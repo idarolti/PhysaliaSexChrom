@@ -6,7 +6,7 @@ The practicals to be covered in this course include:
 
 **Day 1**: Read trimming, quality check, read mapping, variant calling
 
-**Day 2**: Coverage, SNP density, Fst, and K-mer analyses using [SexFindR](https://sexfindr.readthedocs.io/en/latest/index.html)
+**Day 2**: Coverage, SNP density, Fst, and K-mer analyses following the [SexFindR](https://sexfindr.readthedocs.io/en/latest/index.html) pipeline
 
 **Day 3**: 
 
