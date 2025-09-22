@@ -4,9 +4,11 @@
 
 * **[Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic)** - A read trimming tool for Illumina NGS data
 
-    The following command will trim reads to remove adapter sequences, regions where the average Phred score in sliding windows of four bases was <15, reads for which the leading/trailing bases had a Phred score <3, and paired-end reads where either read pair was <50 bp. You can use the command on each pair (forward + reverse) of fastq.gz files
+    The following command will trim reads to remove adapter sequences, regions where the average Phred score in sliding windows of four bases is <15, reads for which the leading/trailing bases have a Phred score <3, and paired-end reads where either read pair is <50 bp. You can use the command on each pair (forward/R1 + reverse/R2) of fastq.gz files
 
-    > java -jar trimmomatic-0.39.jar PE -phred33 sample_input_forward.fq.gz sample_input_reverse.fq.gz sample_output_forward_paired.fq.gz sample_output_forward_unpaired.fq.gz sample_output_reverse_paired.fq.gz sample_output_reverse_unpaired.fq.gz ILLUMINACLIP:adapters.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:50
+    > trimmomatic PE sample_input_R1.fastq.gz sample_input_R2.fastq.gz 
+    sample_output_R1_paired.fastq.gz sample_output_R1_unpaired.fastq.gz sample_output_R2_paired.fastq.gz sample_output_R2_unpaired.fastq.gz 
+    ILLUMINACLIP:adapters.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:50
 
 
 ## 02. Read mapping
