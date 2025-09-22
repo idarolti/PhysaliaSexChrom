@@ -10,6 +10,6 @@ The practicals to be covered in this course include:
 
 **Day 3**: 
 
-**Day 4**: Differential gene expression analysis & tests of Y degeneration and dosage compensation
+**Day 4**: Differential gene expression analysis, tests of Y degeneration and dosage compensation
 
 **Day 5**: 
