@@ -40,6 +40,7 @@
     Variant calling using GATK runs over 4 steps
   
 1. Call SNPs and indels per individual, per chromosome using [HaplotypeCaller](https://gatk.broadinstitute.org/hc/en-us/articles/360037225632-HaplotypeCaller)
+
     Calling variants separately per individual and per chromosome allows these to be run in parallel, therefore faster.
 
 ```
