@@ -34,3 +34,15 @@
     > bowtie2 -x reference -1 sample_output_R1_paired.fastq.gz -2 sample_output_R2_paired.fastq.gz -p 12 | samtools view -b -S - | samtools sort - -o sample.bam
 
 ## 03. Variant calling
+
+* **[GATK](https://gatk.broadinstitute.org/hc/en-us)** - A genomic analysis toolkit focused on variant discovery.
+
+    Variant calling using GATK runs over 4 steps
+  1. Call SNPs and indels per individual, per chromosome using [HaplotypeCaller](https://gatk.broadinstitute.org/hc/en-us/articles/360037225632-HaplotypeCaller)
+    Calling variants separately per individual and per chromosome allows these to be run in parallel, therefore faster.
+```
+#
+```
+  3. Combine all GVCFs per chromosome for multiple individuals using [CombineGVCFs](https://gatk.broadinstitute.org/hc/en-us/articles/13832710975771-CombineGVCFs)
+  4. Perform joint genotyping of variants for multiple samples using [GenotypeGVCFs](https://gatk.broadinstitute.org/hc/en-us/articles/13832766863259-GenotypeGVCFs)
+  5. Merge together GVCFs for all chromosomes using [GatherVcfs](https://gatk.broadinstitute.org/hc/en-us/articles/13832683937435-GatherVcfs-Picard)
