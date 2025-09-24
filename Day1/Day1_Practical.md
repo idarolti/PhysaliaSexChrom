@@ -50,7 +50,7 @@ cd snpcalling
 
 # use a for loop to run over every bam file and every chromosome in the reference
 
-for i in `ls ../mapping/*.bam
+for i in `ls ../mapping/*.bam`
     do
     for j in chr{1..n}
         do
