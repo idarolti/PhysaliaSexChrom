@@ -118,7 +118,7 @@ gatk GenotypeGVCFs \
    -O ./snp_calling/Poecilia_picta_female1_subset_genotyped.gvcf
 ```
 
-Filter variants
+Filter variants using [SelectVariants](https://gatk.broadinstitute.org/hc/en-us/articles/360037055952-SelectVariants) and [VariantFiltration](https://gatk.broadinstitute.org/hc/en-us/articles/360037434691-VariantFiltration)
 
 ```
 gatk SelectVariants \
