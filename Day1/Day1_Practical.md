@@ -53,7 +53,7 @@ trimmomatic PE \
    LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:50
 ```
 
-      For comparison, run FastQC and MultiQC on the trimmed reads
+   For comparison, run FastQC and MultiQC on the trimmed reads
 
 ```
 mkdir fastqc_output_trimmed_reads
@@ -76,7 +76,7 @@ cp ./Shared/day1/02.read_mapping/reference_genome/Poecilia_picta ./reference_gen
 bowtie2-build ./reference_genome/Poecilia_picta.fna ./reference_genome/Poecilia_picta
 ```
 
-      Then, align each pair of reads to the indexed genome using bowtie2 and convert the output alignment sam file in to a sorted bam file.
+   Then, align each pair of reads to the indexed genome using bowtie2 and convert the output alignment sam file in to a sorted bam file.
 
 ```
 bowtie2 -x ./reference_genome/Poecilia_picta -1 ./Shared/day1/02.read_mapping/reads/Poecilia_picta_female1_R1_subset.fastq -2 ./Shared/day1/02.read_mapping/reads/Poecilia_picta_female1_R2_subset.fastq -p 12 | samtools view -b -S - | samtools sort - -o ./read_alignments/Poecilia_picta_female1_subset.bam
