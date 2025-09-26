@@ -36,7 +36,6 @@ multiqc ./fastqc_output_raw_reads -o ./fastqc_output_raw_reads
     The following command will trim reads to remove adapter sequences, regions where the average Phred score in sliding windows of four bases is <15, reads for which the leading/trailing bases have a Phred score <3, and paired-end reads where either read pair is <50 bp. You can find adapter sequences [here](https://support-docs.illumina.com/SHARE/AdapterSequences/Content/SHARE/FrontPages/AdapterSeq.htm). You can use the command on each pair (forward/R1 + reverse/R2) of fastq files.
 
 ```
-
 mkdir trimmed_reads
     
 input_dir="./Shared/day1/01.quality_trimming/raw_reads/"
@@ -52,17 +51,14 @@ trimmomatic PE \
    $output_dir/sample1_output_R2_unpaired.fastq.gz \
    ILLUMINACLIP:$adapter_dir/adapters.fa:2:30:10 \
    LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:50
-
 ```
 
-    For comparison, run FastQC and MultiQC on the trimmed reads
+      For comparison, run FastQC and MultiQC on the trimmed reads
 
 ```
-
 mkdir fastqc_output_trimmed_reads
 for f in ./trimmed_reads/*.gz; do fastqc $f -o ./fastqc_output_trimmed_reads; done
 multiqc ./fastqc_output_trimmed_reads -o ./fastqc_output_trimmed_reads
-
 ```
 
 ## 02. Read mapping
@@ -80,7 +76,7 @@ cp ./Shared/day1/02.read_mapping/reference_genome/Poecilia_picta ./reference_gen
 bowtie2-build ./reference_genome/Poecilia_picta.fna ./reference_genome/Poecilia_picta
 ```
 
-   Then, align each pair of reads to the indexed genome using bowtie2 and convert the output alignment sam file in to a sorted bam file.
+      Then, align each pair of reads to the indexed genome using bowtie2 and convert the output alignment sam file in to a sorted bam file.
 
 ```
 bowtie2 -x ./reference_genome/Poecilia_picta -1 ./Shared/day1/02.read_mapping/reads/Poecilia_picta_female1_R1_subset.fastq -2 ./Shared/day1/02.read_mapping/reads/Poecilia_picta_female1_R2_subset.fastq -p 12 | samtools view -b -S - | samtools sort - -o ./read_alignments/Poecilia_picta_female1_subset.bam
