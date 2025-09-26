@@ -11,11 +11,15 @@ This practical will cover:
 
 * **[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)** - A quality control tool for high throughput sequence data
 
-    First, create an output directory for FastQC. Then, run FastQC for all the paired fastq files.
-  ```
-    mkdir fastqc_output_raw_reads
-    for f in ./Shared/day1/01.quality_trimming/raw_reads/*fastq; do fastqc $f -o ./fastqc_output_raw_reads; done
-      ```
+First, create an output directory for FastQC. Then, run FastQC for all the paired fastq files.
+
+```
+
+mkdir fastqc_output_raw_reads
+
+for f in ./Shared/day1/01.quality_trimming/raw_reads/*fastq; do fastqc $f -o ./fastqc_output_raw_reads; done
+
+```
 
 * **[MultiQC](https://multiqc.info)** - A tool for merging FastQC output reports of individual samples into a single summary report
 
