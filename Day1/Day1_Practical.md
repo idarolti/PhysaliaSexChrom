@@ -14,6 +14,7 @@ This practical will cover:
 First, create an output directory for FastQC. Then, run FastQC for all the paired fastq files.
 
 ```
+mkdir day1
 
 mkdir fastqc_output_raw_reads
 
