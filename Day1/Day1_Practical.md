@@ -17,7 +17,6 @@ First, create an output directory for FastQC. Then, run FastQC for all the paire
 mkdir fastqc_output_raw_reads
 
 for f in ./Shared/day1/01.quality_trimming/raw_reads/*fastq; do fastqc $f -o ./fastqc_output_raw_reads; done
-
 ```
 
 * **[MultiQC](https://multiqc.info)** - A tool for merging FastQC output reports of individual samples into a single summary report
@@ -25,9 +24,7 @@ for f in ./Shared/day1/01.quality_trimming/raw_reads/*fastq; do fastqc $f -o ./f
 This software uses as input the fastqc.zip files produced by FastQC. After running, download the .html output file to your computer to visualize the results in a web browser.
 
 ```
-
 multiqc ./fastqc_output_raw_reads -o ./fastqc_output_raw_reads
-
 ```
 
 * **[Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic)** - A read trimming tool for Illumina NGS data
@@ -75,20 +72,20 @@ cp ./Shared/day1/02.read_mapping/reference_genome/Poecilia_picta ./reference_gen
 bowtie2-build ./reference_genome/Poecilia_picta.fna ./reference_genome/Poecilia_picta
 ```
 
-Then, align each pair of reads to the indexed genome using bowtie2 and convert the output alignment sam file in to a sorted bam file.
+Then, align each pair of reads to the indexed genome using bowtie2 and convert the output alignment sam file into a sorted bam file.
 
 ```
 bowtie2 -p12 -x ./reference_genome/Poecilia_picta \
--1 ./Shared/day1/02.read_mapping/reads/Poecilia_picta_female1_R1_subset.fastq \
--2 ./Shared/day1/02.read_mapping/reads/Poecilia_picta_female1_R2_subset.fastq \
-| samtools view -b -S - | samtools sort - -o ./read_alignments/Poecilia_picta_female1_subset.bam
+   -1 ./Shared/day1/02.read_mapping/reads/Poecilia_picta_female1_R1_subset.fastq \
+   -2 ./Shared/day1/02.read_mapping/reads/Poecilia_picta_female1_R2_subset.fastq \
+   | samtools view -b -S - | samtools sort - -o ./read_alignments/Poecilia_picta_female1_subset.bam
 ```
 
 ## 03. Variant calling
 
 * **[GATK](https://gatk.broadinstitute.org/hc/en-us)** - A genomic analysis toolkit focused on variant discovery.
 
-Create sequence dictionary for the reference sequence
+Create sequence dictionary for the reference sequence.
 
 ```
 gatk CreateSequenceDictionary -R ./reference_genome/Poecilia_picta.fna -O ./reference_genome/Poecilia_picta.dict
@@ -97,12 +94,23 @@ gatk CreateSequenceDictionary -R ./reference_genome/Poecilia_picta.fna -O ./refe
 Call SNPs using [HaplotypeCaller](https://gatk.broadinstitute.org/hc/en-us/articles/360037225632-HaplotypeCaller)
 
 ```
+mkdir snp_calling
 
-mkdir snpcalling
-cd snpcalling
+picard AddOrReplaceReadGroups \
+   I=./read_alignments/Poecilia_picta_female1_subset.bam \
+   O=./read_alignments/Poecilia_picta_female1_subset_RG.bam RGID=1 RGLB=lib1 RGPL=illumina RGPU=unit1 RGSM=picta_female1
+
+samtools index ./read_alignments/Poecilia_picta_female1_subset_RG.bam
 
 gatk HaplotypeCaller \
-    -R reference \
+   -R ./reference_genome/Poecilia_picta.fna \
+   -I ./read_alignments/Poecilia_picta_female1_subset_RG.bam \
+   -O ./snp_calling/Poecilia_picta_female1.gvcf --emit-ref-confidence GVCF --min-base-quality-score 30 --pcr-indel-model NONE --sample-name picta_female1
+
+
+
+gatk HaplotypeCaller \
+    -R ./reference_genome/Poecilia_picta \
     -I sample.bam \
     -L chr1 \
     -O sample.chr1.gvcf \
