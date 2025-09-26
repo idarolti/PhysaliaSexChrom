@@ -7,20 +7,20 @@ This practical will cover:
 3. Variant calling
    
 
-## 01. Read trimming and quality check
+## 01. Read quality check and trimming
 
 * **[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)** - A quality control tool for high throughput sequence data
 
     First, create an output directory for FastQC.
-    > mkdir fastqc_output
+    > mkdir fastqc_output_raw_reads
 
     Then, run FastQC for all the paired fastq files that resulted from trimmomatic.
-    > for f in _paired.fastq.gz; do fastqc $f -o ./fastqc_output; done
+    > for f in ./Shared/day1/01.quality_trimming/raw_reads/*fastq; do fastqc $f -o ./fastqc_output_raw_reads; done
 
 * **[MultiQC](https://multiqc.info)** - A tool for merging FastQC output reports of individual samples into a single summary report
 
     This software uses as input the fastqc.zip files produced by FastQC.
-    > multiqc ./fastqc_output -o ./fastqc_output
+    > multiqc ./fastqc_output_raw_reads -o ./fastqc_output_raw_reads
 
     Download the .html output file to your computer to visualize the results in the web browser.
 
