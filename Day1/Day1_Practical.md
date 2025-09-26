@@ -23,15 +23,13 @@ for f in ./Shared/day1/01.quality_trimming/raw_reads/*fastq; do fastqc $f -o ./f
 
 * **[MultiQC](https://multiqc.info)** - A tool for merging FastQC output reports of individual samples into a single summary report
 
-    This software uses as input the fastqc.zip files produced by FastQC.
+    This software uses as input the fastqc.zip files produced by FastQC. After running, download the .html output file to your computer to visualize the results in a web browser.
 
 ```
 
 multiqc ./fastqc_output_raw_reads -o ./fastqc_output_raw_reads
 
 ```
-
-    Download the .html output file to your computer to visualize the results in a web browser.
 
 * **[Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic)** - A read trimming tool for Illumina NGS data
 
@@ -45,7 +43,15 @@ input_dir="./Shared/day1/01.quality_trimming/raw_reads/"
 adapter_dir="./Shared/day1/01.quality_trimming/"
 output_dir=./trimmed_reads
     
-trimmomatic PE $input_dir/sample1_R1.fastq $input_dir/sample1_R2.fastq $output_dir/sample1_output_R1_paired.fastq.gz $output_dir/sample1_output_R1_unpaired.fastq.gz $output_dir/sample1_output_R2_paired.fastq.gz $output_dir/sample1_output_R2_unpaired.fastq.gz ILLUMINACLIP:$adapter_dir/adapters.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:50
+trimmomatic PE \
+$input_dir/sample1_R1.fastq \
+$input_dir/sample1_R2.fastq \
+$output_dir/sample1_output_R1_paired.fastq.gz \
+$output_dir/sample1_output_R1_unpaired.fastq.gz \
+$output_dir/sample1_output_R2_paired.fastq.gz \
+$output_dir/sample1_output_R2_unpaired.fastq.gz \
+ILLUMINACLIP:$adapter_dir/adapters.fa:2:30:10 \
+LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:50
 
 ```
 
