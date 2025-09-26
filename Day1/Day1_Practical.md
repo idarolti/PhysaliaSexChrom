@@ -11,7 +11,7 @@ This practical will cover:
 
 * **[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)** - A quality control tool for high throughput sequence data
 
-First, create an output directory for FastQC. Then, run FastQC for all the paired fastq files.
+   First, create an output directory for FastQC. Then, run FastQC for all the paired fastq files.
 
 ```
 
