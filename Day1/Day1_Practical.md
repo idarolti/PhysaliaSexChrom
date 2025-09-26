@@ -76,9 +76,9 @@ Then, align each pair of reads to the indexed genome using bowtie2 and convert t
 
 ```
 bowtie2 -p12 -x ./reference_genome/Poecilia_picta \
-   -1 ./Shared/day1/02.read_mapping/reads/Poecilia_picta_female1_R1_subset.fastq \
-   -2 ./Shared/day1/02.read_mapping/reads/Poecilia_picta_female1_R2_subset.fastq \
-   | samtools view -b -S - | samtools sort - -o ./read_alignments/Poecilia_picta_female1_subset.bam
+   -1 ./Shared/day1/02.read_mapping/reads/Poecilia_picta_female1_R1_chr12.fastq \
+   -2 ./Shared/day1/02.read_mapping/reads/Poecilia_picta_female1_R2_chr12.fastq \
+   | samtools view -b -S - | samtools sort - -o ./read_alignments/Poecilia_picta_female1_chr12.bam
 ```
 
 ## 03. Variant calling
@@ -96,16 +96,12 @@ Call SNPs using [HaplotypeCaller](https://gatk.broadinstitute.org/hc/en-us/artic
 ```
 mkdir snp_calling
 
-picard AddOrReplaceReadGroups \
-   I=./read_alignments/Poecilia_picta_female1_subset.bam \
-   O=./read_alignments/Poecilia_picta_female1_subset_RG.bam RGID=1 RGLB=lib1 RGPL=illumina RGPU=unit1 RGSM=picta_female1
-
-samtools index ./read_alignments/Poecilia_picta_female1_subset_RG.bam
+samtools index ./read_alignments/Poecilia_picta_female1_chr12.bam
 
 gatk HaplotypeCaller \
    -R ./reference_genome/Poecilia_picta.fna \
-   -I ./read_alignments/Poecilia_picta_female1_subset_RG.bam \
-   -O ./snp_calling/Poecilia_picta_female1_subset.gvcf --emit-ref-confidence GVCF \
+   -I ./read_alignments/Poecilia_picta_female1_chr12.bam \
+   -O ./snp_calling/Poecilia_picta_female1_chr12.gvcf --emit-ref-confidence GVCF \
    --min-base-quality-score 30 --pcr-indel-model NONE --sample-name picta_female1
 ```
 
@@ -114,8 +110,8 @@ Perform genotyping of variants using [GenotypeGVCFs](https://gatk.broadinstitute
 ```
 gatk GenotypeGVCFs \
    -R ./reference_genome/Poecilia_picta.fna \
-   --variant ./snp_calling/Poecilia_picta_female1_subset.gvcf \
-   -O ./snp_calling/Poecilia_picta_female1_subset_genotyped.gvcf
+   --variant ./snp_calling/Poecilia_picta_female1_chr12.gvcf \
+   -O ./snp_calling/Poecilia_picta_female1_chr12.genotyped.gvcf
 ```
 
 Filter variants using [SelectVariants](https://gatk.broadinstitute.org/hc/en-us/articles/360037055952-SelectVariants) and [VariantFiltration](https://gatk.broadinstitute.org/hc/en-us/articles/360037434691-VariantFiltration)
@@ -123,12 +119,12 @@ Filter variants using [SelectVariants](https://gatk.broadinstitute.org/hc/en-us/
 ```
 gatk SelectVariants \
    -R ./reference_genome/Poecilia_picta.fna \
-   -V ./snp_calling/Poecilia_picta_female1_subset_genotyped.gvcf \
-   -O ./snp_calling/Poecilia_picta_female1_subset_selectvar.gvcf --restrict-alleles-to BIALLELIC --select-type-to-include SNP
+   -V ./snp_calling/Poecilia_picta_female1_chr12.genotyped.gvcf \
+   -O ./snp_calling/Poecilia_picta_female1_chr12.selectvar.gvcf --restrict-alleles-to BIALLELIC --select-type-to-include SNP
 
 gatk VariantFiltration \
    -R ./reference_genome/Poecilia_picta.fna \
-   -V ./snp_calling/Poecilia_picta_female1_subset_selectvar.gvcf \
-   -O ./snp_calling/Poecilia_picta_female1_subset_selectvar_filtered.gvcf \
+   -V ./snp_calling/Poecilia_picta_female1_chr12.selectvar.gvcf \
+   -O ./snp_calling/Poecilia_picta_female1_chr12.selectvar_filtered.gvcf \
    --filter-expression "QUAL <= 30.0 || DP <= 20" --filter-name "low_qual_or_dp"
 ```
