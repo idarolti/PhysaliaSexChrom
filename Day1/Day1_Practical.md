@@ -114,6 +114,21 @@ Perform genotyping of variants using [GenotypeGVCFs](https://gatk.broadinstitute
 ```
 gatk GenotypeGVCFs \
    -R ./reference_genome/Poecilia_picta.fna \
-   --variant ./snp_calling/Poecilia_picta_female1_subset.gvcf -O ./snp_calling/Poecilia_picta_female1_subset_genotyped.gvcf
+   --variant ./snp_calling/Poecilia_picta_female1_subset.gvcf \
+   -O ./snp_calling/Poecilia_picta_female1_subset_genotyped.gvcf
 ```
 
+Filter variants
+
+```
+gatk SelectVariants \
+   -R ./reference_genome/Poecilia_picta.fna \
+   -V ./snp_calling/Poecilia_picta_female1_subset_genotyped.gvcf \
+   -O ./snp_calling/Poecilia_picta_female1_subset_selectvar.gvcf --restrict-alleles-to BIALLELIC --select-type-to-include SNP
+
+gatk VariantFiltration \
+   -R ./reference_genome/Poecilia_picta.fna \
+   -V ./snp_calling/Poecilia_picta_female1_subset_selectvar.gvcf \
+   -O ./snp_calling/Poecilia_picta_female1_subset_selectvar_filtered.gvcf \
+   --filter-expression "QUAL <= 30.0 || DP <= 20" --filter-name "low_qual_or_dp"
+```
