@@ -88,8 +88,14 @@ bowtie2 -p12 -x ./reference_genome/Poecilia_picta \
 ## 03. Variant calling
 
 * **[GATK](https://gatk.broadinstitute.org/hc/en-us)** - A genomic analysis toolkit focused on variant discovery.
-  
-1. Call SNPs using [HaplotypeCaller](https://gatk.broadinstitute.org/hc/en-us/articles/360037225632-HaplotypeCaller)
+
+Create sequence dictionary for the reference sequence
+
+```
+gatk CreateSequenceDictionary -R ./reference_genome/Poecilia_picta.fna -O ./reference_genome/Poecilia_picta.dict
+```
+
+Call SNPs using [HaplotypeCaller](https://gatk.broadinstitute.org/hc/en-us/articles/360037225632-HaplotypeCaller)
 
 ```
 
