@@ -50,10 +50,16 @@ This practical will cover:
 * **[Bowtie2](https://bowtie-bio.sourceforge.net/bowtie2/manual.shtml)** - A tool for alining short-read data to a reference genome or genomic sequences
 
     First, build an index for the reference genome.
-    > bowtie2-build reference.fasta reference
+    > mkdir reference_genome
+    
+    > mkdir read_alignments
+    
+    > cp ./Shared/day1/02.read_mapping/reference_genome/Poecilia_picta ./reference_genome
+    
+    > bowtie2-build ./reference_genome/Poecilia_picta.fna ./reference_genome/Poecilia_picta
 
     Then, align each pair of reads to the indexed genome using bowtie2 and convert the output alignment sam file in to a sorted bam file.
-    > bowtie2 -x reference -1 sample_output_R1_paired.fastq.gz -2 sample_output_R2_paired.fastq.gz -p 12 | samtools view -b -S - | samtools sort - -o sample.bam
+    > bowtie2 -x ./reference_genome/Poecilia_picta -1 ./Shared/day1/02.read_mapping/reads/Poecilia_picta_female1_R1_subset.fastq -2 ./Shared/day1/02.read_mapping/reads/Poecilia_picta_female1_R2_subset.fastq -p 12 | samtools view -b -S - | samtools sort - -o ./read_alignments/Poecilia_picta_female1_subset.bam
 
 ## 03. Variant calling
 
