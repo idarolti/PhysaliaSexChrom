@@ -24,7 +24,12 @@ for f in ./Shared/day1/01.quality_trimming/raw_reads/*fastq; do fastqc $f -o ./f
 * **[MultiQC](https://multiqc.info)** - A tool for merging FastQC output reports of individual samples into a single summary report
 
     This software uses as input the fastqc.zip files produced by FastQC.
-    > multiqc ./fastqc_output_raw_reads -o ./fastqc_output_raw_reads
+
+```
+
+multiqc ./fastqc_output_raw_reads -o ./fastqc_output_raw_reads
+
+```
 
     Download the .html output file to your computer to visualize the results in a web browser.
 
@@ -32,22 +37,27 @@ for f in ./Shared/day1/01.quality_trimming/raw_reads/*fastq; do fastqc $f -o ./f
 
     The following command will trim reads to remove adapter sequences, regions where the average Phred score in sliding windows of four bases is <15, reads for which the leading/trailing bases have a Phred score <3, and paired-end reads where either read pair is <50 bp. You can find adapter sequences [here](https://support-docs.illumina.com/SHARE/AdapterSequences/Content/SHARE/FrontPages/AdapterSeq.htm). You can use the command on each pair (forward/R1 + reverse/R2) of fastq files.
 
-    > mkdir trimmed_reads
+```
+
+mkdir trimmed_reads
     
-    > input_dir="./Shared/day1/01.quality_trimming/raw_reads/"
+input_dir="./Shared/day1/01.quality_trimming/raw_reads/"
+adapter_dir="./Shared/day1/01.quality_trimming/"
+output_dir=./trimmed_reads
     
-    > adapter_dir="./Shared/day1/01.quality_trimming/"
-    
-    > output_dir=./trimmed_reads
-    
-    > trimmomatic PE $input_dir/sample1_R1.fastq $input_dir/sample1_R2.fastq $output_dir/sample1_output_R1_paired.fastq.gz $output_dir/sample1_output_R1_unpaired.fastq.gz $output_dir/sample1_output_R2_paired.fastq.gz $output_dir/sample1_output_R2_unpaired.fastq.gz ILLUMINACLIP:$adapter_dir/adapters.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:50
+trimmomatic PE $input_dir/sample1_R1.fastq $input_dir/sample1_R2.fastq $output_dir/sample1_output_R1_paired.fastq.gz $output_dir/sample1_output_R1_unpaired.fastq.gz $output_dir/sample1_output_R2_paired.fastq.gz $output_dir/sample1_output_R2_unpaired.fastq.gz ILLUMINACLIP:$adapter_dir/adapters.fa:2:30:10 LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:50
+
+```
 
     For comparison, run FastQC and MultiQC on the trimmed reads
-    > mkdir fastqc_output_trimmed_reads
-    
-    > for f in ./trimmed_reads/*.gz; do fastqc $f -o ./fastqc_output_trimmed_reads; done
-    
-    > multiqc ./fastqc_output_trimmed_reads -o ./fastqc_output_trimmed_reads
+
+```
+
+mkdir fastqc_output_trimmed_reads
+for f in ./trimmed_reads/*.gz; do fastqc $f -o ./fastqc_output_trimmed_reads; done
+multiqc ./fastqc_output_trimmed_reads -o ./fastqc_output_trimmed_reads
+
+```
 
 ## 02. Read mapping
 
