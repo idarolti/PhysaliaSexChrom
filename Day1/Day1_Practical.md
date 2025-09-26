@@ -14,8 +14,6 @@ This practical will cover:
 First, create an output directory for FastQC. Then, run FastQC for all the paired fastq files.
 
 ```
-mkdir day1
-
 mkdir fastqc_output_raw_reads
 
 for f in ./Shared/day1/01.quality_trimming/raw_reads/*fastq; do fastqc $f -o ./fastqc_output_raw_reads; done
