@@ -44,14 +44,14 @@ adapter_dir="./Shared/day1/01.quality_trimming/"
 output_dir=./trimmed_reads
     
 trimmomatic PE \
-$input_dir/sample1_R1.fastq \
-$input_dir/sample1_R2.fastq \
-$output_dir/sample1_output_R1_paired.fastq.gz \
-$output_dir/sample1_output_R1_unpaired.fastq.gz \
-$output_dir/sample1_output_R2_paired.fastq.gz \
-$output_dir/sample1_output_R2_unpaired.fastq.gz \
-ILLUMINACLIP:$adapter_dir/adapters.fa:2:30:10 \
-LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:50
+   $input_dir/sample1_R1.fastq \
+   $input_dir/sample1_R2.fastq \
+   $output_dir/sample1_output_R1_paired.fastq.gz \
+   $output_dir/sample1_output_R1_unpaired.fastq.gz \
+   $output_dir/sample1_output_R2_paired.fastq.gz \
+   $output_dir/sample1_output_R2_unpaired.fastq.gz \
+   ILLUMINACLIP:$adapter_dir/adapters.fa:2:30:10 \
+   LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:50
 
 ```
 
