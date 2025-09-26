@@ -47,7 +47,7 @@ This practical will cover:
 
 ## 02. Read mapping
 
-* **[Bowtie2](https://bowtie-bio.sourceforge.net/bowtie2/manual.shtml)** - A tool for alining short-read data to a reference genome or genomic sequences
+* **[Bowtie2](https://bowtie-bio.sourceforge.net/bowtie2/manual.shtml)** - A tool for aligning short-read data to a reference genome or genomic sequences
 
     First, build an index for the reference genome. DO NOT RUN!
     > mkdir reference_genome
