@@ -105,29 +105,15 @@ samtools index ./read_alignments/Poecilia_picta_female1_subset_RG.bam
 gatk HaplotypeCaller \
    -R ./reference_genome/Poecilia_picta.fna \
    -I ./read_alignments/Poecilia_picta_female1_subset_RG.bam \
-   -O ./snp_calling/Poecilia_picta_female1.gvcf --emit-ref-confidence GVCF --min-base-quality-score 30 --pcr-indel-model NONE --sample-name picta_female1
-
-
-
-gatk HaplotypeCaller \
-    -R ./reference_genome/Poecilia_picta \
-    -I sample.bam \
-    -L chr1 \
-    -O sample.chr1.gvcf \
-    --emit-ref-confidence GVCF \
-    --min-base-quality-score 30 \
-    --pcr-indel-model NONE
-
+   -O ./snp_calling/Poecilia_picta_female1_subset.gvcf --emit-ref-confidence GVCF \
+   --min-base-quality-score 30 --pcr-indel-model NONE --sample-name picta_female1
 ```
 
-2. Perform genotyping of variants using [GenotypeGVCFs](https://gatk.broadinstitute.org/hc/en-us/articles/13832766863259-GenotypeGVCFs)
+Perform genotyping of variants using [GenotypeGVCFs](https://gatk.broadinstitute.org/hc/en-us/articles/13832766863259-GenotypeGVCFs)
 
 ```
-
 gatk GenotypeGVCFs \
--R reference \
---variant sample.chr1.gvcf \
--O sample.chr1.genotyped.g.vcf.gz
-
+   -R ./reference_genome/Poecilia_picta.fna \
+   --variant ./snp_calling/Poecilia_picta_female1_subset.gvcf -O ./snp_calling/Poecilia_picta_female1_subset_genotyped.gvcf
 ```
 
