@@ -1,5 +1,12 @@
 # Day 1 Practical
 
+This practical will cover:
+
+1. Read quality check and trimming
+2. Read mapping to genome assembly
+3. Variant calling
+   
+
 ## 01. Read trimming and quality check
 
 * **[FastQC](http://www.bioinformatics.babraham.ac.uk/projects/fastqc/)** - A quality control tool for high throughput sequence data
