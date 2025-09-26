@@ -72,22 +72,18 @@ multiqc ./fastqc_output_trimmed_reads -o ./fastqc_output_trimmed_reads
     First, build an index for the reference genome. DO NOT RUN!
 
 ```
-
 mkdir reference_genome
 mkdir read_alignments
     
 cp ./Shared/day1/02.read_mapping/reference_genome/Poecilia_picta ./reference_genome
     
 bowtie2-build ./reference_genome/Poecilia_picta.fna ./reference_genome/Poecilia_picta
-
 ```
 
     Then, align each pair of reads to the indexed genome using bowtie2 and convert the output alignment sam file in to a sorted bam file.
 
 ```
-
 bowtie2 -x ./reference_genome/Poecilia_picta -1 ./Shared/day1/02.read_mapping/reads/Poecilia_picta_female1_R1_subset.fastq -2 ./Shared/day1/02.read_mapping/reads/Poecilia_picta_female1_R2_subset.fastq -p 12 | samtools view -b -S - | samtools sort - -o ./read_alignments/Poecilia_picta_female1_subset.bam
-
 ```
 
 ## 03. Variant calling
