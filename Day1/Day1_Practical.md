@@ -22,7 +22,7 @@ This practical will cover:
     This software uses as input the fastqc.zip files produced by FastQC.
     > multiqc ./fastqc_output_raw_reads -o ./fastqc_output_raw_reads
 
-    Download the .html output file to your computer to visualize the results in the web browser.
+    Download the .html output file to your computer to visualize the results in a web browser.
 
 * **[Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic)** - A read trimming tool for Illumina NGS data
 
