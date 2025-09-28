@@ -66,7 +66,7 @@ Merge the file with dS values with the file with positional information on the s
 join -t $'\t' -1 1 -2 1 <(sort gametologs_dS.txt) <(sort ~/Server/day3/gametolog_divergence/gametologs_position.txt) > gametologs_dS_position.txt
 ```
 
-Visualize results in **[R](https://www.r-project.org/).
+Visualize results in **[R](https://www.r-project.org/)**.
 
 ```
 library(ggplot2)
