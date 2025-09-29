@@ -94,7 +94,7 @@ Try running the bowtie mapping for female2 subset.
 
 * **[GATK](https://gatk.broadinstitute.org/hc/en-us)** - A genomic analysis toolkit focused on variant discovery.
 
-Create sequence dictionary for the reference sequence.
+Create sequence dictionary for the reference sequence. DO NOT RUN!
 
 ```
 gatk CreateSequenceDictionary -R Poecilia_picta.fna -O Poecilia_picta.dict
