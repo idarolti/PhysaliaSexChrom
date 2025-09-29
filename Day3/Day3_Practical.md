@@ -69,7 +69,7 @@ cut -f 9 kmers.assoc.tab | grep -v 'P' | sort -g | head -1
 Edit the command for the p-value output from the step above
 
 ```
-awk '$9 < P' kmers.assoc.tab > most_significant_assoc.txt
+awk '$9 <= P' kmers.assoc.tab > most_significant_assoc.txt
 ```
 
 Convert plink file
