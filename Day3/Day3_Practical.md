@@ -16,6 +16,69 @@ conda activate sexchr
 
 ## 01. K-mer analyses
 
+Set up folder
+
+```
+
+mkdir kmersGWAS
+cd kmersGWAS
+mkdir Ppicta
+cd Ppicta
+cp /bin/Ppicta_dirlist.txt .
+cp /bin/Ppicta_phenotype.txt .
+cp /bin/Poecilia_picta*.fastq.gz .
+
+```
+
+### Step 1 Generate kmers.table
+
+This is a table of all kmers and their presence/absence between all individuals
+
+> bash run_kmersGWAS_step1_Ppicta.sh
+
+Generate kinship table, in case useful for future analysis
+
+> bin/emma_kinship_kmers -t kmers_table -k 31 --maf 0.05 > kmers_table.kinship
+
+Testing for associating with phenotype using plink
+
+> bin/kmers_table_to_bed -t kmers_table -k 31 -p Ppicta_phenotype.txt --maf 0.05 --mac 2 -b 1000000000 -o kmerGWAS_plink
+
+Run plink
+
+> plink --noweb --bfile kmerGWAS_plink.0 --allow-no-sex --assoc --out kmers
+
+Edit format of output file
+
+> awk -v OFS='\t' '{ $1=$1; print }' kmers.assoc > kmers.assoc.tab
+
+Check the output file for the most significant p-value, and filter for only kmers with this value
+
+> cut -f 9 kmers.assoc.tab | grep -v 'P' | sort -g | head -1
+
+Edit the command for the p-value output from the step above
+
+> awk '$9 < P' kmers.assoc > most_significant_assoc.txt
+
+Convert plink file
+
+> python plink_to_abyss_kmers.py most_significant_assoc.tab plink_abyss_input.txt
+
+# Assemble small contigs with ABYSS
+
+mamba activate /share/pool/CompGenomVert/Applications/mamba-env-abyss
+
+ABYSS -k25 -c0 -e0 plink_abyss_input.txt -o plink_abyss_output.txt
+
+# blast contigs against a reference genome
+
+REF_FASTA=[path to reference genome]
+
+makeblastdb -in $REF_FASTA -dbtype nucl
+
+blastn -query plink_abyss_output.txt -db $REF_FASTA -outfmt 6 -out kmers_blast.out
+
+
 ## 02. Identify sex-linked sequences with **[SEX-DETector](https://pmc.ncbi.nlm.nih.gov/articles/PMC5010906/)**
 
 ## 03. Gametologs divergence
