@@ -33,6 +33,7 @@ Download the **[X](https://www.ncbi.nlm.nih.gov/nuccore/CM109091.1?report=fasta)
 ## 02. Identify sex chromosome assemblies from INSDC
 Align the X and Y chromosome sequence online with **[DGenies](https://dgenies.toulouse.inra.fr)**
 Click on the "RUN" tab
+<img width="1293" height="831" alt="Screenshot 2025-09-29 at 17 12 08" src="https://github.com/user-attachments/assets/bbc23361-b8be-4c76-b17b-817a79c2941d" />
 
 
 
