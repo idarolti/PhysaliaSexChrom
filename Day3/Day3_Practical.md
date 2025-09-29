@@ -136,8 +136,6 @@ kmerblast_chrom <-
 
 ### kmer positions
 
-b<-poplar_kmerV2_filter%>% filter(X2 == "scaffold_19") %>% ggplot(aes(x=X9,y=X3)) + geom_point() + xlab('Position on chromosome (bp)') + ylab('Percent identity for blastn') + scale_x_continuous(breaks=seq(0,16000000,1000000)) + ggtitle("B. Distribution of male-specific k-mers from kmerGWAS across poplar v2.2 chromosome 19 from blastn")
-
 (points <-
 	filter(kmerblast_filter, scaf == "") %>%
     ggplot(aes(x = ref_start, y = ident.match_p)) +
