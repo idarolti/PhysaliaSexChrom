@@ -6,6 +6,8 @@ This practical will cover:
 2. Visualising dot plots
 3. Investigate structural rearrangements
 
+We will investigate sex chromosome inversions identified in the fourspine stickleback by **[Liu et al. 2025](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1011465)**
+
 ## 00. Prepare work folder for day 5
 ```
 mkdir day5
@@ -23,6 +25,8 @@ double click the installation and follow the on screen instructions, double clic
 https://jbrowse.org/jb2/download/
 ```
 
+## 02. Identify sex chromosome assemblies from INSDC
+Search 
 
 
 
