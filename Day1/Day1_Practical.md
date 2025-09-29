@@ -105,7 +105,9 @@ Call SNPs using [HaplotypeCaller](https://gatk.broadinstitute.org/hc/en-us/artic
 ```
 mkdir snp_calling
 
-samtools index ./read_alignments/Poecilia_picta_female1_subset.bam
+picard AddOrReplaceReadGroups I=./read_alignments/Poecilia_picta_female1_subset.bam O=./read_alignments/Poecilia_picta_female1_subset_RG.bam RGID=1 RGLB=lib1 RGPL=illumina RGPU=unit1 RGSM=picta_female1
+
+samtools index /work/FAC/FBM/DEE/tschwand/miya/idarolti/physalia/guppy_DNA_reads/picta/Poecilia_picta_female1_subset_1000_RG.bam
 
 gatk HaplotypeCaller \
    -R /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta.fna \
@@ -137,3 +139,5 @@ gatk VariantFiltration \
    -O ./snp_calling/Poecilia_picta_female1_chr12.selectvar_filtered.gvcf \
    --filter-expression "QUAL <= 30.0 || DP <= 20" --filter-name "low_qual_or_dp"
 ```
+
+Try genotyping and variant filters on female1_chr8.
