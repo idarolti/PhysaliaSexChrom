@@ -80,7 +80,7 @@ bowtie2 -p12 -x /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecili
    | samtools view -b -S - | samtools sort - -o ./read_alignments/Poecilia_picta_female1_subset.bam
 ```
 
-TAKES 15 MIN.
+TAKES 15 MIN!
 ```
 bowtie2 -p12 -x /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta \
    -1 /home/ubuntu/Share/day1/02.read_mapping/reads/Poecilia_picta_female1_R1_chr12.fastq \
@@ -107,11 +107,11 @@ mkdir snp_calling
 
 picard AddOrReplaceReadGroups I=./read_alignments/Poecilia_picta_female1_subset.bam O=./read_alignments/Poecilia_picta_female1_subset_RG.bam RGID=1 RGLB=lib1 RGPL=illumina RGPU=unit1 RGSM=picta_female1
 
-samtools index /work/FAC/FBM/DEE/tschwand/miya/idarolti/physalia/guppy_DNA_reads/picta/Poecilia_picta_female1_subset_1000_RG.bam
+samtools index ./read_alignments/Poecilia_picta_female1_subset_RG.bam
 
 gatk HaplotypeCaller \
    -R /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta.fna \
-   -I ./read_alignments/Poecilia_picta_female1_subset.bam \
+   -I ./read_alignments/Poecilia_picta_female1_subset_RG.bam \
    -O ./snp_calling/Poecilia_picta_female1_subset.gvcf --emit-ref-confidence GVCF \
    --min-base-quality-score 30 --pcr-indel-model NONE --sample-name picta_female1
 ```
