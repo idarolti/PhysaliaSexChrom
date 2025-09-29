@@ -32,21 +32,26 @@ Search **[NCBI Genomes](https://www.ncbi.nlm.nih.gov/genome/)** for the entry "A
 Select assembly **[GCA_048569185.1](https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_048569185.1/)**  
 Download the **[X](https://www.ncbi.nlm.nih.gov/nuccore/CM109091.1?report=fasta)** and the **[Y](https://www.ncbi.nlm.nih.gov/nuccore/CM109092.1?report=fasta)** chromosome fasta files to your local machine  
 
-  
+         
 ## 03. Align X and Y chromosome
 Align the X and Y chromosome sequence online with **[DGenies](https://dgenies.toulouse.inra.fr)**  
 Click on the "RUN" tab  
 
+
 <img width="1293" height="831" alt="Screenshot 2025-09-29 at 17 12 08" src="https://github.com/user-attachments/assets/bbc23361-b8be-4c76-b17b-817a79c2941d" />
 
+  
 Select the fasta files you downloaded previously and fill in the required information.  
 Click **Submit**  
 
-Your status will change from   
+Your status will change from  
+
+  
 <img width="817" height="362" alt="Screenshot 2025-09-29 at 17 17 08" src="https://github.com/user-attachments/assets/3a5cab80-3197-4b2d-9ef4-7472a95e4dc1" />  
 
 
-To
+To  
+
 <img width="785" height="460" alt="Screenshot 2025-09-29 at 17 18 53" src="https://github.com/user-attachments/assets/0432353d-228d-41eb-8bf1-07703a0b0e0f" />
 
 
