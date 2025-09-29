@@ -7,5 +7,7 @@ This practical will cover methods on sex chromosome discovery:
 
 ## 00. Prepare work folder for day 2
 
+```
+mkdir day2
 
 
