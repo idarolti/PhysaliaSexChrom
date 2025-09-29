@@ -16,7 +16,7 @@ First, create an output directory for FastQC. Then, run FastQC for all the paire
 ```
 mkdir fastqc_output_raw_reads
 
-for f in ./Shared/day1/01.quality_trimming/raw_reads/*fastq; do fastqc $f -o ./fastqc_output_raw_reads; done
+for f in /home/ubuntu/Share/day1/01.quality_trimming/raw_reads/*fastq; do fastqc $f -o ./fastqc_output_raw_reads; done
 ```
 
 * **[MultiQC](https://multiqc.info)** - A tool for merging FastQC output reports of individual samples into a single summary report
@@ -34,8 +34,8 @@ The following command will trim reads to remove adapter sequences, regions where
 ```
 mkdir trimmed_reads
     
-input_dir="./Shared/day1/01.quality_trimming/raw_reads/"
-adapter_dir="./Shared/day1/01.quality_trimming/"
+input_dir="/home/ubuntu/Share/day1/01.quality_trimming/raw_reads/"
+adapter_dir="/home/ubuntu/Share/day1/01.quality_trimming/"
 output_dir=./trimmed_reads
     
 trimmomatic PE \
@@ -53,9 +53,11 @@ For comparison, run FastQC and MultiQC on the trimmed reads
 
 ```
 mkdir fastqc_output_trimmed_reads
-for f in ./trimmed_reads/*.gz; do fastqc $f -o ./fastqc_output_trimmed_reads; done
+for f in ./trimmed_reads/*_paired.fastq.gz; do fastqc $f -o ./fastqc_output_trimmed_reads; done
 multiqc ./fastqc_output_trimmed_reads -o ./fastqc_output_trimmed_reads
 ```
+
+Try running the trimming and fastqc commands for sample2.
 
 ## 02. Read mapping
 
@@ -67,7 +69,7 @@ First, build an index for the reference genome. DO NOT RUN!
 mkdir reference_genome
 mkdir read_alignments
     
-cp ./Shared/day1/02.read_mapping/reference_genome/Poecilia_picta ./reference_genome
+cp /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta* ./reference_genome
     
 bowtie2-build ./reference_genome/Poecilia_picta.fna ./reference_genome/Poecilia_picta
 ```
@@ -76,8 +78,16 @@ Then, align each pair of reads to the indexed genome using bowtie2 and convert t
 
 ```
 bowtie2 -p12 -x ./reference_genome/Poecilia_picta \
-   -1 ./Shared/day1/02.read_mapping/reads/Poecilia_picta_female1_R1_chr12.fastq \
-   -2 ./Shared/day1/02.read_mapping/reads/Poecilia_picta_female1_R2_chr12.fastq \
+   -1 /home/ubuntu/Share/day1/02.read_mapping/reads/Poecilia_picta_female1_R1_subset.fastq \
+   -2 /home/ubuntu/Share/day1/02.read_mapping/reads/Poecilia_picta_female1_R2_subset.fastq \
+   | samtools view -b -S - | samtools sort - -o ./read_alignments/Poecilia_picta_female1_subset.bam
+```
+
+TAKES 15 MIN.
+```
+bowtie2 -p12 -x ./reference_genome/Poecilia_picta \
+   -1 /home/ubuntu/Share/day1/02.read_mapping/reads/Poecilia_picta_female1_R1_chr12.fastq \
+   -2 /home/ubuntu/Share/day1/02.read_mapping/reads/Poecilia_picta_female1_R2_chr12.fastq \
    | samtools view -b -S - | samtools sort - -o ./read_alignments/Poecilia_picta_female1_chr12.bam
 ```
 
