@@ -19,65 +19,132 @@ conda activate sexchr
 Set up folder
 
 ```
-
 mkdir kmersGWAS
 cd kmersGWAS
 mkdir Ppicta
 cd Ppicta
 cp /bin/Ppicta_dirlist.txt .
 cp /bin/Ppicta_phenotype.txt .
-cp /bin/Poecilia_picta*.fastq.gz .
-
+cp /bin/Poecilia_picta* .
 ```
 
-### Step 1 Generate kmers.table
+Generate kmers.table
 
 This is a table of all kmers and their presence/absence between all individuals
 
-> bash run_kmersGWAS_step1_Ppicta.sh
+```
+bash run_kmersGWAS_step1_Ppicta.sh
+```
 
 Generate kinship table, in case useful for future analysis
 
-> bin/emma_kinship_kmers -t kmers_table -k 31 --maf 0.05 > kmers_table.kinship
+```
+bin/emma_kinship_kmers -t kmers_table -k 31 --maf 0.05 > kmers_table.kinship
+```
 
 Testing for associating with phenotype using plink
 
-> bin/kmers_table_to_bed -t kmers_table -k 31 -p Ppicta_phenotype.txt --maf 0.05 --mac 2 -b 1000000000 -o kmerGWAS_plink
+```
+bin/kmers_table_to_bed -t kmers_table -k 31 -p Ppicta_phenotype.txt --maf 0.05 --mac 2 -b 1000000000 -o kmerGWAS_plink
+```
 
 Run plink
 
-> plink --noweb --bfile kmerGWAS_plink.0 --allow-no-sex --assoc --out kmers
+```
+plink --noweb --bfile kmerGWAS_plink.0 --allow-no-sex --assoc --out kmers
+```
 
 Edit format of output file
 
-> awk -v OFS='\t' '{ $1=$1; print }' kmers.assoc > kmers.assoc.tab
+```
+awk -v OFS='\t' '{ $1=$1; print }' kmers.assoc > kmers.assoc.tab
+```
 
 Check the output file for the most significant p-value, and filter for only kmers with this value
 
-> cut -f 9 kmers.assoc.tab | grep -v 'P' | sort -g | head -1
+```
+cut -f 9 kmers.assoc.tab | grep -v 'P' | sort -g | head -1
+```
 
 Edit the command for the p-value output from the step above
 
-> awk '$9 < P' kmers.assoc > most_significant_assoc.txt
+```
+awk '$9 < P' kmers.assoc > most_significant_assoc.txt
+```
 
 Convert plink file
 
-> python plink_to_abyss_kmers.py most_significant_assoc.tab plink_abyss_input.txt
+```
+python plink_to_abyss_kmers.py most_significant_assoc.tab plink_abyss_input.txt
+```
 
-# Assemble small contigs with ABYSS
+Assemble small contigs with ABYSS
 
-mamba activate /share/pool/CompGenomVert/Applications/mamba-env-abyss
-
+```
 ABYSS -k25 -c0 -e0 plink_abyss_input.txt -o plink_abyss_output.txt
+```
 
-# blast contigs against a reference genome
+Blast contigs against a reference genome
 
-REF_FASTA=[path to reference genome]
+```
+REF_FASTA=Poecilia_picta.fna
 
 makeblastdb -in $REF_FASTA -dbtype nucl
 
 blastn -query plink_abyss_output.txt -db $REF_FASTA -outfmt 6 -out kmers_blast.out
+```
 
+Download kmers_blast.out file
+In R
+
+```
+library(tidyverse)
+
+# Read in data
+kmerblast_out <- read_tsv(paste0(species, "/kmers_blast.out"), col_names = F) %>%
+  rename("query_sid" = 1,
+         "scaf" = 2,
+         "ident.match_p" = 3,
+         "alignmt_len" = 4,
+         "mismatch_n" = 5,
+         "gapopen_n" = 6,
+         "query_start" = 7,
+         "query_end" = 8,
+         "ref_start" = 9,
+         "ref_end" = 10,
+         "exp_value" = 11,
+         "bitscore" = 12)
+
+# query' is unique for each k-mer, so we want to select the best hit for each one and plot those:
+kmerblast_filter <- 
+  kmerblast_out %>% 
+  group_by(query_sid) %>% 
+  top_n(n = 1, wt = -exp_value)
+
+# Count hits per chromosome
+
+kmerblast_chrom <-
+  kmerblast_filter %>% 
+  ungroup() %>% 
+  count(scaf)
+
+(chr <-
+    ggplot(kmerblast_chrom,
+           aes(x=scaf,
+               y=n)) + 
+    geom_col()
+
+### kmer positions
+
+b<-poplar_kmerV2_filter%>% filter(X2 == "scaffold_19") %>% ggplot(aes(x=X9,y=X3)) + geom_point() + xlab('Position on chromosome (bp)') + ylab('Percent identity for blastn') + scale_x_continuous(breaks=seq(0,16000000,1000000)) + ggtitle("B. Distribution of male-specific k-mers from kmerGWAS across poplar v2.2 chromosome 19 from blastn")
+
+(points <-
+	filter(kmerblast_filter, scaf == "") %>%
+    ggplot(aes(x = ref_start, y = ident.match_p)) +
+    geom_point(
+      size = 1)
+
+```
 
 ## 02. Identify sex-linked sequences with **[SEX-DETector](https://pmc.ncbi.nlm.nih.gov/articles/PMC5010906/)**
 
