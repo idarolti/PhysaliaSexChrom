@@ -5,7 +5,11 @@ This practical will cover:
 1. Read quality check and trimming
 2. Read mapping to genome assembly
 3. Variant calling
-   
+
+## 00. Prepare work folder for day 1
+mkdir day1
+cd day1
+conda activate sexchr
 
 ## 01. Read quality check and trimming
 
