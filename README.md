@@ -8,7 +8,7 @@ The practicals to be covered in this course include:
 
 **Day 2**: Coverage, SNP density, Fst, analyses
 
-**Day 3**: K-mer analyses, idetnifying sex-linked sequences, estimating gametologs divergence
+**Day 3**: K-mer analyses, identifying sex-linked sequences, estimating gametologs divergence
 
 **Day 4**: Differential gene expression analysis, tests of Y gene activity decay and dosage compensation
 
