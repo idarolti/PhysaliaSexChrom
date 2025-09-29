@@ -1,0 +1,7 @@
+accession_id	phenotype_value
+Poecilia_picta_female1	1
+Poecilia_picta_female2	1
+Poecilia_picta_female3	1
+Poecilia_picta_male1	2
+Poecilia_picta_male2	2
+Poecilia_picta_male3	2
