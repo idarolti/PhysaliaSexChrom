@@ -26,16 +26,24 @@ double click the installation and follow the on screen instructions, double clic
 https://jbrowse.org/jb2/download/
 ```
 
+
 ## 02. Identify sex chromosome assemblies from INSDC
 Search **[NCBI Genomes](https://www.ncbi.nlm.nih.gov/genome/)** for the entry "Apeltes quadracus"  
 Select assembly **[GCA_048569185.1](https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_048569185.1/)**  
 Download the **[X](https://www.ncbi.nlm.nih.gov/nuccore/CM109091.1?report=fasta)** and the **[Y](https://www.ncbi.nlm.nih.gov/nuccore/CM109092.1?report=fasta)** chromosome fasta files to your local machine
 
-## 02. Identify sex chromosome assemblies from INSDC
+  
+## 02. Align X and Y chromosome
 Align the X and Y chromosome sequence online with **[DGenies](https://dgenies.toulouse.inra.fr)**  
 Click on the "RUN" tab  
 
 <img width="1293" height="831" alt="Screenshot 2025-09-29 at 17 12 08" src="https://github.com/user-attachments/assets/bbc23361-b8be-4c76-b17b-817a79c2941d" />
+
+Select the fasta files you downloaded previously and fill in the required information.  
+
+
+
+
 
 
 
