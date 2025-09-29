@@ -9,5 +9,12 @@ This practical will cover methods on sex chromosome discovery:
 
 ```
 mkdir day2
+cd day2
+conda activate sexchr
+```
+
+# 01 Coverage based analysis
+
+
 
 
