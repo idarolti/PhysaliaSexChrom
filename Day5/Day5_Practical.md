@@ -26,11 +26,13 @@ https://jbrowse.org/jb2/download/
 ```
 
 ## 02. Identify sex chromosome assemblies from INSDC
-Search 
+Search **[NCBI Genomes](https://www.ncbi.nlm.nih.gov/genome/)** for the entry "Apeltes quadracus"
+Select assembly **[GCA_048569185.1](https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_048569185.1/)**
+Download the **[X](https://www.ncbi.nlm.nih.gov/nuccore/CM109091.1?report=fasta)** and the **[Y](https://www.ncbi.nlm.nih.gov/nuccore/CM109092.1?report=fasta)** chromosome fasta files to your local machine
 
-
-
-
+## 02. Identify sex chromosome assemblies from INSDC
+Align the X and Y chromosome sequence online with **[DGenies](https://dgenies.toulouse.inra.fr)**
+Click on the "RUN" tab
 
 
 
