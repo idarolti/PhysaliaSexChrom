@@ -121,7 +121,7 @@ Perform genotyping of variants using [GenotypeGVCFs](https://gatk.broadinstitute
 ```
 gatk GenotypeGVCFs \
    -R /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta.fna \
-   --variant /home/ubuntu/Share/day1/02.read_mapping/snp_calling/Poecilia_picta_female1_chr12.gvcf \
+   --variant /home/ubuntu/Share/day1/03.snp_calling/Poecilia_picta_female1_chr12.gvcf \
    -O ./snp_calling/Poecilia_picta_female1_chr12.genotyped.gvcf
 ```
 
