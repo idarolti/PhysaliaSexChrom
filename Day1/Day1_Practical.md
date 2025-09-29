@@ -66,18 +66,15 @@ Try running the trimming and fastqc commands for sample2.
 First, build an index for the reference genome. DO NOT RUN!
 
 ```
-mkdir reference_genome
 mkdir read_alignments
-    
-cp /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta* ./reference_genome
-    
-bowtie2-build ./reference_genome/Poecilia_picta.fna ./reference_genome/Poecilia_picta
+
+bowtie2-build Poecilia_picta.fna Poecilia_picta
 ```
 
 Then, align each pair of reads to the indexed genome using bowtie2 and convert the output alignment sam file into a sorted bam file.
 
 ```
-bowtie2 -p12 -x ./reference_genome/Poecilia_picta \
+bowtie2 -p12 -x /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta \
    -1 /home/ubuntu/Share/day1/02.read_mapping/reads/Poecilia_picta_female1_R1_subset.fastq \
    -2 /home/ubuntu/Share/day1/02.read_mapping/reads/Poecilia_picta_female1_R2_subset.fastq \
    | samtools view -b -S - | samtools sort - -o ./read_alignments/Poecilia_picta_female1_subset.bam
@@ -85,11 +82,13 @@ bowtie2 -p12 -x ./reference_genome/Poecilia_picta \
 
 TAKES 15 MIN.
 ```
-bowtie2 -p12 -x ./reference_genome/Poecilia_picta \
+bowtie2 -p12 -x /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta \
    -1 /home/ubuntu/Share/day1/02.read_mapping/reads/Poecilia_picta_female1_R1_chr12.fastq \
    -2 /home/ubuntu/Share/day1/02.read_mapping/reads/Poecilia_picta_female1_R2_chr12.fastq \
    | samtools view -b -S - | samtools sort - -o ./read_alignments/Poecilia_picta_female1_chr12.bam
 ```
+
+Try running the bowtie mapping for female2 subset.
 
 ## 03. Variant calling
 
@@ -98,7 +97,7 @@ bowtie2 -p12 -x ./reference_genome/Poecilia_picta \
 Create sequence dictionary for the reference sequence.
 
 ```
-gatk CreateSequenceDictionary -R ./reference_genome/Poecilia_picta.fna -O ./reference_genome/Poecilia_picta.dict
+gatk CreateSequenceDictionary -R Poecilia_picta.fna -O Poecilia_picta.dict
 ```
 
 Call SNPs using [HaplotypeCaller](https://gatk.broadinstitute.org/hc/en-us/articles/360037225632-HaplotypeCaller)
@@ -106,12 +105,12 @@ Call SNPs using [HaplotypeCaller](https://gatk.broadinstitute.org/hc/en-us/artic
 ```
 mkdir snp_calling
 
-samtools index ./read_alignments/Poecilia_picta_female1_chr12.bam
+samtools index ./read_alignments/Poecilia_picta_female1_subset.bam
 
 gatk HaplotypeCaller \
-   -R ./reference_genome/Poecilia_picta.fna \
-   -I ./read_alignments/Poecilia_picta_female1_chr12.bam \
-   -O ./snp_calling/Poecilia_picta_female1_chr12.gvcf --emit-ref-confidence GVCF \
+   -R /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta.fna \
+   -I ./read_alignments/Poecilia_picta_female1_subset.bam \
+   -O ./snp_calling/Poecilia_picta_female1_subset.gvcf --emit-ref-confidence GVCF \
    --min-base-quality-score 30 --pcr-indel-model NONE --sample-name picta_female1
 ```
 
@@ -119,8 +118,8 @@ Perform genotyping of variants using [GenotypeGVCFs](https://gatk.broadinstitute
 
 ```
 gatk GenotypeGVCFs \
-   -R ./reference_genome/Poecilia_picta.fna \
-   --variant ./snp_calling/Poecilia_picta_female1_chr12.gvcf \
+   -R /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta.fna \
+   --variant /home/ubuntu/Share/day1/02.read_mapping/snp_calling/Poecilia_picta_female1_chr12.gvcf \
    -O ./snp_calling/Poecilia_picta_female1_chr12.genotyped.gvcf
 ```
 
@@ -128,12 +127,12 @@ Filter variants using [SelectVariants](https://gatk.broadinstitute.org/hc/en-us/
 
 ```
 gatk SelectVariants \
-   -R ./reference_genome/Poecilia_picta.fna \
+   -R /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta.fna \
    -V ./snp_calling/Poecilia_picta_female1_chr12.genotyped.gvcf \
    -O ./snp_calling/Poecilia_picta_female1_chr12.selectvar.gvcf --restrict-alleles-to BIALLELIC --select-type-to-include SNP
 
 gatk VariantFiltration \
-   -R ./reference_genome/Poecilia_picta.fna \
+   -R /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta.fna \
    -V ./snp_calling/Poecilia_picta_female1_chr12.selectvar.gvcf \
    -O ./snp_calling/Poecilia_picta_female1_chr12.selectvar_filtered.gvcf \
    --filter-expression "QUAL <= 30.0 || DP <= 20" --filter-name "low_qual_or_dp"
