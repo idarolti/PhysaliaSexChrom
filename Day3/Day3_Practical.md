@@ -3,13 +3,16 @@
 This practical will cover:
 
 1. K-mer analyses for sex chromosome discovery
-2. Estimating sequence divergence between gametologs
-3. Measuring signal for Fast-x evolution
+2. Identifying sex-linked sequences
+3. Estimating sequence divergence between gametologs
 
 ## 00. Prepare work folder for day 3
+
+```
 mkdir day3
 cd day3
 conda activate sexchr
+```
 
 ## 01. K-mer analyses
 
