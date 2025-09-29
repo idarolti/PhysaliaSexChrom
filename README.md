@@ -12,4 +12,4 @@ The practicals to be covered in this course include:
 
 **Day 4**: Differential gene expression analysis, tests of Y gene activity decay and dosage compensation
 
-**Day 5**: 
+**Day 5**: Synteny analysis of gametologs
