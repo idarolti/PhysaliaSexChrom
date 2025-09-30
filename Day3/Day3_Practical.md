@@ -238,7 +238,7 @@ The output .gen file is a tab delimited file showing each position of each gene 
   2	TT|1	TT|0.98
 ```
 
-Identify sex-linked sequences wuth SEX-DETector. The software can be found **[here](https://gitlab.in2p3.fr/sex-det-family). For this practical we will use the original version of the software.
+Identify sex-linked sequences with SEX-DETector. The software can be found **[here](https://gitlab.in2p3.fr/sex-det-family)**. For this practical we will use the original version of the software.
 
 Copy the SEX-DETector scripts to your folder and create a folder for the output files.
 
