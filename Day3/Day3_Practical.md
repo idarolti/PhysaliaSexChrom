@@ -200,12 +200,7 @@ ls *.bam > bam_list.txt
 (or try: ls -d "$PWD"/* > bam_list.txt)
 ```
 
-Run reads2snp. Below, is an explanation of each parameter.
-
-```
-mkdir ../reads2snp
-reads2snp -aeb -min 3 -par 0 -bqt 20 -rqt 10 -bamlist bam_list.txt -bamref ../transcriptome_assembly/trinity.fasta -out ../reads2snp/reads2snp_output
-```
+Run reads2snp:
 
 -aeb: allows alleles to have different expression levels, which is important for sex chromosome anaylses as the Y copy can be less expressed than the X copy
 
@@ -217,7 +212,10 @@ reads2snp -aeb -min 3 -par 0 -bqt 20 -rqt 10 -bamlist bam_list.txt -bamref ../tr
 
 -rqt: minimum read mapping quality
 
-
+```
+mkdir ../reads2snp
+reads2snp -aeb -min 3 -par 0 -bqt 20 -rqt 10 -bamlist bam_list.txt -bamref ../transcriptome_assembly/trinity.fasta -out ../reads2snp/reads2snp_output
+```
 
 Have a look at the two main reads2snp outputs: .alr and .gen
 
