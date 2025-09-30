@@ -218,6 +218,7 @@ reads2snp -aeb -min 3 -par 0 -bqt 20 -rqt 10 -bamlist bam_list.txt -bamref ../tr
 -rqt: minimum read mapping quality
 
 
+
 Have a look at the two main reads2snp outputs: .alr and .gen
 
 The output .alr file is a tab delimited file that shows each position of each gene on a different line with the major allele (most common allele in number of reads), then M if the position is monomorphic or P if the position shows different alleles, then for each individual the total read number if the position is monomorphic or the total read number followed by the number of reads for each base [A/C/G/T] if the position is polymorphic:
