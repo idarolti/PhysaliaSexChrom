@@ -294,7 +294,7 @@ awk '
 
 grep ">" Poecilia_reticulata_sex-linked_sequences_unique.fasta | wc -l
 
-blastn -evalue 10e-10 -db Poecilia_reticulata -query ../sexdetector_output_full/Poecilia_reticulata_sex-linked_sequences_unique.fasta -out blastout -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore sseq"
+blastn -db /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_reticulata -query Poecilia_reticulata_sex-linked_sequences_unique.fasta -out blastout -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore sseq"
 
 python2 ../scripts/blast_tophit.py blastout blastout_tophits
 
