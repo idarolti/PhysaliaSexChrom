@@ -315,7 +315,27 @@ END {
   }
 }
 ' blastout_tophits
+```
 
+Extract the inferred sex-linked genes that align to the sex chromosome (CM002717.1).
+
+```
+awk -F',' '$2 == "CM002717.1"' blastout_tophits > blastout_tophits_sexchromo
+```
+
+Lastly, in R, plot the distribution of sex-linked genes across the sex chromosome.
+
+```
+sexlinked = read.csv("blastout_tophits_sexchromo", header=F)
+
+dim(sexlinked)
+
+names(sexlinked)
+
+positions <- sexlinked$V5
+genes <- sexlinked$V1
+
+dotchart(positions,labels=genes,cex=.7,main="Sex-linked genes",xlab="Chr12 start position",gcolor="black")
 ```
 
 ## 03. Gametologs divergence
