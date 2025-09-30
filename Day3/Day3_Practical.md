@@ -115,6 +115,12 @@ kmerblast_out <- read_tsv("kmers_blast.out") %>%
          "exp_value" = 11,
          "bitscore" = 12)
 
+# Read in reference chromosome list
+
+ref <- read_tsv("chrlength_Ppicta.tsv") %>%
+  rename("scaf" = 1,
+         "length" = 2)
+
 # query' is unique for each k-mer, so we want to select the best hit for each one and plot those:
 kmerblast_filter <- 
   filter(kmerblast_out, !grepl('JAVY', scaf)) %>% 
@@ -128,21 +134,51 @@ kmerblast_chrom <-
   ungroup() %>% 
   count(scaf)
 
+kmer_chr <- left_join(ref, kmerblast_chrom) %>% arrange(scaf)
+
+kmer_chr$n_prop <- kmer_chr$n / kmer_chr$length
+
 (chr <-
-    ggplot(kmerblast_chrom,
+    ggplot(kmer_chr,
            aes(x=scaf,
-               y=n)) + 
-    geom_col()
+               y=n_prop)) + 
+    geom_col() +
+    theme_bw() +
+    labs(title = bquote("Blasted kmerGWAS results for P. picta"),
+         subtitle = "Counts per chromosome, proportional to chromosome length") +
+    xlab("Chromosome") +
+    ylab("ABySS contig blastn hit proportion") +
+    theme_bw() + 
+    theme(legend.position = "none") + 
+    theme(axis.text.x = element_text(size = 15, vjust = .5,  angle = 90),
+          axis.title.x = element_text(size = 15),
+          axis.text.y = element_text(size = 10),
+          axis.title.y = element_text(size = 12, angle = 90, hjust = .5, vjust = .5, face = "plain"),
+          title = element_text(size=15)
+    )
 )
   
-  ### kmer positions
+### kmer positions
   
   (points <-
-      filter(kmerblast_filter, scaf == "CM065364.1") %>%
+      filter(kmerblast_filter, scaf == "CM065354.1") %>%
       ggplot(aes(x = ref_start, y = ident.match_p)) +
       geom_point(
-        size = 1)
-  )
+        size = 1) +
+      labs(title = bquote("Blasted kmerGWAS results for P. picta"),
+           subtitle = "All kmers")) +
+      labs(x = "Position (bp)", y = "Blast similarity best hit per contig (%)") +
+      theme_bw() + 
+      theme(legend.position = "none") + 
+      theme(axis.text.x = element_text(size = 15, vjust = .5,  angle = 90),
+            axis.title.x = element_text(size = 15),
+            axis.text.y = element_text(size = 10),
+            axis.title.y = element_text(size = 12, angle = 90, hjust = .5, vjust = .5, face = "plain"),
+            title = element_text(size=15)
+      )
+
+
+
 ```
 
 ## 02. Identify sex-linked sequences with **[SEX-DETector](https://pmc.ncbi.nlm.nih.gov/articles/PMC5010906/)**
