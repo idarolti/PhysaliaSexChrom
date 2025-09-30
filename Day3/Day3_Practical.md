@@ -147,13 +147,28 @@ kmerblast_chrom <-
 
 ## 02. Identify sex-linked sequences with **[SEX-DETector](https://pmc.ncbi.nlm.nih.gov/articles/PMC5010906/)**
 
+First, obtain alignment bam files and transcriptome assembly
+
+```
+mkdir sexdetector
+cd sexdetector
+cp -r /home/ubuntu/Share/day3/sexdetector/transcriptome_assembly/ ./
+cp -r /home/ubuntu/Share/day3/sexdetector/bam_files/ ./
+```
+
+Genotyping using **[reads2snp](https://kimura.univ-montp2.fr/PopPhyl/index.php?section=tools)**
+
+
+
+
+
 ## 03. Gametologs divergence
 
 First, obtain gametolog sequences and scripts.
 
 ```
-mkdir ./gametolog_divergence
-cd ./gametolog_divergence
+mkdir gametologs_divergence
+cd gametologs_divergence
 cp -r /home/ubuntu/Share/day3/gametologs_divergence/1.gametolog_sequences ./
 cp -r /home/ubuntu/Share/day3/gametologs_divergence/scripts ./
 ```
@@ -161,7 +176,7 @@ cp -r /home/ubuntu/Share/day3/gametologs_divergence/scripts ./
 Align sequences with **[Prank](http://wasabiapp.org/software/prank/)**.
 
 ```
-cd ./scripts
+cd scripts
 python 01.run-prank.py ../1.gametolog_sequences
 ```
 
