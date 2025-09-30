@@ -335,7 +335,7 @@ names(sexlinked)
 positions <- sexlinked$V5
 genes <- sexlinked$V1
 
-dotchart(positions,labels=genes,cex=.7,main="Sex-linked genes",xlab="Chr12 start position")
+dotchart(positions,labels=genes,cex=.7,main="Sex-linked genes",xlab="Chr12 start position",xlim=c(0,26000000))
 ```
 
 ## 03. Gametologs divergence
