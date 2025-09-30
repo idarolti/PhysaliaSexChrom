@@ -59,7 +59,7 @@ We will format the SNP variant file with **[bcftools](https://samtools.github.io
 We will then calculate SNP density in 10kb windows with VCFtools
 ```
 gunzip Poecilia_picta.g.vcf.gz
-mv Poecilia_picta.g.vcf SNPden
+mv Poecilia_picta.g.vcf ./SNPden
 cd SNPden
 
 for SAMPLE in `cat Ppicta_female.list`;
