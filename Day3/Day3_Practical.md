@@ -262,9 +262,13 @@ Run SEX-DETector
 
 Look at the outputs produced by SEX-DETector and see which genes are inferred to be sex-linked and why.
 
-Next, check where on the genome do the sex-linked genes map.
+Next, using the SEX-DETector output for the full dataset, check where on the genome do the sex-linked genes map.
 
 ```
+cd day3/sexdetector
+cp -r /home/ubuntu/Share/day3/sexdetector/sexdetector_output_full ./
+cd sexdetector_output_full
+
 grep "^>" Poecilia_reticulata_sex-linked_sequences.fasta | sed 's/_[^_]*$//' | sort | uniq | wc -l
 
 awk '
