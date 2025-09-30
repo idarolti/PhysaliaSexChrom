@@ -25,12 +25,12 @@ Set up directories and files
 mkdir Fst
 mkdir GWAS
 mkdir SNPden
-cp /Share/day2/Ppicta_female.list Fst/
-cp /Share/day2/Ppicta_male.list Fst/
-cp /Share/day2/Ppicta_sex.list GWAS/
-cp /Share/day2/Ppicta_female.list SNPden/
-cp /Share/day2/Ppicta_male.list SNPden/
-cp Poecilia_picta.g.vcf.gz .
+cp /home/ubuntu/Share/day2/Ppicta_female.list Fst/
+cp /home/ubuntu/Share/day2/Ppicta_male.list Fst/
+cp /home/ubuntu/Share/day2/Ppicta_sex.list GWAS/
+cp /home/ubuntu/Share/day2/Ppicta_female.list SNPden/
+cp /home/ubuntu/Share/day2/Ppicta_male.list SNPden/
+cp /home/ubuntu/Share/day2/Poecilia_picta.g.vcf.gz .
 ```
 
 ## 03. Calculate intersex Fst 
