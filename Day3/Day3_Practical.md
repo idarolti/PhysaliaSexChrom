@@ -69,7 +69,7 @@ cut -f 9 kmers.assoc.tab | grep -v 'P' | sort -g | head -1
 Edit the command for the p-value output from the step above
 
 ```
-awk '$9 <= P' kmers.assoc.tab > most_significant_assoc.txt
+awk '$9 < P' kmers.assoc.tab > most_significant_assoc.txt
 ```
 
 Convert plink file
@@ -101,7 +101,7 @@ In R
 library(tidyverse)
 
 # Read in data
-kmerblast_out <- read_tsv(paste0(species, "/kmers_blast.out"), col_names = F) %>%
+kmerblast_out <- read_tsv("kmers_blast.out") %>%
   rename("query_sid" = 1,
          "scaf" = 2,
          "ident.match_p" = 3,
@@ -117,7 +117,7 @@ kmerblast_out <- read_tsv(paste0(species, "/kmers_blast.out"), col_names = F) %>
 
 # query' is unique for each k-mer, so we want to select the best hit for each one and plot those:
 kmerblast_filter <- 
-  kmerblast_out %>% 
+  filter(kmerblast_out, !grepl('JAVY', scaf)) %>% 
   group_by(query_sid) %>% 
   top_n(n = 1, wt = -exp_value)
 
@@ -133,15 +133,16 @@ kmerblast_chrom <-
            aes(x=scaf,
                y=n)) + 
     geom_col()
-
-### kmer positions
-
-(points <-
-	filter(kmerblast_filter, scaf == "") %>%
-    ggplot(aes(x = ref_start, y = ident.match_p)) +
-    geom_point(
-      size = 1)
-
+)
+  
+  ### kmer positions
+  
+  (points <-
+      filter(kmerblast_filter, scaf == "CM065364.1") %>%
+      ggplot(aes(x = ref_start, y = ident.match_p)) +
+      geom_point(
+        size = 1)
+  )
 ```
 
 ## 02. Identify sex-linked sequences with **[SEX-DETector](https://pmc.ncbi.nlm.nih.gov/articles/PMC5010906/)**
