@@ -176,9 +176,6 @@ kmer_chr$n_prop <- kmer_chr$n / kmer_chr$length
             axis.title.y = element_text(size = 12, angle = 90, hjust = .5, vjust = .5, face = "plain"),
             title = element_text(size=15)
       )
-
-
-
 ```
 
 ## 02. Identify sex-linked sequences with **[SEX-DETector](https://pmc.ncbi.nlm.nih.gov/articles/PMC5010906/)**
