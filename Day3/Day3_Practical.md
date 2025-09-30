@@ -262,6 +262,57 @@ Run SEX-DETector
 
 Look at the outputs produced by SEX-DETector and see which genes are inferred to be sex-linked and why.
 
+Next, check where on the genome do the sex-linked genes map.
+
+```
+grep "^>" Poecilia_reticulata_sex-linked_sequences.fasta | sed 's/_[^_]*$//' | sort | uniq | wc -l
+
+awk '
+  /^>/ {
+    # Extract gene name by removing trailing underscore and suffix (_X, _Y, etc.)
+    gene = $0
+    sub(/^>/, "", gene)
+    sub(/_[^_]+$/, "", gene)
+    if (seen[gene]++) {
+      # skip this sequence (do not print header)
+      skip = 1
+    } else {
+      # print header
+      print $0
+      skip = 0
+    }
+  }
+  !/^>/ {
+    # print sequence only if not skipping
+    if (!skip) print $0
+  }
+' Poecilia_reticulata_sex-linked_sequences.fasta > Poecilia_reticulata_sex-linked_sequences_unique.fasta
+
+grep ">" Poecilia_reticulata_sex-linked_sequences_unique.fasta | wc -l
+
+blastn -evalue 10e-10 -db Poecilia_reticulata -query ../sexdetector_output_full/Poecilia_reticulata_sex-linked_sequences_unique.fasta -out blastout -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore sseq"
+
+python2 ../scripts/blast_tophit.py blastout blastout_tophits
+
+awk -F',' '
+{
+  key = $2 SUBSEP $1   # chromosome + gene combined key
+  count[key] = 1      # mark unique pairs
+}
+END {
+  for (k in count) {
+    split(k, parts, SUBSEP)
+    chrom = parts[1]
+    gene = parts[2]
+    genes_per_chrom[chrom]++
+  }
+  for (chrom in genes_per_chrom) {
+    print chrom, genes_per_chrom[chrom]
+  }
+}
+' blastout_tophits
+
+```
 
 ## 03. Gametologs divergence
 
