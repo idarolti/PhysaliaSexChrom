@@ -54,142 +54,47 @@ To
 
 <img width="785" height="460" alt="Screenshot 2025-09-29 at 17 18 53" src="https://github.com/user-attachments/assets/0432353d-228d-41eb-8bf1-07703a0b0e0f" />
 
+in a couple of minutes  
 
-in a couple of minutes
+## 04. Inspect the results online
+
+<img width="787" height="746" alt="Screenshot 2025-09-30 at 09 51 35" src="https://github.com/user-attachments/assets/1b957ff2-a4a2-4428-b35c-3cd015cde012" />  
+
+## 05. Export the results
+Export the results in PAF format to your local machine.  
+
+
+## 06. Load the results into Jbrowse
+Open Jbrowse  
+Click **Open Sequence file(s)**  
+
+<img width="622" height="634" alt="Screenshot 2025-09-30 at 10 01 54" src="https://github.com/user-attachments/assets/30c49768-3805-4381-8288-fe74f3c24020" />  
+
+Click **ADD ANOTHER ASSEMBLY**  
+  
+<img width="617" height="691" alt="Screenshot 2025-09-30 at 10 03 25" src="https://github.com/user-attachments/assets/dee3ba26-7fad-4c33-b76c-d55de07755a6" />
+
+Click **SUBMIT**  
+
+Select  **Dotplot View -> LAUNCH VIEW**  
+The following error message will appear  
+<img width="1348" height="422" alt="Screenshot 2025-09-30 at 10 22 43" src="https://github.com/user-attachments/assets/96b6b184-6b0e-4a87-a10b-b49ed979e25f" />
+
+Choose the following settings  
 
 
 
+Click **LAUNCH**  
+and explore the plot
 
+Click **ADD** , choose **Linear Synteny View**  
 
+<img width="1332" height="240" alt="Screenshot 2025-09-30 at 10 25 39" src="https://github.com/user-attachments/assets/f21e387c-7661-4d15-8c16-bae7d913c74d" />
 
+Click **LAUNCH**  
 
+You can now explore this plot  
 
-```
-mkdir fastqc_output_raw_reads
+<img width="1375" height="334" alt="Screenshot 2025-09-30 at 10 29 15" src="https://github.com/user-attachments/assets/da17496b-2731-4e18-8c35-482236cc63c0" />
 
-for f in /home/ubuntu/Share/day1/01.quality_trimming/raw_reads/*fastq; do fastqc $f -o ./fastqc_output_raw_reads; done
-```
-
-* **[MultiQC](https://multiqc.info)** - A tool for merging FastQC output reports of individual samples into a single summary report
-
-This software uses as input the fastqc.zip files produced by FastQC. After running, download the .html output file to your computer to visualize the results in a web browser.
-
-```
-multiqc ./fastqc_output_raw_reads -o ./fastqc_output_raw_reads
-```
-
-* **[Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic)** - A read trimming tool for Illumina NGS data
-
-The following command will trim reads to remove adapter sequences, regions where the average Phred score in sliding windows of four bases is <15, reads for which the leading/trailing bases have a Phred score <3, and paired-end reads where either read pair is <50 bp. You can find adapter sequences [here](https://support-docs.illumina.com/SHARE/AdapterSequences/Content/SHARE/FrontPages/AdapterSeq.htm). You can use the command on each pair (forward/R1 + reverse/R2) of fastq files.
-
-```
-mkdir trimmed_reads
-    
-input_dir="/home/ubuntu/Share/day1/01.quality_trimming/raw_reads/"
-adapter_dir="/home/ubuntu/Share/day1/01.quality_trimming/"
-output_dir=./trimmed_reads
-    
-trimmomatic PE \
-   $input_dir/sample1_R1.fastq \
-   $input_dir/sample1_R2.fastq \
-   $output_dir/sample1_output_R1_paired.fastq.gz \
-   $output_dir/sample1_output_R1_unpaired.fastq.gz \
-   $output_dir/sample1_output_R2_paired.fastq.gz \
-   $output_dir/sample1_output_R2_unpaired.fastq.gz \
-   ILLUMINACLIP:$adapter_dir/adapters.fa:2:30:10 \
-   LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:50
-```
-
-For comparison, run FastQC and MultiQC on the trimmed reads
-
-```
-mkdir fastqc_output_trimmed_reads
-for f in ./trimmed_reads/*_paired.fastq.gz; do fastqc $f -o ./fastqc_output_trimmed_reads; done
-multiqc ./fastqc_output_trimmed_reads -o ./fastqc_output_trimmed_reads
-```
-
-Try running the trimming and fastqc commands for sample2.
-
-## 02. Read mapping
-
-* **[Bowtie2](https://bowtie-bio.sourceforge.net/bowtie2/manual.shtml)** - A tool for aligning short-read data to a reference genome or genomic sequences
-
-First, build an index for the reference genome. DO NOT RUN!
-
-```
-mkdir read_alignments
-
-bowtie2-build Poecilia_picta.fna Poecilia_picta
-```
-
-Then, align each pair of reads to the indexed genome using bowtie2 and convert the output alignment sam file into a sorted bam file.
-
-```
-bowtie2 -p12 -x /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta \
-   -1 /home/ubuntu/Share/day1/02.read_mapping/reads/Poecilia_picta_female1_R1_subset.fastq \
-   -2 /home/ubuntu/Share/day1/02.read_mapping/reads/Poecilia_picta_female1_R2_subset.fastq \
-   | samtools view -b -S - | samtools sort - -o ./read_alignments/Poecilia_picta_female1_subset.bam
-```
-
-TAKES 15 MIN!
-```
-bowtie2 -p12 -x /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta \
-   -1 /home/ubuntu/Share/day1/02.read_mapping/reads/Poecilia_picta_female1_R1_chr12.fastq \
-   -2 /home/ubuntu/Share/day1/02.read_mapping/reads/Poecilia_picta_female1_R2_chr12.fastq \
-   | samtools view -b -S - | samtools sort - -o ./read_alignments/Poecilia_picta_female1_chr12.bam
-```
-
-Try running the bowtie mapping for female2 subset.
-
-## 03. Variant calling
-
-* **[GATK](https://gatk.broadinstitute.org/hc/en-us)** - A genomic analysis toolkit focused on variant discovery.
-
-Create sequence dictionary for the reference sequence. DO NOT RUN!
-
-```
-gatk CreateSequenceDictionary -R Poecilia_picta.fna -O Poecilia_picta.dict
-```
-
-Call SNPs using [HaplotypeCaller](https://gatk.broadinstitute.org/hc/en-us/articles/360037225632-HaplotypeCaller)
-
-```
-mkdir snp_calling
-
-picard AddOrReplaceReadGroups I=./read_alignments/Poecilia_picta_female1_subset.bam O=./read_alignments/Poecilia_picta_female1_subset_RG.bam RGID=1 RGLB=lib1 RGPL=illumina RGPU=unit1 RGSM=picta_female1
-
-samtools index ./read_alignments/Poecilia_picta_female1_subset_RG.bam
-
-gatk HaplotypeCaller \
-   -R /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta.fna \
-   -I ./read_alignments/Poecilia_picta_female1_subset_RG.bam \
-   -O ./snp_calling/Poecilia_picta_female1_subset.gvcf --emit-ref-confidence GVCF \
-   --min-base-quality-score 30 --pcr-indel-model NONE --sample-name picta_female1
-```
-
-Perform genotyping of variants using [GenotypeGVCFs](https://gatk.broadinstitute.org/hc/en-us/articles/13832766863259-GenotypeGVCFs)
-
-```
-gatk GenotypeGVCFs \
-   -R /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta.fna \
-   --variant /home/ubuntu/Share/day1/03.snp_calling/Poecilia_picta_female1_chr12.gvcf \
-   -O ./snp_calling/Poecilia_picta_female1_chr12.genotyped.gvcf
-```
-
-Filter variants using [SelectVariants](https://gatk.broadinstitute.org/hc/en-us/articles/360037055952-SelectVariants) and [VariantFiltration](https://gatk.broadinstitute.org/hc/en-us/articles/360037434691-VariantFiltration)
-
-```
-gatk SelectVariants \
-   -R /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta.fna \
-   -V ./snp_calling/Poecilia_picta_female1_chr12.genotyped.gvcf \
-   -O ./snp_calling/Poecilia_picta_female1_chr12.selectvar.gvcf --restrict-alleles-to BIALLELIC --select-type-to-include SNP
-
-gatk VariantFiltration \
-   -R /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta.fna \
-   -V ./snp_calling/Poecilia_picta_female1_chr12.selectvar.gvcf \
-   -O ./snp_calling/Poecilia_picta_female1_chr12.selectvar_filtered.gvcf \
-   --filter-expression "QUAL <= 30.0 || DP <= 20" --filter-name "low_qual_or_dp"
-```
-
-Try genotyping and variant filters on female1_chr8.
 
