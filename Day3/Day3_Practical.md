@@ -147,7 +147,7 @@ kmerblast_chrom <-
 
 ## 02. Identify sex-linked sequences with **[SEX-DETector](https://pmc.ncbi.nlm.nih.gov/articles/PMC5010906/)**
 
-First, obtain alignment bam files and transcriptome assembly
+First, obtain alignment bam files and transcriptome assembly.
 
 ```
 mkdir sexdetector
@@ -156,7 +156,31 @@ cp -r /home/ubuntu/Share/day3/sexdetector/transcriptome_assembly/ ./
 cp -r /home/ubuntu/Share/day3/sexdetector/bam_files/ ./
 ```
 
-Genotyping using **[reads2snp](https://kimura.univ-montp2.fr/PopPhyl/index.php?section=tools)**
+Genotyping will be done using **[reads2snp](https://kimura.univ-montp2.fr/PopPhyl/index.php?section=tools)**. 
+
+Make a list of bam files to run reads2snp.
+
+```
+cd bam_files
+ls *.bam > bam_list.txt
+
+(or try: ls -d "$PWD"/* > bam_list.txt)
+```
+
+Run reads2snp. Below, is an explanation of each parameter.
+
+```
+mkdir ../reads2snp
+reads2snp -aeb -min 3 -par 0 -bqt 20 -rqt 10 -bamlist bam_list.txt -bamref ../transcriptome_assembly/trinity.fasta -out ../reads2snp/reads2snp_output
+
+```
+
+-aeb: allows alleles to have different expression levels, which is important for sex chromosome anaylses as the Y copy can be less expressed than the X copy
+-min: minimum number of reads to call a genotype
+-par: 0 no paraclean usage (do not clean for paralogous SNPs because X/Y SNPs can look like paralogous SNPs)
+-bqt: minimum base quality
+-rqt: minimum read mapping quality
+
 
 
 
