@@ -205,18 +205,63 @@ Run reads2snp. Below, is an explanation of each parameter.
 ```
 mkdir ../reads2snp
 reads2snp -aeb -min 3 -par 0 -bqt 20 -rqt 10 -bamlist bam_list.txt -bamref ../transcriptome_assembly/trinity.fasta -out ../reads2snp/reads2snp_output
-
 ```
 
 -aeb: allows alleles to have different expression levels, which is important for sex chromosome anaylses as the Y copy can be less expressed than the X copy
+
 -min: minimum number of reads to call a genotype
+
 -par: 0 no paraclean usage (do not clean for paralogous SNPs because X/Y SNPs can look like paralogous SNPs)
+
 -bqt: minimum base quality
+
 -rqt: minimum read mapping quality
 
 
+Have a look at the two main reads2snp outputs: .alr and .gen
 
+The output .alr file is a tab delimited file that shows each position of each gene on a different line with the major allele (most common allele in number of reads), then M if the position is monomorphic or P if the position shows different alleles, then for each individual the total read number if the position is monomorphic or the total read number followed by the number of reads for each base [A/C/G/T] if the position is polymorphic:
 
+```
+>contig_name
+	maj	M/P	individual1	individual2
+	T	M	8	1
+	C	P	17[0/0/0/17]	14[0/6/0/8]
+```
+
+The output .gen file is a tab delimited file showing each position of each gene on a separate line with the position number starting from 1, then for each individual the inferred genotype followed by a pipe and the posterior probability of the inferred genotype:
+
+```
+>contig_name
+  position	individual1	individual2
+  1	TT|1	NN|0
+  2	TT|1	TT|0.98
+```
+
+Identify sex-linked sequences wuth SEX-DETector. The software can be found **[here](https://gitlab.in2p3.fr/sex-det-family). For this practical we will use the original version of the software.
+
+Copy the SEX-DETector scripts to your folder and create a folder for the output files.
+
+```
+cd day3/sexdetector/
+cp /home/ubuntu/Share/day3/sexdetector/scripts/ ./
+mkdir sexdetector_output
+cd scripts
+```
+
+Generate gen_summary file - allows SEX-DETector to run faster. The following options should be use for the command below, -hom string (names of homogametic progeny individuals separated by commas), -het string (the names of the heterogametic progeny individuals separated by commas), -hom_par string (homogametic parent name), -het_par string (heterogametic parent name). The gen_summary file is similar to the gen file except that it shows only one occurence of each possible SNP in the dataset and shows the number of times it happens in the first column instead of the position number of the SNP.
+
+```
+./SEX-DETector_prepare_file.pl ../reads2snp/reads2snp_output.gen ../reads2snp_output.gen_summary -hom Female_Offspring1,Female_Offspring2,Female_Offspring3,Female_Offspring4,Female_Offspring5 -het Male_Offspring1,Male_Offspring2,Male_Offspring3,Male_Offspring4,Male_Offspring5 -hom_par Female_Mother -het_par Male_Father
+```
+
+Run SEX-DETector
+
+```
+./SEX-DETector.pl -alr ../reads2snp/reads2snp_output.alr -alr_gen ../reads2snp/reads2snp_output.gen -alr_gen_sum ../reads2snp/reads2snp_output.gen_summary -system xy -hom Female_Offspring1,Female_Offspring2,Female_Offspring3,Female_Offspring4,Female_Offspring5 -het Male_Offspring1,Male_Offspring2,Male_Offspring3,Male_Offspring4,Male_Offspring5 -hom_par Female_Mother -het_par Male_Father -seq -detail -detail-sex-linked -out ../sexdetector_output/Poecilia_reticulata
+```
+
+Look at the outputs produced by SEX-DETector and see which genes are inferred to be sex-linked and why.
 
 
 ## 03. Gametologs divergence
