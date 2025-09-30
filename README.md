@@ -6,7 +6,7 @@ The practicals to be covered in this course include:
 
 **Day 1**: Read trimming, quality check, read mapping, variant calling
 
-**Day 2**: Coverage, SNP density, Fst, analyses
+**Day 2**: Coverage, SNP density, Fst analyses
 
 **Day 3**: K-mer analyses, identifying sex-linked sequences, estimating gametologs divergence
 
