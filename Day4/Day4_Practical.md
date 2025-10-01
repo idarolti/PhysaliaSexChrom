@@ -195,7 +195,7 @@ python filter-expression.py rpkm_catkin.txt read_counts_catkin.txt rpkm_catkin_f
 ```
 library("edgeR")
 
-data <- read.table("read_counts.txt",stringsAsFactors=F,header=T, row.names=1)
+data <- read.table("read_counts_catkin.txt",stringsAsFactors=F,header=T, row.names=1)
 head(data)
 dim(data)
 conditions <- factor(c("F","F","F","M","M","M"))
@@ -230,7 +230,6 @@ lines(sample6, type="l",lwd=2,col="blue")
 
 ```
 #Check normalised read count data
-expr <- DGEList(counts=data,group=conditions)
 norm_expr <- calcNormFactors(expr)
 plotMDS(norm_expr,xlim=c(-6,6))
 ```
@@ -272,7 +271,7 @@ gene_length_vector <- c(gene_length$V2)
 all(gene_length$V1 == rownames(expr))
 #should print TRUE
 rpkm_norm <- rpkm(norm_expr, log=FALSE,gene.length=gene_length_vector)
-write.table(rpkm_norm, file="rpkm.normalised",quote=F, sep="\t")
+write.table(rpkm_norm, file="",quote=F, sep="\t")
 ```
 
 Plot the clustering of samples by gene expression information.
@@ -299,3 +298,51 @@ pheatmap(log2(rpkm_norm+1), show_colnames=T, show_rownames=F, color = palette2, 
 
 
 Run the analysis based on the leaf gene expression, and see what differences can you observe.
+
+### Differential gene expression
+
+```
+library("edgeR")
+
+data <- read.table("read_counts_catkin.txt",stringsAsFactors=F,header=T, row.names=1)
+head(data)
+dim(data)
+conditions <- factor(c("F","F","F","M","M","M"))
+expr <- DGEList(counts=data,group=conditions)
+norm_expr <- calcNormFactors(expr)
+norm_expr
+
+norm_expr <- estimateCommonDisp(norm_expr)
+norm_expr <- estimateTagwiseDisp(norm_expr)
+et <- exactTest(norm_expr)
+et
+
+p <- et$table$PValue
+p_FDR <- p.adjust(p, method = c("fdr"), n = length(p))
+
+de_results_catkin <- et$table
+de_results_catkin$Padj <- p_FDR
+
+#How many genes are significant?
+sum(de_results_catkin$Padj < 0.05)
+# 12753
+
+# How many genes show 2-fold enrichment in males?
+sum(de_results_catkin$Padj < 0.05 & de_results_catkin$logFC > 1)
+# 6307
+
+# How many genes show 2-fold enrichment in females?
+sum(de_results_catkin$Padj < 0.05 & de_results_catkin$logFC < -1)
+# 5675
+
+# Create an MA plot
+plot(de_results_catkin$logCPM, de_results_catkin$logFC, main="MA plot", xlab="log CPM", ylab="log FC")
+sig <- de_results_catkin$Padj < 0.05 & (de_results_catkin$logFC > 1 | de_results_catkin$logFC < -1)
+points(de_results_catkin$logCPM[sig], de_results_catkin$logFC[sig], col="orange", pch=19)
+abline(h=c(-1,1), lty="dashed", col="grey")
+```
+
+<img width="615" height="639" alt="Screenshot 2025-10-01 at 23 16 23" src="https://github.com/user-attachments/assets/29199cbe-792d-4b00-95ea-b7323418b97c" />
+
+
+Run the differential gene expression on the leaf samples, and see what contrasts can you make to the catkin results.
