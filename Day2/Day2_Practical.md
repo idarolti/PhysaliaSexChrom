@@ -62,15 +62,11 @@ cat /home/ubuntu/Share/day2/covstats.tab
 
 Use these values to set the parameters for the following command
 
-a = minimum coverage sample1\n
-A = maximum coverage sample1
-
-b = minimum coverage sample2
-
-B = maximum coverage sample2
-
-v = target number of valid bases in the window (set to 10000)
-
+a = minimum coverage sample1  
+A = maximum coverage sample1  
+b = minimum coverage sample2  
+B = maximum coverage sample2  
+v = target number of valid bases in the window (set to 10000)  
 l = minimum size of window to output (set to 1000)
 
 ```
