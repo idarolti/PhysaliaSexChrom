@@ -15,6 +15,11 @@ conda activate sexchr
 
 ## 01. Coverage based analysis
 
+Set up directories and files
+
+mkdir picta
+mkdir reticulata
+
 ## 02. SNP based analysis
 
 Set up directories and files
