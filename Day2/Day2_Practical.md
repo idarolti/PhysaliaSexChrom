@@ -13,14 +13,53 @@ cd day2
 conda activate sexchr
 ```
 
+# Day 2 Practical Sex chromosome discovery - coverage and SNP based methods
+
+This practical will cover methods on sex chromosome discovery:
+
+1. Coverage based analysis
+2. SNP-based analyses
+
+We will base our analysis on the **[SexFindR pipeline](https://sexfindr.readthedocs.io/en/latest/#)** published by **[Grayson et al](https://doi.org/10.1101/2022.02.21.481346)**
+
+## 00. Prepare work folder for day 2
+
+```
+mkdir day2
+cd day2
+conda activate sexchr
+```
+
 ## 01. Coverage based analysis
 
 Set up directories and files
 
+```
+mkdir coverage
+cd coverage
 mkdir picta
 mkdir reticulata
+cp /home/ubuntu/Share/day2/Poecilia_picta_*male1_chr8_chr11_chr12.bam* picta
+cp /home/ubuntu/Share/day2/Poecilia_reticulata_*male1_chr8_chr11_chr12.bam* reticulata
+cp /home/ubuntu/Share/day2/Ppicta_covstats.tab picta
+cp /home/ubuntu/Share/day2/Preticulata_covstats.tab reticulata
+```
 
-## 02. SNP based analysis
+Step 1. create unionbed file
+
+```
+cd picta
+${SCRIPTS_DIR}/from_bams_to_unionbed.sh Poecilia_picta_female1_chr8_chr11_chr12.bam Poecilia_picta_male1_chr8_chr11_chr12.bam
+```
+
+Step 2. find the coverage ratio per window
+
+```
+# read the coverage statistics from the covstats file
+cat Pp
+
+```
+## 02. Set up working directories and input files 
 
 Set up directories and files
 
@@ -28,35 +67,41 @@ Set up directories and files
 mkdir Fst
 mkdir GWAS
 mkdir SNPden
-cp /bin/Ppicta_female.list Fst/
-cp /bin/Ppicta_male.list Fst/
-cp /bin/Ppicta_sex.list GWAS
-cp /bin/Ppicta_female.list SNPden
-cp /bin/Ppicta_male.list SNPden
-cp Poecilia_picta.g.vcf.gz .
+cp /home/ubuntu/Share/day2/Ppicta_female.list Fst/
+cp /home/ubuntu/Share/day2/Ppicta_male.list Fst/
+cp /home/ubuntu/Share/day2/Ppicta_sex.list GWAS/
+cp /home/ubuntu/Share/day2/Ppicta_female.list SNPden/
+cp /home/ubuntu/Share/day2/Ppicta_male.list SNPden/
+cp /home/ubuntu/Share/day2/Poecilia_picta.g.vcf.gz .
 ```
 
-### Fst
+## 03. Calculate intersex Fst 
+We will use **[VCFtools](https://vcftools.github.io)** to calculate Fst (fixation index, a measure of genetic differentiation between populations) between males and female in 10kb windows based on the variant file you learned how to generate yesterday   
 
 ```
 cd Fst
 vcftools --gzvcf ../Poecilia_picta.g.vcf.gz --weir-fst-pop Ppicta_female.list --weir-fst-pop Ppicta_male.list --fst-window-size 10000 --out Ppicta.fst.10kb
+cd ..
 ```
 
-### GWAS
+## 04. Run association test for sex with GEMMA   
+
+We will first generate a filtered input file that we will then further format with PLINK and then use as input for **[GEMMA](https://github.com/genetics-statistics/GEMMA)** which runs linear mixed models to test for an association between each SNP and sex.   
 
 ```
 cd GWAS
 vcftools --gzvcf ../Poecilia_picta.g.vcf.gz --plink --remove-indels --max-missing 0.5 --max-maf 0.95 --maf 0.05 --out Poecilia_picta.filt
 plink --file Poecilia_picta.filt --pheno Ppicta_sex.list --make-bed --out Poecilia_picta.plink --noweb --allow-no-sex
 gemma -bfile Poecilia_picta.plink -lm 2 -o Poecilia_picta.gemma
+cd ..
 ```
 
-### SNP density
-
+### Calculate male and female SNP density
+We will format the SNP variant file with **[bcftools](https://samtools.github.io/bcftools/bcftools.html)** to subset female and male entries into separate files  
+We will then calculate SNP density in 10kb windows with VCFtools
 ```
 gunzip Poecilia_picta.g.vcf.gz
-mv Poecilia_picta.g.vcf SNPden
+mv Poecilia_picta.g.vcf ./SNPden
 cd SNPden
 
 for SAMPLE in `cat Ppicta_female.list`;
