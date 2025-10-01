@@ -54,15 +54,15 @@ cd picta
 
 Step 2. find the coverage ratio per window
 
+Read the coverage statistics from the covstats file located in Day2/coverage
+
 ```
-# read the coverage statistics from the covstats file located in Day2/coverage
 cat /home/ubuntu/Share/day2/covstats.tab
 ```
 
 Use these values to set the parameters for the following command
 
-a = minimum coverage sample1
-
+a = minimum coverage sample1\n
 A = maximum coverage sample1
 
 b = minimum coverage sample2
