@@ -106,7 +106,7 @@ echo "Generate rough histogram with given precision order"
 
 echo "Generate histogram with bins centered at value X reporting scores from [X-0.25 to X+0.25)"
 /home/ubuntu/Share/day2/generate_DNAcopyout_len_vs_scores_histogram_bin0.5.sh *.DNAcopyout.len
-
+```
 
 ## 02. SNP based analyses
 
