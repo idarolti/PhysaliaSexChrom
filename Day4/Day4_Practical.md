@@ -204,7 +204,11 @@ length(conditions)
 #Check raw read count data
 expr <- DGEList(counts=data,group=conditions)
 plotMDS(expr,xlim=c(-6,6))
+```
 
+<img width="643" height="623" alt="Screenshot 2025-10-01 at 19 19 32" src="https://github.com/user-attachments/assets/6a38a5da-05f2-4e37-b26a-3f1edbba5d08" />
+
+```
 cpm_expr <- cpm(expr)
 sample1 <- density(log2(cpm_expr[,1]))
 sample2 <- density(log2(cpm_expr[,2]))
@@ -218,12 +222,20 @@ lines(sample3, type="l",lwd=2,col="red")
 lines(sample4, type="l",lwd=2,col="blue")
 lines(sample5, type="l",lwd=2,col="blue")
 lines(sample6, type="l",lwd=2,col="blue")
+```
 
+<img width="617" height="587" alt="Screenshot 2025-10-01 at 19 23 46" src="https://github.com/user-attachments/assets/cd1c03fe-cbcd-4be4-8c98-de6c04a13cc0" />
+
+```
 #Check normalised read count data
 expr <- DGEList(counts=data,group=conditions)
 norm_expr <- calcNormFactors(expr)
 plotMDS(norm_expr,xlim=c(-6,6))
+```
 
+<img width="547" height="519" alt="Screenshot 2025-10-01 at 19 24 47" src="https://github.com/user-attachments/assets/78bb9a97-8292-494f-8b75-3bbef923fba7" />
+
+```
 cpm_norm_expr <- cpm(norm_expr)
 sample1 <- density(log2(cpm_norm_expr[,1]))
 sample2 <- density(log2(cpm_norm_expr[,2]))
@@ -237,7 +249,11 @@ lines(sample3, type="l",lwd=2,col="red")
 lines(sample4, type="l",lwd=2,col="blue")
 lines(sample5, type="l",lwd=2,col="blue")
 lines(sample6, type="l",lwd=2,col="blue")
+```
 
+<img width="576" height="549" alt="Screenshot 2025-10-01 at 19 25 46" src="https://github.com/user-attachments/assets/42ed8f62-8e49-454f-bbf5-e01bcfd7ad46" />
+
+```
 #Normalise and extract rpkm
 expr <- DGEList(counts=data)
 norm_expr <- calcNormFactors(expr)
@@ -253,13 +269,26 @@ all(gene_length$V1 == rownames(expr))
 #should print TRUE
 rpkm_norm <- rpkm(norm_expr, log=FALSE,gene.length=gene_length_vector)
 write.table(rpkm_norm, file="rpkm.normalised",quote=F, sep="\t")
+```
 
+Plot the clustering of samples by gene expression information.
+
+```
 #Heat maps
 library(pheatmap)
 library(pvclust)
+
 palette2 <-colorRamps::"matlab.like2"(n=200)
 bootstraps = pvclust(log2(rpkm_norm+1), method.hclust="average", method.dist="euclidean")
 plot(bootstraps)
+```
+
+<img width="651" height="552" alt="Screenshot 2025-10-01 at 19 29 13" src="https://github.com/user-attachments/assets/da90da67-5ab8-4459-8dc8-e724c064be07" />
+
+```
+palette2 <-colorRamps::"matlab.like2"(n=200)
 pheatmap(log2(rpkm_norm+1), show_colnames=T, show_rownames=F, color = palette2, clustering_distance_cols = "euclidean", clustering_method="average") 
 ```
+
+<img width="640" height="647" alt="Screenshot 2025-10-01 at 19 36 37" src="https://github.com/user-attachments/assets/296c130a-1563-4355-8d8e-82f0a3e4976d" />
 
