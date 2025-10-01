@@ -35,11 +35,12 @@ Align paired-end reads to the genome, then sort.
 ```
 cd ..
 cp /home/ubuntu/Share/day4/willow/reads/ ./
-mkdir hisat_alignments
-cd hisat_alignments
+mkdir hisat
+cd hisat
+
 hisat2 ../genome/genome_assembly_1k -1 ../reads/female1_catkin_R1.fastq -2 ../reads/female1_catkin_R2.fastq -q --no-discordant --no-mixed --no-unal --dta -S female1_catkin.sam
 
-samtools view -bS female1_catkin.sam | samtools sort -o female1_catkin_sorted.bam
+samtools view -bS female1_catkin.sam | samtools sort -o female1_catkin_coordsorted.bam
 rm female1_catkin.sam
 ```
 
@@ -66,13 +67,13 @@ for r1 in ${reads_dir}/*_R1.fastq; do
     base=$(basename "$r1" "_R1.fastq")
     r2="${reads_dir}/${base}_R2.fastq"
     sam="${base}.sam"
-    bam_sorted="${base}_sorted.bam"
+    bam_coordsorted="${base}_coordsorted.bam"
 
     # Run HISAT2 alignment
     hisat2 "$genome_index" -1 "$r1" -2 "$r2" -q --no-discordant --no-mixed --no-unal --dta -S "$sam"
 
     # Convert SAM to sorted BAM
-    samtools view -bS "$sam" | samtools sort -o "$bam_sorted"
+    samtools view -bS "$sam" | samtools sort -o "$bam_coordsorted"
 
     # Optional: remove intermediate SAM file to save space
     rm "$sam"
@@ -84,16 +85,51 @@ done
 **[StringTie](https://ccb.jhu.edu/software/stringtie/index.shtml)** - A fast and highly efficient assembler of RNA-Seq alignments into potential transcripts. 
 
 ```
-stringtie female1_catkin_sorted.bam -o female1_catkin.gtf -p 12 -A female1_catkin.gene_abund
+cd ../
+mkdir stringtie
+cd stringtie
+
+stringtie ../hisat/female1_catkin_coordsorted.bam -o female1_catkin.gtf -A female1_catkin.gene_abund
 ```
 
+Run StringTie for all samples
+
 ```
+# Directory containing BAM files
+bam_dir="../hisat"
+
+# Loop over all sorted BAM files in that directory
+for bam in ${bam_dir}/*_coordsorted.bam; do
+    # Get the base sample name, removing path and suffix
+    base=$(basename "$bam" "_coordsorted.bam")
+    
+    # Run StringTie with output files named by sample
+    stringtie "$bam" -o "${base}.gtf" -A "${base}.gene_abund"
+done
+```
+
+Make list of all gtf files and merge
+
+```
+ls *.gtf > gtfs.list
+
 stringtie --merge gtfs.list -o merged.gtf
 ```
 
-### Obtain read counts
+### Obtain read counts (DO NOT RUN)
 
-We will use **[HTSeq]([http://www-huber.embl.de/users/anders/HTSeq/doc/count.html](https://htseq.readthedocs.io/en/release_0.11.1/count.html))**. For faster processing, 
+We will use **[HTSeq]([http://www-huber.embl.de/users/anders/HTSeq/doc/count.html](https://htseq.readthedocs.io/en/release_0.11.1/count.html))**. For faster processing, bam files must be sorted by read name, so paired reads appear adjacent in the file and are counted more quickly (default option in HTSeq). If your BAM is coordinate sorted (sorted by genomic position, the default with samtools sort), you must specify -r pos to tell htseq-count the BAM is position sorted. However, this requires more memory, as mate pairs may be separated and htseq-count buffers them until it sees the mate.
+
+```
+cd ../
+mkdir htseq
+cd htseq
+
+samtools sort -n -T namesorted -O bam -o ../hisat/female1_catkin_namesorted.bam female1_catkin_coordsorted.bam
+htseq-count -f bam -r name -s no female1_catkin_namesorted.bam ../stringtie/merged.gtf > female1_catkin_htseqcount.txt
+```
+
+
 
 
 
