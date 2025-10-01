@@ -21,7 +21,7 @@ For this part of the practical, we will use an example for quantifying gene expr
 
 **(DO NOT RUN)**
 
-Mapping reads can be done with **[HISAT2](https://daehwankimlab.github.io/hisat2/), a fast and sensitive alignment program for mapping next-generation sequencing reads. 
+Mapping reads can be done with **[HISAT2](https://daehwankimlab.github.io/hisat2/)**, a fast and sensitive alignment program for mapping next-generation sequencing reads. 
 
 ```
 hisat2-build -f genome_assembly_1k.fa genome_assembly_1k
