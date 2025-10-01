@@ -47,10 +47,14 @@ HISAT2 options:
 
 ```
 stringtie female1_catkin_sorted.bam -o female1_catkin.gtf -p 12 -A female1_catkin.gene_abund
+```
 
 ```
 stringtie --merge gtfs.list -o merged.gtf
 ```
+
+### Obtain read counts with **[HTSeq]([http://www-huber.embl.de/users/anders/HTSeq/doc/count.html](https://htseq.readthedocs.io/en/release_0.11.1/count.html))**
+
 
 
 
