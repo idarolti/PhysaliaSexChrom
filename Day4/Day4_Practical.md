@@ -19,27 +19,65 @@ For this part of the practical, we will use an example for quantifying gene expr
 
 ### Map RNA-seq reads
 
-**(DO NOT RUN)**
-
 Mapping reads can be done with **[HISAT2](https://daehwankimlab.github.io/hisat2/)**, a fast and sensitive alignment program for mapping next-generation sequencing reads. 
 
+Generate genome index.
+
 ```
+mkdir genome
+cd genome
+cp /home/ubuntu/Share/day4/willow/genome/genome_assembly_1k.fa
 hisat2-build -f genome_assembly_1k.fa genome_assembly_1k
+```
 
-hisat2 genome_assembly_1k -1 female1_catkin_R1.out.fastq -2 female1_catkin_R2.out.fastq -q --no-discordant --no-mixed --no-unal --dta -S female1_catkin.sam
+Align paired-end reads to the genome, then sort.
 
-samtools view -Su female1_catkin.sam | samtools sort - female1_catkin_sorted.bam
+```
+cd ..
+cp /home/ubuntu/Share/day4/willow/reads/ ./
+mkdir hisat_alignments
+cd hisat_alignments
+hisat2 ../genome/genome_assembly_1k -1 ../reads/female1_catkin_R1.fastq -2 ../reads/female1_catkin_R2.fastq -q --no-discordant --no-mixed --no-unal --dta -S female1_catkin.sam
+
+samtools view -bS female1_catkin.sam | samtools sort -o female1_catkin_sorted.bam
+rm female1_catkin.sam
 ```
 
 HISAT2 options:
 
---no-discordant: 
+--no-discordant: suppress discordant alignments for paired reads
 
---no-mixed:
+--no-mixed: suppress unpaired alignments for paired reads
 
---no-unal:
+--no-unal: suppresses the output of SAM records for reads that fail to align
 
---dta/--downstream-transcriptome-assembly: Report alignments tailored for transcript assemblers including StringTie. With this option, HISAT2 requires longer anchor lengths for de novo discovery of splice sites. This leads to fewer alignments with short-anchors, which helps transcript assemblers improve significantly in computationa and memory usage.
+--dta/--downstream-transcriptome-assembly: report alignments tailored for transcript assemblers including StringTie. With this option, HISAT2 requires longer anchor lengths for de novo discovery of splice sites. This leads to fewer alignments with short-anchors, which helps transcript assemblers improve significantly in computationa and memory usage.
+
+Run hisat2 and sorting for all the samples.
+
+```
+reads_dir="../reads"
+# Genome index prefix
+genome_index="../genome/genome_assembly_1k"
+
+# Loop over all R1 fastq files
+for r1 in ${reads_dir}/*_R1.fastq; do
+    # Extract base name (e.g., female1_catkin)
+    base=$(basename "$r1" "_R1.fastq")
+    r2="${reads_dir}/${base}_R2.fastq"
+    sam="${base}.sam"
+    bam_sorted="${base}_sorted.bam"
+
+    # Run HISAT2 alignment
+    hisat2 "$genome_index" -1 "$r1" -2 "$r2" -q --no-discordant --no-mixed --no-unal --dta -S "$sam"
+
+    # Convert SAM to sorted BAM
+    samtools view -bS "$sam" | samtools sort -o "$bam_sorted"
+
+    # Optional: remove intermediate SAM file to save space
+    rm "$sam"
+done
+```
 
 ### Extract gene coordinates
 
@@ -53,7 +91,13 @@ stringtie female1_catkin_sorted.bam -o female1_catkin.gtf -p 12 -A female1_catki
 stringtie --merge gtfs.list -o merged.gtf
 ```
 
-### Obtain read counts with **[HTSeq]([http://www-huber.embl.de/users/anders/HTSeq/doc/count.html](https://htseq.readthedocs.io/en/release_0.11.1/count.html))**
+### Obtain read counts
+
+We will use **[HTSeq]([http://www-huber.embl.de/users/anders/HTSeq/doc/count.html](https://htseq.readthedocs.io/en/release_0.11.1/count.html))**. For faster processing, 
+
+
+
+
 
 
 
