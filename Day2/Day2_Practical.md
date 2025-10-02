@@ -31,7 +31,7 @@ cp /Share/day2/Poecilia_reticulata_*male1_chr8_chr11_chr12.bam* reticulata/
 
 ### Step 1. create unionbed file
 
-This step takes about 45 minutes, so set to run before the break
+This step takes a long time, so start running to check it works, then cancel (ctrl+c).
 
 ```
 cd picta
@@ -40,6 +40,11 @@ cd picta
 
 ### Step 2. find the coverage ratio per window
 
+Copy the premade output of day2 to the working directory.
+
+```
+cp /Share/day2/picta_sample1_sample2.unionbedcv .
+```
 Read the coverage statistics from the covstats file located in Day2/coverage
 
 ```
@@ -56,7 +61,7 @@ v = target number of valid bases in the window (set to 10000)
 l = minimum size of window to output (set to 1000)
 
 ```
-/home/ubuntu/Share/day2/from_unionbed_to_ratio_per_window_CC0 -a a -A A -b b -B B -v v -l l sample1_sample2.unionbedcv
+/home/ubuntu/Share/day2/from_unionbed_to_ratio_per_window_CC0 -a a -A A -b b -B B -v v -l l picta_sample1_sample2.unionbedcv
 ```
 
 ### Step 3. adjust coverage based on the bam ratio in covstats.tab
@@ -95,7 +100,7 @@ echo "Generate histogram with bins centered at value X reporting scores from [X-
 ```
 
 ### Now run this again for P. reticulata  
-### If you finish both species, try adjusting the window size for P. picta in step 2, and see how this changes the results. Try smaller windows, e.g. 1,000 or larger, e.g. 50,000
+### If you finish both species, try adjusting the window size in step 2, and see how this changes the results. Try smaller windows, e.g. 1,000 or larger, e.g. 50,000
 
 ## 02. SNP based analyses
 
