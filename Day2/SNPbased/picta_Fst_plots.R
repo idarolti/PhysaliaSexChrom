@@ -44,7 +44,7 @@ Fst_join %>% ggplot(aes(x=BPcum,y=WEIGHTED_FST,color=as.factor(scaf))) +
   theme(axis.text.x = element_text(angle = 90)) +
   labs(x="CHROMOSOME",color="") + 
   guides(color = guide_legend(ncol = 1, byrow = F)) + 
-  geom_hline(yintercept = 0.6, linetype="dotted", color = "black", size=0.75) + 
-  geom_hline(yintercept = 0.461538, linetype="dotted", color = "black", size=1.5)  + 
+  geom_hline(yintercept = 0.336323, linetype="dotted", color = "black", size=0.75) + 
+  geom_hline(yintercept = 0.470588, linetype="dotted", color = "black", size=1.5)  + 
   labs(title="Fst for P. picta with 5% and 1% cutoff")
 
