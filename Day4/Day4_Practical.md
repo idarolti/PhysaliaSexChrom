@@ -374,7 +374,12 @@ cd salmon_quantification
 salmon quant --numBootstraps 100 --gcBias --seqBias -p 12 -l A -i ../transcriptome/Poecilia_picta_transcripts -1 /home/ubuntu/Share/day4/guppy/rnaseq_reads/picta/female1_R1.fastq.gz -2 /home/ubuntu/Share/day4/guppy/rnaseq_reads/picta/female1_R2.fastq.gz -o female1
 ```
 
+This step takes a few minutes to run for each sample, so you can copy the salmon outputs to your folder.
 
+```
+cd ../
+cp -r /home/ubuntu/Share/day4/guppy/salmon_quantification_fullset ./
+```
 
 
 
