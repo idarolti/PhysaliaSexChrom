@@ -36,7 +36,7 @@ Align paired-end reads to the genome, then sort.
 
 ```
 cd ..
-cp /home/ubuntu/Share/day4/willow/reads/ ./
+cp -r /home/ubuntu/Share/day4/willow/reads/ ./
 mkdir hisat
 cd hisat
 
@@ -93,14 +93,14 @@ cd stringtie
 mkdir subset
 cd subset
 
-stringtie ../hisat/female1_catkin_coordsorted.bam -o female1_catkin.gtf -A female1_catkin.gene_abund
+stringtie ../../hisat/female1_catkin_coordsorted.bam -o female1_catkin.gtf -A female1_catkin.gene_abund
 ```
 
 Run StringTie for all samples
 
 ```
 # Directory containing BAM files
-bam_dir="../hisat"
+bam_dir="../../hisat"
 
 # Loop over all sorted BAM files in that directory
 for bam in ${bam_dir}/*_coordsorted.bam; do
@@ -134,18 +134,17 @@ htseq-count -f bam -r name -s no female1_catkin_namesorted.bam ../stringtie/merg
 Copy the htseq-count output on the full dataset and copy scripts for downstream analyses.
 
 ```
-cd ../
+cd ../../
 cp -r /home/ubuntu/Share/day4/willow/scripts ./
 mkdir htseq
-cd htseq
-cp -r /home/ubuntu/Share/day4/willow/htseq/catkin ./
-cp -r /home/ubuntu/Share/day4/willow/htseq/leaf ./
+cp -r /home/ubuntu/Share/day4/willow/htseq/catkin ./htseq/
+cp -r /home/ubuntu/Share/day4/willow/htseq/leaf ./htseq/
 ```
 
 Merge read count outputs per tissue. Below is an example for catkin. Run the same for the leaf tissue.
 
 ```
-cd ../scripts
+cd scripts
 python3 extract-counts.py ../htseq/catkin ../htseq/catkin/read_counts_catkin.txt
 ```
 
@@ -154,12 +153,11 @@ python3 extract-counts.py ../htseq/catkin ../htseq/catkin/read_counts_catkin.txt
 Copy the merged.gtf file based on the full dataset, then create a file with the length of each gene. You only need to run this using one tissue, as all genes are included in both.
 
 ```
-cd ../
-cd stringtie
+cd ../stringtie
 mkdir fullset
-cp /home/ubuntu/Share/day4/willow/gtfs/fullset/merged.gtf ./stringtie/fullset/
+cp /home/ubuntu/Share/day4/willow/stringtie_gtfs/fullset/merged.gtf ./stringtie/fullset/
 cd scripts
-python3 extract-gene-length.py ../htseq/read_counts_catkin.txt ../stringtie/fullset/merged.gtf ../stringtie/fullset/gene_length.txt
+python3 extract-gene-lengths.py ../htseq/catkin/read_counts_catkin.txt ../stringtie/fullset/merged.gtf ../stringtie/fullset/gene_length.txt
 ```
 
 Download the read counts file for each tissue and the gene_length txt to your local directory. Use edgeR to convert counts to RPKM.
