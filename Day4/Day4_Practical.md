@@ -370,6 +370,7 @@ Then, align reads to the transcriptome.
 ```
 mkdir salmon_quantification
 cd salmon_quantification
+
 salmon quant --numBootstraps 100 --gcBias --seqBias -p 12 -l A -i ../transcriptome/Poecilia_picta_transcripts -1 /home/ubuntu/Share/day4/guppy/rnaseq_reads/picta/female1_R1.fastq.gz -2 /home/ubuntu/Share/day4/guppy/rnaseq_reads/picta/female1_R2.fastq.gz -o female1
 ```
 
