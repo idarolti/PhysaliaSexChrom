@@ -93,6 +93,8 @@ echo "Generate rough histogram with given precision order"
 echo "Generate histogram with bins centered at value X reporting scores from [X-0.25 to X+0.25)"
 /home/ubuntu/Share/day2/generate_DNAcopyout_len_vs_scores_histogram_bin0.5.sh *.DNAcopyout.len
 ```
+
+### Now run this again for P. reticulata  
 ### If you finish both species, try adjusting the window size for P. picta in step 2, and see how this changes the results. Try smaller windows, e.g. 1,000 or larger, e.g. 50,000
 
 ## 02. SNP based analyses
