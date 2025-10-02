@@ -140,3 +140,4 @@ gatk VariantFiltration \
    --filter-expression "QUAL <= 30.0 || DP <= 20" --filter-name "low_qual_or_dp"
 ```
 
+Try running genotyping and filtering on another chromosome file (/home/ubuntu/Share/day1/03.snp_calling/Poecilia_picta_female1_chr8.gvcf)
