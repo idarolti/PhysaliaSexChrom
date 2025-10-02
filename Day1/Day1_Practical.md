@@ -86,14 +86,6 @@ bowtie2 -p12 -x /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecili
    | samtools view -b -S - | samtools sort - -o ./read_alignments/Poecilia_picta_female1_subset.bam
 ```
 
-TAKES 15 MIN!
-```
-bowtie2 -p12 -x /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta \
-   -1 /home/ubuntu/Share/day1/02.read_mapping/reads/Poecilia_picta_female1_R1_chr12.fastq \
-   -2 /home/ubuntu/Share/day1/02.read_mapping/reads/Poecilia_picta_female1_R2_chr12.fastq \
-   | samtools view -b -S - | samtools sort - -o ./read_alignments/Poecilia_picta_female1_chr12.bam
-```
-
 Try running the bowtie mapping for female2 subset.
 
 ## 03. Variant calling
