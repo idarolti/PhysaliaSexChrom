@@ -110,7 +110,7 @@ cp /home/ubuntu/Share/day2/picta_male.list Fst/
 cp /home/ubuntu/Share/day2/picta_sex.list GWAS/
 cp /home/ubuntu/Share/day2/picta_female.list SNPden/
 cp /home/ubuntu/Share/day2/picta_male.list SNPden/
-cp /home/ubuntu/Share/day2/Poecilia_picta_subset_merged.vcf.gz .
+cp /home/ubuntu/Share/day2/Poecilia_picta_allchromo_merged.vcf.gz .
 ```
 
 ## 03. Calculate intersex Fst 
@@ -118,7 +118,7 @@ We will use **[VCFtools](https://vcftools.github.io)** to calculate Fst (fixatio
 
 ```
 cd Fst
-vcftools --gzvcf ../Poecilia_picta_subset_merged.vcf.gz --weir-fst-pop picta_FEMALE.list --weir-fst-pop picta_MALE.list --fst-window-size 10000 --out picta.fst.10kb
+vcftools --gzvcf ../Poecilia_picta_allchromo_merged.vcf.gz --weir-fst-pop picta_FEMALE.list --weir-fst-pop picta_MALE.list --fst-window-size 10000 --out picta.fst.10kb
 cd ..
 ```
 
@@ -132,7 +132,7 @@ We will first generate a filtered input file that we will then further format wi
 
 ```
 cd GWAS
-vcftools --gzvcf ../Poecilia_picta_subset_merged.vcf.gz --plink --remove-indels --max-missing 0.5 --max-maf 0.95 --maf 0.05 --out Poecilia_picta.filt
+vcftools --gzvcf ../Poecilia_picta_allchromo_merged.vcf.gz --plink --remove-indels --max-missing 0.5 --max-maf 0.95 --maf 0.05 --out Poecilia_picta.filt
 plink --file Poecilia_picta.filt --pheno picta_sex.list --make-bed --out Poecilia_picta.plink --noweb --allow-no-sex
 gemma -bfile Poecilia_picta.plink -lm 2 -o Poecilia_picta.gemma
 cd output
@@ -144,13 +144,13 @@ Result is in the output/ folder. Download the Poecilia_picta.gemma.assoc file an
 We will format the SNP variant file with **[bcftools](https://samtools.github.io/bcftools/bcftools.html)** to subset female and male entries into separate files  
 We will then calculate SNP density in 10kb windows with VCFtools
 ```
-gunzip Poecilia_picta_subset_merged.vcf.gz
-mv Poecilia_picta_subset_merged.vcf ./SNPden
+gunzip Poecilia_picta_allchromo_merged.vcf.gz
+mv Poecilia_picta_allchromo_merged.vcf ./SNPden
 cd SNPden
 
 for SAMPLE in `cat picta_FEMALE.list`;
   do
-  bcftools view -a -s ${SAMPLE} -o FEMALE_${SAMPLE}.vcf Poecilia_picta_subset_merged.vcf
+  bcftools view -a -s ${SAMPLE} -o FEMALE_${SAMPLE}.vcf Poecilia_picta_allchromo_merged.vcf
   bgzip -c FEMALE_${SAMPLE}.vcf > FEMALE_${SAMPLE}.vcf.gz
   bcftools index FEMALE_${SAMPLE}.vcf.gz
   vcftools --gzvcf FEMALE_${SAMPLE}.vcf.gz --SNPdensity 10000 --out FEMALE_${SAMPLE}.snpden
@@ -158,7 +158,7 @@ done
 
 for SAMPLE in `cat picta_MALE.list`;
   do
-  bcftools view -a -s ${SAMPLE} -o MALE_${SAMPLE}.vcf Poecilia_picta_subset_merged.vcf
+  bcftools view -a -s ${SAMPLE} -o MALE_${SAMPLE}.vcf Poecilia_picta_allchromo_merged.vcf
   bgzip -c MALE_${SAMPLE}.vcf > MALE_${SAMPLE}.vcf.gz
   bcftools index MALE_${SAMPLE}.vcf.gz
   vcftools --gzvcf MALE_${SAMPLE}.vcf.gz --SNPdensity 10000 --out MALE_${SAMPLE}.snpden
