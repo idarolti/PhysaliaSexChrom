@@ -1,26 +1,12 @@
-# Day 2 Practical
-
-This practical will cover methods on sex chromosome discovery:
-
-1. Coverage based analysis
-2. SNP-based analyses
-
-## 00. Prepare work folder for day 2
-
-```
-mkdir day2
-cd day2
-conda activate sexchr
-```
-
 # Day 2 Practical Sex chromosome discovery - coverage and SNP based methods
 
 This practical will cover methods on sex chromosome discovery:
 
 1. Coverage based analysis
 2. SNP-based analyses
-
+    
 We will base our analysis on the **[SexFindR pipeline](https://sexfindr.readthedocs.io/en/latest/#)** published by **[Grayson et al](https://doi.org/10.1101/2022.02.21.481346)**
+
 
 ## 00. Prepare work folder for day 2
 
@@ -39,11 +25,11 @@ mkdir coverage
 cd coverage
 mkdir picta
 mkdir reticulata
-cp /home/ubuntu/Share/day2/Poecilia_picta_*male1_chr8_chr11_chr12.bam* picta
-cp /home/ubuntu/Share/day2/Poecilia_reticulata_*male1_chr8_chr11_chr12.bam* reticulata
+cp /Share/day2/Poecilia_picta_*male1_chr8_chr11_chr12.bam* picta/
+cp /Share/day2/Poecilia_reticulata_*male1_chr8_chr11_chr12.bam* reticulata/
 ```
 
-Step 1. create unionbed file
+### Step 1. create unionbed file
 
 This step takes about 45 minutes, so set to run before the break
 
@@ -52,7 +38,7 @@ cd picta
 /home/ubuntu/Share/day2/from_bams_to_unionbed.sh Poecilia_picta_female1_chr8_chr11_chr12.bam Poecilia_picta_male1_chr8_chr11_chr12.bam
 ```
 
-Step 2. find the coverage ratio per window
+### Step 2. find the coverage ratio per window
 
 Read the coverage statistics from the covstats file located in Day2/coverage
 
@@ -73,20 +59,20 @@ l = minimum size of window to output (set to 1000)
 /home/ubuntu/Share/day2/from_unionbed_to_ratio_per_window_CC0 -a a -A A -b b -B B -v v -l l sample1_sample2.unionbedcv
 ```
 
-Step 3. adjust coverage based on the bam ratio in covstats.tab
+### Step 3. adjust coverage based on the bam ratio in covstats.tab
 
 ```
 /home/ubuntu/Share/day2/from_ratio_per_window_to_prepare_for_DNAcopy_output.sh sample1_sample2.ratio_per_w_CC0_* bam_ratio
 ```
 
-Step 4. create plots in R
+### Step 4. create plots in R
 
 ```
 Rscript /home/ubuntu/Share/day2/run_DNAcopy_from_bash.R sample1_sample2.ratio_per_w_CC0_*.log2adj_*
 ```
 Check the output pdf file
 
-Step 5. filter only genomic regions with enrichment scores > p.
+### Step 5. filter only genomic regions with enrichment scores > p.
 
 The script extracts from file *.DNAcopyout fragments with enrichment scores ≥ p and stores them in *.DNAcopyout{p}, (i.e. fragments where read coverage in sample1 is higher than sample2 ), and *.DNAcopyout.down{-p} fragments with enrichment scores ≤-p, (i.e. fragments where coverage in sample2 is higher than sample1 ).
 
@@ -96,7 +82,7 @@ Set p to 2, to filter sites with double coverage in one sample compared to the o
 /home/ubuntu/Share/day2/from_DNAcopyout_to_p_fragments.sh sample1_sample2.*.DNAcopyout" 2
 ```
 
-Step 6. generate histograms for further inspection
+### Step 6. generate histograms for further inspection
 
 ```
 /home/ubuntu/Share/day2/get_DNAcopyout_with_length_of_intervals.sh *.DNAcopyout ref.length.Vk1s_sorted
