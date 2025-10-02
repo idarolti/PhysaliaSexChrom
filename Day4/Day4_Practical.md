@@ -346,3 +346,34 @@ abline(h=c(-1,1), lty="dashed", col="grey")
 
 
 Run the differential gene expression on the leaf samples, and see what contrasts can you make to the catkin results.
+
+
+## Y gene activity decay
+
+```
+cd day4
+mkdir Y_gene_activity
+cd Y_gene_activity
+cp /home/ubuntu/Share/day4/guppy/gene_expression/transcriptome ./
+```
+
+Obtain read counts using Salmon.....
+
+First, we must index the transcriptome assembly. (Takes a while, so DO NOT RUN)
+
+```
+salmon index -t Poecilia_picta_transcripts.fasta -i Poecilia_picta_transcripts
+```
+
+Then, align reads to the transcriptome.
+
+```
+mkdir salmon_quantification
+cd salmon_quantification
+salmon quant --numBootstraps 100 --gcBias --seqBias -p 12 -l A -i ../transcriptome/Poecilia_picta_transcripts -1 ../rnaseq_reads/picta/282_1.out.fastq.gz -2 ../rnaseq_reads/picta/282_2.out.fastq.gz -o female1
+```
+
+
+
+
+
