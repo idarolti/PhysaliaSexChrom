@@ -35,7 +35,7 @@ This step takes a long time, so start running to check it works, then cancel (ct
 
 ```
 cd picta
-/home/ubuntu/Share/day2/from_bams_to_unionbed.sh Poecilia_picta_female1_chr8_chr11_chr12.bam Poecilia_picta_male1_chr8_chr11_chr12.bam
+/home/ubuntu/bin/dif_cover_scripts/from_bams_to_unionbed.sh Poecilia_picta_female1_chr8_chr11_chr12.bam Poecilia_picta_male1_chr8_chr11_chr12.bam
 ```
 
 ### Step 2. find the coverage ratio per window
@@ -43,7 +43,7 @@ cd picta
 Copy the premade output of day2 to the working directory.
 
 ```
-cp /Share/day2/picta_sample1_sample2.unionbedcv .
+/home/ubuntu/bin/dif_cover_scripts/picta_sample1_sample2.unionbedcv .
 ```
 Read the coverage statistics from the covstats file located in Day2/coverage
 
@@ -61,19 +61,19 @@ v = target number of valid bases in the window (set to 10000)
 l = minimum size of window to output (set to 1000)
 
 ```
-/home/ubuntu/Share/day2/from_unionbed_to_ratio_per_window_CC0 -a a -A A -b b -B B -v v -l l picta_sample1_sample2.unionbedcv
+/home/ubuntu/bin/dif_cover_scripts/from_unionbed_to_ratio_per_window_CC0 -a a -A A -b b -B B -v v -l l picta_sample1_sample2.unionbedcv
 ```
 
 ### Step 3. adjust coverage based on the bam ratio in covstats.tab
 
 ```
-/home/ubuntu/Share/day2/from_ratio_per_window_to_prepare_for_DNAcopy_output.sh sample1_sample2.ratio_per_w_CC0_* bam_ratio
+/home/ubuntu/bin/dif_cover_scripts/from_ratio_per_window_to_prepare_for_DNAcopy_output.sh sample1_sample2.ratio_per_w_CC0_* bam_ratio
 ```
 
 ### Step 4. create plots in R
 
 ```
-Rscript /home/ubuntu/Share/day2/run_DNAcopy_from_bash.R sample1_sample2.ratio_per_w_CC0_*.log2adj_*
+Rscript /home/ubuntu/bin/dif_cover_scripts/run_DNAcopy_from_bash.R sample1_sample2.ratio_per_w_CC0_*.log2adj_*
 ```
 Check the output pdf file
 
@@ -84,19 +84,19 @@ The script extracts from file *.DNAcopyout fragments with enrichment scores ≥ 
 Set p to 2, to filter sites with double coverage in one sample compared to the other.
 
 ```
-/home/ubuntu/Share/day2/from_DNAcopyout_to_p_fragments.sh sample1_sample2.*.DNAcopyout" 2
+/home/ubuntu/bin/dif_cover_scripts/from_DNAcopyout_to_p_fragments.sh sample1_sample2.*.DNAcopyout" 2
 ```
 
 ### Step 6. generate histograms for further inspection
 
 ```
-/home/ubuntu/Share/day2/get_DNAcopyout_with_length_of_intervals.sh *.DNAcopyout ref.length.Vk1s_sorted
+/home/ubuntu/bin/dif_cover_scripts/get_DNAcopyout_with_length_of_intervals.sh *.DNAcopyout ref.length.Vk1s_sorted
 
 echo "Generate rough histogram with given precision order"
-/home/ubuntu/Share/day2/generate_DNAcopyout_len_histogram.sh *.DNAcopyout.len 1
+/home/ubuntu/bin/dif_cover_scripts/generate_DNAcopyout_len_histogram.sh *.DNAcopyout.len 1
 
 echo "Generate histogram with bins centered at value X reporting scores from [X-0.25 to X+0.25)"
-/home/ubuntu/Share/day2/generate_DNAcopyout_len_vs_scores_histogram_bin0.5.sh *.DNAcopyout.len
+/home/ubuntu/bin/dif_cover_scripts/generate_DNAcopyout_len_vs_scores_histogram_bin0.5.sh *.DNAcopyout.len
 ```
 
 ### Now run this again for P. reticulata  
