@@ -374,8 +374,38 @@ python 03.convert-fasta-phylip.py ../2.gametolog_sequences_phylip gapsrm.fa
 We must first create a paml control file that specifies input alignment and output files, plus options like the genetic code and analyses to perform. Then run pmal yn00.
 
 ```
-python 04.make-paml-control-file.py /home/ubuntu/Share/test_day3/2.gametolog_sequences_phylip
-python 05.run-paml-yn00.py /home/ubuntu/Share/test_day3/2.gametolog_sequences_phylip
+cd ../2.gametolog_sequences_phylip
+for d in Gametologs_*; do
+    if [ -d "$d" ]; then
+        base="${d#Gametologs_}"
+        ctl_path="$d/$base.ctl"
+
+        cat > "$ctl_path" <<EOF
+seqfile = $base.phy * sequence data filename
+outfile = $base.txt * main result file name
+
+noisy = 9  * 0,1,2,3,9: how much rubbish on the screen
+verbose = 1  * 0: concise; 1: detailed, 2: too much
+icode = 0  * 0:universal code; 1:mammalian mt; 2-10:see below
+weighting = 0
+commonf3x4 = 0
+ndata = 1
+EOF
+        echo "Wrote $ctl_path"
+    fi
+done
+```
+
+```
+for d in Gametologs_*; do
+    if [ -d "$d" ]; then
+        echo "Running yn00 in $d"
+        (
+            cd "$d"
+            yn00 *.ctl
+        )
+    fi
+done
 ```
 
 The pairwise dS values can be found in the 2YN.dS files. We can extract the dS values for all gametologs using:
