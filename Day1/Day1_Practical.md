@@ -114,12 +114,14 @@ gatk HaplotypeCaller \
    --min-base-quality-score 30 --pcr-indel-model NONE --sample-name picta_female1
 ```
 
-Perform genotyping of variants using [GenotypeGVCFs](https://gatk.broadinstitute.org/hc/en-us/articles/13832766863259-GenotypeGVCFs)
+Perform genotyping of variants using [GenotypeGVCFs](https://gatk.broadinstitute.org/hc/en-us/articles/13832766863259-GenotypeGVCFs). The next steps run more quickly, so we can use as input file a gvcf based on the entire sex chromosome (chr12).
 
 ```
+cp /home/ubuntu/Share/day1/03.snp_calling/Poecilia_picta_female1_chr12.gvcf ./snp_calling
+
 gatk GenotypeGVCFs \
    -R /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta.fna \
-   --variant /home/ubuntu/Share/day1/03.snp_calling/Poecilia_picta_female1_chr12.gvcf \
+   --variant ./snp_calling/Poecilia_picta_female1_chr12.gvcf \
    -O ./snp_calling/Poecilia_picta_female1_chr12.genotyped.gvcf
 ```
 
@@ -138,4 +140,3 @@ gatk VariantFiltration \
    --filter-expression "QUAL <= 30.0 || DP <= 20" --filter-name "low_qual_or_dp"
 ```
 
-Try genotyping and variant filters on female1_chr8.
