@@ -116,7 +116,7 @@ write_tsv(perm_with_true_p %>% select(scaf,base,mean_MvF_dif,Pvalue), "SNPdensit
 # adding window size for consistency between analyses
 
 # want a look at proportion of scaffold - find the outlier
-scaffold_length <- read_tsv("Poecilia_picta.fna.fai",col_names = F) %>% rename(scaf=X1,length=X2)
+scaffold_length <- read_tsv("../Poecilia_picta.fna.fai",col_names = F) %>% rename(scaf=X1,length=X2)
 
 perm_with_true_p001_snp <- perm_with_true_p %>% filter(Pvalue <= 0.001) 
 count_snp_p001_scaffolds <- perm_with_true_p001_snp %>% select(scaf) %>% count(scaf)
