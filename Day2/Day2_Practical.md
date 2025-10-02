@@ -176,4 +176,4 @@ for SAMPLE in `cat picta_MALE.list`;
 done
 ```
 
-# NOW DO THE SAME FOR POECILIA RETICULATA
+## Now do the same for Poecilia reticulata
