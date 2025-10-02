@@ -24,9 +24,11 @@ Mapping reads can be done with **[HISAT2](https://daehwankimlab.github.io/hisat2
 Generate genome index.
 
 ```
+mkdir differential_gene_expression
+cd differential_gene_expression
 mkdir genome
 cd genome
-cp /home/ubuntu/Share/day4/willow/genome/genome_assembly_1k.fa
+cp /home/ubuntu/Share/day4/willow/genome/genome_assembly_1k.fa ./
 hisat2-build -f genome_assembly_1k.fa genome_assembly_1k
 ```
 
