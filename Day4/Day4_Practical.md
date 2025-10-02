@@ -354,7 +354,7 @@ Run the differential gene expression on the leaf samples, and see what contrasts
 cd day4
 mkdir Y_gene_activity
 cd Y_gene_activity
-cp /home/ubuntu/Share/day4/guppy/gene_expression/transcriptome ./
+cp -r /home/ubuntu/Share/day4/guppy/transcriptome ./
 ```
 
 Obtain read counts using Salmon.....
@@ -370,7 +370,7 @@ Then, align reads to the transcriptome.
 ```
 mkdir salmon_quantification
 cd salmon_quantification
-salmon quant --numBootstraps 100 --gcBias --seqBias -p 12 -l A -i ../transcriptome/Poecilia_picta_transcripts -1 ../rnaseq_reads/picta/282_1.out.fastq.gz -2 ../rnaseq_reads/picta/282_2.out.fastq.gz -o female1
+salmon quant --numBootstraps 100 --gcBias --seqBias -p 12 -l A -i ../transcriptome/Poecilia_picta_transcripts -1 /home/ubuntu/Share/day4/guppy/rnaseq_reads/picta/female1_R1.fastq.gz -2 /home/ubuntu/Share/day4/guppy/rnaseq_reads/picta/female1_R2.fastq.gz -o female1
 ```
 
 
