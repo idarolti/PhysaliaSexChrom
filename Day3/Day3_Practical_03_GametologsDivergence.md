@@ -34,7 +34,7 @@ Remove gaps in alignments and short sequences.
 python 02.remove-gaps.py ../1.gametolog_sequences ../invalid_gametologs -cutoff 300
 ```
 
-## 02. Prepare files for PAML.
+## 02. Prepare files for PAML
 
 Convert fasta file to **[phylip](https://www.phylo.org/index.php/help/phylip)** format, which is required by PAML. PRANK includes a built-in feature for format conversion using the -convert option along with the -f flag to specify the output format.
 
@@ -69,7 +69,7 @@ EOF
 done
 ```
 
-## 03. Run PAML and extract pairwise divergence estimates.
+## 03. Run PAML and extract pairwise divergence estimates
 
 ```
 for d in Gametologs_*; do
@@ -102,7 +102,7 @@ cd ../plot
 head gametologs_dS.txt
 ```
 
-## 04. Plot dSxy estimates.
+## 04. Plot dSxy estimates
 
 Merge the file with dS values with the file with positional information on the sex chromosome for each gametolog.
 
