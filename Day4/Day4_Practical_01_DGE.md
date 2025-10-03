@@ -10,7 +10,7 @@ cd day4
 conda activate sexchr
 ```
 
-### Map RNA-seq reads
+## 01. Map RNA-seq reads
 
 Mapping reads can be done with **[HISAT2](https://daehwankimlab.github.io/hisat2/)**, a fast and sensitive alignment program for mapping next-generation sequencing reads. 
 
@@ -75,7 +75,7 @@ for r1 in ${reads_dir}/*_R1.fastq; do
 done
 ```
 
-### Extract gene coordinates
+## 02. Extract gene coordinates
 
 **[StringTie](https://ccb.jhu.edu/software/stringtie/index.shtml)** - A fast and highly efficient assembler of RNA-Seq alignments into potential transcripts. 
 
@@ -113,7 +113,7 @@ ls *.gtf > gtfs.list
 stringtie --merge gtfs.list -o merged.gtf
 ```
 
-### Obtain read counts 
+## 03. Obtain read counts 
 
 We will use **[HTSeq]([http://www-huber.embl.de/users/anders/HTSeq/doc/count.html](https://htseq.readthedocs.io/en/release_0.11.1/count.html))**. For faster processing, bam files must be sorted by read name, so paired reads appear adjacent in the file and are counted more quickly (default option in HTSeq). If your BAM is coordinate sorted (sorted by genomic position, the default with samtools sort), you must specify -r pos to tell htseq-count the BAM is position sorted. However, this requires more memory, as mate pairs may be separated and htseq-count buffers them until it sees the mate.
 
@@ -141,7 +141,7 @@ cd scripts
 python3 extract-counts.py ../htseq/catkin ../htseq/catkin/read_counts_catkin.txt
 ```
 
-### Filter lowly expressed genes
+## 04. Filter lowly expressed genes
 
 Copy the merged.gtf file based on the full dataset, then create a file with the length of each gene. You only need to run this using one tissue, as all genes are included in both.
 
@@ -183,7 +183,7 @@ Filter genes that do not have a minimum of 2 RPKM expression in at least half of
 python filter-expression.py rpkm_catkin.txt read_counts_catkin.txt rpkm_catkin_filtered.txt read_counts_catkin_filtered.txt 'F,F,F,M,M,M'
 ```
 
-### Normalization of gene expression with edgeR
+## 05. Normalization of gene expression with edgeR
 
 ```
 library("edgeR")
@@ -292,7 +292,7 @@ pheatmap(log2(rpkm_norm+1), show_colnames=T, show_rownames=F, color = palette2, 
 
 Run the analysis based on the leaf gene expression, and see what differences can you observe.
 
-### Differential gene expression
+## 06. Differential gene expression
 
 ```
 library("edgeR")
@@ -339,40 +339,3 @@ abline(h=c(-1,1), lty="dashed", col="grey")
 
 
 Run the differential gene expression on the leaf samples, and see what contrasts can you make to the catkin results.
-
-
-## Y gene activity decay
-
-```
-cd day4
-mkdir Y_gene_activity
-cd Y_gene_activity
-cp -r /home/ubuntu/Share/day4/guppy/transcriptome ./
-```
-
-Obtain read counts using Salmon.....
-
-First, we must index the transcriptome assembly. (Takes a while, so DO NOT RUN)
-
-```
-salmon index -t Poecilia_picta_transcripts.fasta -i Poecilia_picta_transcripts
-```
-
-Then, align reads to the transcriptome.
-
-```
-mkdir salmon_quantification
-cd salmon_quantification
-
-salmon quant --numBootstraps 100 --gcBias --seqBias -p 12 -l A -i ../transcriptome/Poecilia_picta_transcripts -1 /home/ubuntu/Share/day4/guppy/rnaseq_reads/picta/female1_R1.fastq.gz -2 /home/ubuntu/Share/day4/guppy/rnaseq_reads/picta/female1_R2.fastq.gz -o female1
-```
-
-This step takes a few minutes to run for each sample, so you can copy the salmon outputs to your folder.
-
-```
-cd ../
-cp -r /home/ubuntu/Share/day4/guppy/salmon_quantification_fullset ./
-```
-
-
-
