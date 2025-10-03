@@ -1,6 +1,6 @@
 # Day 3 Practical - 03. Gametologs divergence
 
-This part of the practical will cover the steps for estimating sequence divergence between gametologs
+This part of the practical will cover the steps for estimating sequence divergence between gametologs.
 
 ## 00. Prepare work folder for day 3
 
@@ -34,6 +34,8 @@ Remove gaps in alignments and short sequences.
 python 02.remove-gaps.py ../1.gametolog_sequences ../invalid_gametologs -cutoff 300
 ```
 
+## 02. Prepare files for PAML.
+
 Convert fasta file to **[phylip](https://www.phylo.org/index.php/help/phylip)** format, which is required by PAML. PRANK includes a built-in feature for format conversion using the -convert option along with the -f flag to specify the output format.
 
 ```
@@ -51,7 +53,6 @@ for d in Gametologs_*; do
     if [ -d "$d" ]; then
         base="${d#Gametologs_}"
         ctl_path="$d/$base.ctl"
-
         cat > "$ctl_path" <<EOF
 seqfile = $base.phy * sequence data filename
 outfile = $base.txt * main result file name
@@ -67,6 +68,8 @@ EOF
     fi
 done
 ```
+
+## 03. Run PAML and extract pairwise divergence estimates.
 
 ```
 for d in Gametologs_*; do
@@ -99,6 +102,8 @@ cd ../plot
 head gametologs_dS.txt
 ```
 
+## 04. Plot dSxy estimates.
+
 Merge the file with dS values with the file with positional information on the sex chromosome for each gametolog.
 
 ```
@@ -123,3 +128,5 @@ ggplot(gametologs, aes(x=V3, y=V2)) +
 			y="Pairwise divergence dSxy") +
 	theme_minimal()
 ```
+
+<img width="801" height="437" alt="gametologs divergence plot" src="https://github.com/user-attachments/assets/0ab6471f-418d-44ae-a060-199e4f6c44c0" />
