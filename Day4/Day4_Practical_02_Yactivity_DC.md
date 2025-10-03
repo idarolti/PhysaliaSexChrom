@@ -14,7 +14,7 @@ conda activate sexchr
 
 (DO NOT RUN)
 
-The **[STAR](https://physiology.med.cornell.edu/faculty/skrabanek/lab/angsd/lecture_notes/STARmanual.pdf) aligner is often recommended for mapping RNA-seq reads before calling SNPs because of its high sensitivity and accuracy in spliced alignment, especially for exon-exon junctions, and better handling of complex splicing events and repetitive regions.
+The **[STAR](https://physiology.med.cornell.edu/faculty/skrabanek/lab/angsd/lecture_notes/STARmanual.pdf)** aligner is often recommended for mapping RNA-seq reads before calling SNPs because of its high sensitivity and accuracy in spliced alignment, especially for exon-exon junctions, and better handling of complex splicing events and repetitive regions.
 
 ```
 STAR --runMode genomeGenerate --genomeDir reference_genome --genomeFastaFiles Poecilia_picta.fna --genomeSAindexNbases 12 --runThreadN 12
@@ -46,7 +46,7 @@ cp -r /home/ubuntu/Share/day4/guppy/snp_calling/ ./
 cd snp_calling
 ```
 
-Measurements of allele-specific expression can be biased when RNA-seq reads are aligned to a single reference genome haplotype, which contains only one allele at each polymorphic site. That is because reads carrying the non-reference (alternative) allele tend to have more mismatches when aligned to the reference genome, increasing the likelihood that they are either unmapped or incorrectly mapped to a different locus. Alignment algorithms often favor sequences that match the reference perfectly or with fewer mismatches, leading to a systematic bias where reads with the reference allele are mapped more efficiently than those with alternative alleles. As a result, reads containing the non-reference allele are underrepresented, skewing allele-specific expression estimates and potentially masking true biological signals or creating artificial signals of allelic imbalance. (See this article for more details: (https://doi.org/10.1186/1471-2164-14-536)
+Measurements of allele-specific expression can be biased when RNA-seq reads are aligned to a single reference genome haplotype, which contains only one allele at each polymorphic site. That is because reads carrying the non-reference (alternative) allele tend to have more mismatches when aligned to the reference genome, increasing the likelihood that they are either unmapped or incorrectly mapped to a different locus. Alignment algorithms often favor sequences that match the reference perfectly or with fewer mismatches, leading to a systematic bias where reads with the reference allele are mapped more efficiently than those with alternative alleles. As a result, reads containing the non-reference allele are underrepresented, skewing allele-specific expression estimates and potentially masking true biological signals or creating artificial signals of allelic imbalance. (See this article for more details: (**[https://doi.org/10.1186/1471-2164-14-536](https://doi.org/10.1186/1471-2164-14-536**)
 
 To mitigate this by removing regions with a high density of SNPs.
 
