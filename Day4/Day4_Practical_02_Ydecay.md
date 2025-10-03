@@ -73,7 +73,7 @@ Split vcfs into autosomes and sex chromosomes.
 
 ```
 mkdir ../major_allele_ratio
-python split_autosomes_sexchromo.py ../snp_calling/males_only_noclusters_filt_coverage.vcf positional_information.txt ../major_allele_ratio/males_snps_autosomes.vcf ../major_allele_ratio/males_snps_sexchromosomes.vcf
+python split_autosomes_sexchromo.py ../snp_calling/males_noclusters_filt_coverage.vcf positional_information.txt ../major_allele_ratio/males_snps_autosomes.vcf ../major_allele_ratio/males_snps_sexchromosomes.vcf
 ```
 
 For each heterozygous site, calculate the ratio between the major and the minor alleles.
