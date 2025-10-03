@@ -173,3 +173,7 @@ dotchart(positions,labels=genes,cex=.7,main="Sex-linked genes",xlab="Chr12 start
 ```
 
 <img width="1069" height="628" alt="sex_linked_genes_distribution" src="https://github.com/user-attachments/assets/8c47fc86-ecfc-45c9-939a-10b8f119938c" />
+
+Results from multiple families:
+
+<img width="598" height="394" alt="Screenshot 2025-10-03 at 17 52 36" src="https://github.com/user-attachments/assets/ab860a4e-fc1c-478f-ae69-be4931140774" />
