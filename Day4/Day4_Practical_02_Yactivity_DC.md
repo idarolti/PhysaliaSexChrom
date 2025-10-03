@@ -125,3 +125,7 @@ plot = ggplot(data_m, aes(x=ratio, fill=category)) +
 plot
 ```
 
+<img width="603" height="567" alt="males_ASE_plot" src="https://github.com/user-attachments/assets/3980d8b4-2b02-48be-ab6c-23a9f4af233c" />
+
+
+Run the analysis on the female dataset and compare results.
