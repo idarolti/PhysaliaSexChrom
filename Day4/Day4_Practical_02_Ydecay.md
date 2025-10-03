@@ -1,4 +1,4 @@
-# Day 4 Practical - 02. Y gene activity decay and Dosage Compensation
+# Day 4 Practical - 02. Y gene activity decay
 
 In this practical we will explore how to measure Y gene activity decay using estimates of allele-specific expression (ASE). ASE quanitfies the ratio of Y-linked allele expression to X-linked allele expression for genes that still have homologs on both sex chromosomes. A low expression ratio (Y/X) indicates reduced Y gene activity, signaling functional degradation or partial gene silencing on Y. We will use RNA-seq data from Poecilia picta males and females, perform genotyping to identify heterozygous sites, calculate the expression ratio for the two alleles at each site, and compare the distribution of ratios between sites on the autosomes and on the sex chromosomes, in both males and females.
 
@@ -129,39 +129,3 @@ plot
 
 
 Run the analysis on the female dataset and compare results.
-
-## Y gene activity decay
-
-```
-cd day4
-mkdir Y_gene_activity
-cd Y_gene_activity
-cp -r /home/ubuntu/Share/day4/guppy/transcriptome ./
-```
-
-Obtain read counts using Salmon.....
-
-First, we must index the transcriptome assembly. (Takes a while, so DO NOT RUN)
-
-```
-salmon index -t Poecilia_picta_transcripts.fasta -i Poecilia_picta_transcripts
-```
-
-Then, align reads to the transcriptome.
-
-```
-mkdir salmon_quantification
-cd salmon_quantification
-
-salmon quant --numBootstraps 100 --gcBias --seqBias -p 12 -l A -i ../transcriptome/Poecilia_picta_transcripts -1 /home/ubuntu/Share/day4/guppy/rnaseq_reads/picta/female1_R1.fastq.gz -2 /home/ubuntu/Share/day4/guppy/rnaseq_reads/picta/female1_R2.fastq.gz -o female1
-```
-
-This step takes a few minutes to run for each sample, so you can copy the salmon outputs to your folder.
-
-```
-cd ../
-cp -r /home/ubuntu/Share/day4/guppy/salmon_quantification_fullset ./
-```
-
-
-
