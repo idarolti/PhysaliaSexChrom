@@ -1,9 +1,6 @@
-# Day 4 Practical
+# Day 4 Practical - 01. Differential gene expression analysis
 
-This practical will cover:
-
-1. Differential gene expression analysis
-2. Detecting Y gene activity decay and dosage compensation
+For this part of the practical, we will use an example for quantifying gene expression in the absence of a GTF file or transcriptome reference. Several tools support genome-guided quantification, where RNA-seq reads are aligned to the genome and expression is estimated from assembled transcript structures. Here, we will focus on a pipeline based on HISAT2 and StringTie, and the model system is the willow (Salix viminalis), a dioecious species for which we have male and female RNA-seq data from both reproductive tissue (catkin) and somatic tissue (leaf).
 
 ## 00. Prepare work folder for day 4
 
@@ -12,10 +9,6 @@ mkdir day4
 cd day4
 conda activate sexchr
 ```
-
-## 01. Differential gene expression analysis
-
-For this part of the practical, we will use an example for quantifying gene expression in the absence of a GTF file or transcriptome reference. Several tools support genome-guided quantification, where RNA-seq reads are aligned to the genome and expression is estimated from assembled transcript structures. Here, we will focus on a pipeline based on HISAT2 and StringTie, and the model system is the willow (Salix viminalis), a dioecious species for which we have male and female RNA-seq data from both reproductive tissue (catkin) and somatic tissue (leaf).
 
 ### Map RNA-seq reads
 
