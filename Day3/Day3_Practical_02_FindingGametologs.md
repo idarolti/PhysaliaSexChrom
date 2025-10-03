@@ -172,3 +172,4 @@ genes <- sexlinked$V1
 dotchart(positions,labels=genes,cex=.7,main="Sex-linked genes",xlab="Chr12 start position",xlim=c(0,26000000))
 ```
 
+<img width="1069" height="628" alt="sex_linked_genes_distribution" src="https://github.com/user-attachments/assets/8c47fc86-ecfc-45c9-939a-10b8f119938c" />
