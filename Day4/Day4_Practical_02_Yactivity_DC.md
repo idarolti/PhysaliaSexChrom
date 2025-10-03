@@ -52,7 +52,7 @@ To mitigate this, remove regions with a high density of SNPs.
 
 ```
 cd ../ase_scripts/
-python exclude_snp_clusters.py ../snp_calling/males.vcf
+python exclude_snp_clusters.py ../snp_calling/males.vcf -l 75 -m 5
 ```
 
 Apply additional filters to remove triallelic SNPs and missing information in the vcf file.
