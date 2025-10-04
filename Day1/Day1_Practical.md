@@ -84,24 +84,22 @@ bowtie2 -p4 -x /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia
    | samtools view -b -S - | samtools sort - -o ./read_alignments/Poecilia_picta_female1_subset.bam
 ```
 
-**Filter alignments** (DO NOT RUN)
-
 Filter alignment files by mapping quality
 
 ```
-samtools view -b -q 20 aligned.bam > filtered.bam
+samtools view -b -q 30 Poecilia_picta_female1_subset.bam > Poecilia_picta_female1_subset_mapq.bam
 ```
 
-Filter alignment files based on secondary alignments
+Filter alignment files based on secondary alignments based on XS tag (though this is not always available!)
 
 ```
-samtools view -h aligned.bam | grep -v "XS:i:" | samtools view -bS - > filtered.bam
+samtools view -h Poecilia_picta_female1_subset.bam | grep -v "XS:i:" | samtools view -bS - > Poecilia_picta_female1_subset_unique.bam
 ```
 
 Remove duplicates
 
 ```
-picard MarkDuplicates I=aligned.bam O=aligned_rmdup.bam M=dupmetrics.txt REMOVE_DUPLICATES=true
+picard MarkDuplicates I=Poecilia_picta_female1_subset_mapq.bam O=Poecilia_picta_female1_subset_mapq_rmdup.bam M=dupmetrics.txt REMOVE_DUPLICATES=true
 ```
 
 
