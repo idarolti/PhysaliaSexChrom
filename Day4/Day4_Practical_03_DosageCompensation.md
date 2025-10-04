@@ -1,36 +1,289 @@
 
 # Day 4 Practical - 03. Dosage compensation
 
+## 00. Prepare work folder
+
+A lot of the steps will be done in R, so prepare a work folder locally.
+
 ```
-cd day4
-mkdir dc
-cd dc
-cp -r /home/ubuntu/Share/day4/guppy/transcriptome ./
+mkdir Desktop/physalia/day4/dosage_compensation
+cd Desktop/physalia/day4/dosage_compensation
 ```
 
-Obtain read counts using Salmon.....
+## 01. Quantify gene expression
 
-First, we must index the transcriptome assembly. (Takes a while, so DO NOT RUN)
+Obtain read counts using **[Salmon](https://combine-lab.github.io/salmon/)**. Salmon is a fast quasi-mapping approach that directly maps reads to the transcriptome without full base-to-base alignment, drastically reducing runtime and storage compared to other aligners.
+
+<img width="760" height="517" alt="Screenshot 2025-10-04 at 14 43 01" src="https://github.com/user-attachments/assets/166c0336-0fd1-428d-8e1b-28e39d942279" />
+
+The two steps in Salmon are indexing the transcriptome, and then aligning with bootstrapping. 
 
 ```
 salmon index -t Poecilia_picta_transcripts.fasta -i Poecilia_picta_transcripts
+
+salmon quant --numBootstraps 100 --gcBias --seqBias -p 12 -l A -i Poecilia_picta_transcripts -1 female1_R1.fastq.gz -2 female1_R2.fastq.gz -o female1
 ```
 
-Then, align reads to the transcriptome.
+Both steps take a while to run, so you can copy the outputs directly to your working folder.
 
 ```
-mkdir salmon_quantification
-cd salmon_quantification
-
-salmon quant --numBootstraps 100 --gcBias --seqBias -p 12 -l A -i ../transcriptome/Poecilia_picta_transcripts -1 /home/ubuntu/Share/day4/guppy/rnaseq_reads/picta/female1_R1.fastq.gz -2 /home/ubuntu/Share/day4/guppy/rnaseq_reads/picta/female1_R2.fastq.gz -o female1
+scp -i chrsex25.pem ubuntu@44.249.25.243:/home/ubuntu/Share/day4/guppy/transcriptome ./
+scp -i chrsex25.pem ubuntu@44.249.25.243:/home/ubuntu/Share/day4/guppy/salmon_quantification ./
 ```
 
-This step takes a few minutes to run for each sample, so you can copy the salmon outputs to your folder.
+## 02. Obtain merged counts data
+
+First, make list of sample names.
 
 ```
-cd ../
-cp -r /home/ubuntu/Share/day4/guppy/salmon_quantification_fullset ./
+mkdir expression
+cd expression
+
+(echo "sample_id"; ls ../salmon_quantification) > samples_list.txt
 ```
+
+Import counts data with **[tximport](https://www.bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html)** package in R.
+
+```
+library(tximport)
+
+# Get file with sample names
+picta_samples <- read.table("samples_list.txt", header=T, sep=",")
+head(picta_samples)
+
+# Read quantification files
+files <- file.path("./salmon_quantification_fullset", picta_samples$sample_id, "quant.sf")
+names(files) <- paste0(picta_samples$sample_id)
+all(file.exists(files))
+
+# Run tximport
+txi <- tximport(files, type = "salmon", , txOut = TRUE, countsFromAbundance = "no")
+head(txi$counts)
+
+# Write read counts
+df <- data.frame(gene = rownames(txi$counts), txi$counts, check.names = FALSE)
+write.table(df, file="./expression/Poecilia_picta_counts.txt", quote = FALSE, sep = ",", row.names = FALSE)
+```
+
+## 03. Convert counts to RPKM
+
+First, obtain gene lengths.
+
+```
+awk '/^>/{if(seqlen){print seqname"\t"seqlen}; seqname=substr($0,2); seqlen=0; next}
+     {seqlen += length($0)}
+     END{print seqname"\t"seqlen}' ../transcriptome/Poecilia_picta_transcripts.fasta > ../transcriptome/gene_lengths.txt
+```
+
+Covert read counts to RPKM.
+
+```
+library("edgeR")
+
+data <- read.table("./expression/Poecilia_picta_counts.txt",stringsAsFactors=F, header=T, row.names=1, sep=",")
+head(data)
+dim(data)
+
+#Extract RPKM
+expr <- DGEList(counts=data)
+gene_length <- read.table("./transcriptome/gene_lengths.txt",stringsAsFactors=F)
+head(gene_length)
+dim(gene_length)
+
+expressed_genes <- rownames(data)
+length(expressed_genes)
+gene_length <- subset(gene_length, V1 %in% expressed_genes)
+gene_length <- gene_length[match(rownames(expr),gene_length$V1),]
+gene_length_vector <- c(gene_length$V2)
+all(gene_length$V1 == rownames(expr))
+#should print TRUE
+
+rpkm <- rpkm(expr, log=FALSE, gene.length=gene_length_vector)
+write.table(rpkm, file="./expression/Poecilia_picta_rpkm.txt",quote=F, sep=",")
+```
+
+## 04. Remove lowly-expressed genes
+
+Remove genes that do not have at least 2 RPKM in half of the individuals of one sex.
+
+```
+awk -F, '
+NR==1 { print; next }
+{
+  female_count = 0
+  male_count = 0
+  for (i=2; i<=4; i++) if ($i > 2) female_count++
+  for (i=5; i<=7; i++) if ($i > 2) male_count++
+  if (female_count >= 2 || male_count >= 2) print
+}' Poecilia_picta_rpkm.txt > Poecilia_picta_rpkm_filtered.txt
+
+awk -F, 'NR==FNR {genes[$1]; next} FNR==1 || $1 in genes' Poecilia_picta_rpkm_filtered.txt Poecilia_picta_counts.txt > Poecilia_picta_counts_filtered.txt
+```
+
+## 05. Normalize gene expression
+
+```
+library("edgeR")
+
+data <- read.table("Poecilia_picta_counts_filtered.txt",stringsAsFactors=F,header=T, row.names=1,sep=",")
+head(data)
+dim(data)
+conditions <- factor(c("F","F","F","M","M","M"))
+
+#Check raw read count data
+expr <- DGEList(counts=data,group=conditions)
+plotMDS(expr,xlim=c(-6,6))
+```
+
+<img width="618" height="580" alt="Screenshot 2025-10-04 at 16 46 47" src="https://github.com/user-attachments/assets/d5994cde-4c8b-4096-b991-946283323db9" />
+
+```
+cpm_expr <- cpm(expr)
+sample1 <- density(log2(cpm_expr[,1]))
+sample2 <- density(log2(cpm_expr[,2]))
+sample3 <- density(log2(cpm_expr[,3]))
+sample4 <- density(log2(cpm_expr[,4]))
+sample5 <- density(log2(cpm_expr[,5]))
+sample6 <- density(log2(cpm_expr[,6]))
+plot(sample1, xlab = "CPM", ylab = "Density",type="l",lwd=2,main="Raw log2 cpm",col="red")
+lines(sample2, type="l",lwd=2,col="red")
+lines(sample3, type="l",lwd=2,col="red")
+lines(sample4, type="l",lwd=2,col="blue")
+lines(sample5, type="l",lwd=2,col="blue")
+lines(sample6, type="l",lwd=2,col="blue")
+```
+
+<img width="661" height="601" alt="Screenshot 2025-10-04 at 16 43 21" src="https://github.com/user-attachments/assets/1144aee0-796f-4b08-9999-a8a7f800d463" />
+
+```
+#Check normalised read count data
+expr <- DGEList(counts=data,group=conditions)
+norm_expr <- calcNormFactors(expr)
+plotMDS(norm_expr,xlim=c(-2,2))
+```
+
+<img width="666" height="578" alt="Screenshot 2025-10-04 at 16 43 55" src="https://github.com/user-attachments/assets/a55d697d-df5b-4c7f-9e27-9630544f981b" />
+
+```
+cpm_norm_expr <- cpm(norm_expr)
+sample1 <- density(log2(cpm_norm_expr[,1]))
+sample2 <- density(log2(cpm_norm_expr[,2]))
+sample3 <- density(log2(cpm_norm_expr[,3]))
+sample4 <- density(log2(cpm_norm_expr[,4]))
+sample5 <- density(log2(cpm_norm_expr[,5]))
+sample6 <- density(log2(cpm_norm_expr[,6]))
+plot(sample1, xlab = "CPM", ylab = "Density",type="l",lwd=2,main="Raw log2 cpm",col="red")
+lines(sample2, type="l",lwd=2,col="red")
+lines(sample3, type="l",lwd=2,col="red")
+lines(sample4, type="l",lwd=2,col="blue")
+lines(sample5, type="l",lwd=2,col="blue")
+lines(sample6, type="l",lwd=2,col="blue")
+```
+
+<img width="665" height="602" alt="Screenshot 2025-10-04 at 16 44 18" src="https://github.com/user-attachments/assets/9305286d-290b-40a7-9bbd-6709b3665f28" />
+
+```
+#Normalise and extract rpkm
+expr <- DGEList(counts=data)
+norm_expr <- calcNormFactors(expr)
+gene_length <- read.table("./transcriptome/gene_lengths.txt",stringsAsFactors=F)
+head(gene_length)
+dim(gene_length)
+expressed_genes <- rownames(data)
+length(expressed_genes)
+gene_length <- subset(gene_length, V1 %in% expressed_genes)
+gene_length <- gene_length[match(rownames(expr),gene_length$V1),]
+gene_length_vector <- c(gene_length$V2)
+all(gene_length$V1 == rownames(expr))
+#should print TRUE
+
+rpkm_norm <- rpkm(norm_expr, log=FALSE, gene.length=gene_length_vector)
+
+rpkm_df <- as.data.frame(rpkm_norm)
+rpkm_df$gene <- rownames(rpkm_df)
+rpkm_df <- rpkm_df[, c(ncol(rpkm_df), 1:(ncol(rpkm_df)-1))]
+
+write.table(rpkm_df, file="./expression/Poecilia_picta_rpkm_normalized.txt", quote = FALSE, sep = ",", row.names = FALSE)
+```
+
+## 06. Obtain chromosomal information for each gene
+
+```
+awk '$3 == "CDS" { 
+  split($9, a, ";"); 
+  for(i in a) { 
+    if(a[i] ~ /^ID=/) { 
+      split(a[i], b, "="); 
+      split(b[2], c, ":"); 
+      print c[1], $1 
+    } 
+  } 
+}' ../transcriptome/Poecilia_picta_annotation.gff3 > ../transcriptome/gene_chromosome.txt
+```
+
+## 07. Compare expression between males and females
+
+```
+library(ggplot2) 
+library(tidyr)
+library(dplyr)
+
+# Read expression matrix
+expr <- read.table("./expression/Poecilia_picta_rpkm_normalized.txt", stringsAsFactors = FALSE,sep=",",header=T)
+head(expr)
+
+# Read gene-to-chromosome mapping (no header assumed)
+genes_chr <- read.table("./transcriptome/gene_chromosome.txt", stringsAsFactors = FALSE, col.names = c("gene", "chromosome"))
+head(genes_chr)
+
+# Merge by gene
+merged <- merge(expr, genes_chr, by = "gene", all.x = TRUE)
+head(merged)
+
+# Apply log2 transformation (+1 pseudocount) to expression columns
+expr_cols <- setdiff(colnames(merged), c("gene", "chromosome"))
+merged[expr_cols] <- log2(merged[expr_cols] + 1)
+
+# Filter rows for sex chromosome chromosome
+chr12_data <- merged %>% filter(chromosome == "LG12")
+
+# Select relevant columns and reshape to long format
+long_data <- chr12_data %>%
+  select(gene, female1, female2, female3, male1, male2, male3) %>%
+  pivot_longer(cols = -gene, names_to = "sample", values_to = "expression")
+
+# Add a sex column based on sample name prefix
+long_data$sex <- ifelse(grepl("^female", long_data$sample), "Female", "Male")
+
+# Create boxplot of expression by sex
+ggplot(long_data, aes(x = sex, y = expression,fill=sex)) + 
+  geom_boxplot(outlier.shape = NA,notch = TRUE) +
+  scale_fill_manual(values = c("Female" = "firebrick3", "Male" = "dodgerblue")) +
+  labs(title = "Sex chromosome",
+       x = "Sex", y = "Log2 RPKM") +
+  theme_minimal()+
+  coord_cartesian(ylim = c(0, 8))
+```
+
+<img width="404" height="531" alt="Screenshot 2025-10-04 at 16 56 45" src="https://github.com/user-attachments/assets/32de4ec2-a51d-40a2-99f9-440ad7d2b38f" />
+
+```
+# Create boxplot of expression by sample
+ggplot(long_data, aes(x = sample, y = expression,fill=sex)) + 
+  geom_boxplot(outlier.shape = NA,notch = TRUE) +
+  scale_fill_manual(values = c("Female" = "firebrick3", "Male" = "dodgerblue")) +
+  labs(title = "Sex chromosome",
+       x = "Sample", y = "log2 RPKM") +
+  theme_minimal() +
+  coord_cartesian(ylim = c(0, 8)) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+<img width="488" height="525" alt="Screenshot 2025-10-04 at 17 04 30" src="https://github.com/user-attachments/assets/1497c2fb-8398-4404-b480-14a8c4da798a" />
+
+**Try plotting male and female expression for autosomal data**
+
+autosomal_data <- merged %>% filter(chromosome != "LG12")
 
 
 
