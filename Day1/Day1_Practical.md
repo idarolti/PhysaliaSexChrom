@@ -55,7 +55,7 @@ trimmomatic PE \
    LEADING:3 TRAILING:3 SLIDINGWINDOW:4:15 MINLEN:50
 ```
 
-For comparison, run FastQC and MultiQC on the trimmed reads
+**For comparison, run FastQC and MultiQC on the trimmed reads.**
 
 ```
 mkdir fastqc_output_trimmed_reads
@@ -63,7 +63,7 @@ for f in ./trimmed_reads/*_paired.fastq.gz; do fastqc $f -o ./fastqc_output_trim
 multiqc ./fastqc_output_trimmed_reads -o ./fastqc_output_trimmed_reads
 ```
 
-Try running the trimming and fastqc commands for sample2.
+**Try running the trimming and fastqc commands for sample2.**
 
 ## 02. Read mapping
 
