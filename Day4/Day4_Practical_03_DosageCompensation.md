@@ -285,5 +285,24 @@ ggplot(long_data, aes(x = sample, y = expression,fill=sex)) +
 
 autosomal_data <- merged %>% filter(chromosome != "LG12")
 
+## 08. Compare expression between the autosomes and the sex chromosomes
 
+```
+sexchr_data$chr_type <- "SexChr"
+autosome_data$chr_type <- "Autosome"
+combined_data <- bind_rows(sexchr_data, autosome_data)
+
+combined_males <- combined_data %>% filter(sex == "Male")
+
+ggplot(combined_males, aes(x = chr_type, y = expression, fill = chr_type)) +
+  geom_boxplot(notch = TRUE, outlier.shape = NA) +
+  scale_fill_manual(values = c("SexChr" = "forestgreen", "Autosome" = "gray")) +
+  labs(title = "Males", x = "Category", y = "log2 RPKM") +
+  theme_minimal()+
+  coord_cartesian(ylim = c(0, 8))
+```
+
+<img width="352" height="531" alt="auto_sexchr_males" src="https://github.com/user-attachments/assets/a21bcd00-5b6f-4e78-801c-cb8effa56589" />
+
+**Try plotting the same for the female dataset**
 
