@@ -1,10 +1,6 @@
-# Day 3 Practical
+# Day 3 Practical - 01. K-mer analyses
 
-This practical will cover:
-
-1. K-mer analyses for sex chromosome discovery
-2. Identifying sex-linked sequences
-3. Estimating sequence divergence between gametologs
+This first part of the practical will cover the steps for K-mer analyses for sex chromosome discovery.
 
 ## 00. Prepare work folder for day 3
 
