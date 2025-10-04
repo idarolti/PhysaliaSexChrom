@@ -63,8 +63,6 @@ for f in ./trimmed_reads/*_paired.fastq.gz; do fastqc $f -o ./fastqc_output_trim
 multiqc ./fastqc_output_trimmed_reads -o ./fastqc_output_trimmed_reads
 ```
 
-**Try running the trimming and fastqc commands for sample2.**
-
 ## 02. Read mapping
 
 * **[Bowtie2](https://bowtie-bio.sourceforge.net/bowtie2/manual.shtml)** - A tool for aligning short-read data to a reference genome or genomic sequences
@@ -86,7 +84,7 @@ bowtie2 -p12 -x /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecili
    | samtools view -b -S - | samtools sort - -o ./read_alignments/Poecilia_picta_female1_subset.bam
 ```
 
-Try running the bowtie mapping for female2 subset.
+**Try running the bowtie mapping for female2 subset.**
 
 ## 03. Variant calling
 
