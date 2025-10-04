@@ -1,10 +1,10 @@
 
-## Y gene activity decay
+# Day 4 Practical - 03. Dosage compensation
 
 ```
 cd day4
-mkdir Y_gene_activity
-cd Y_gene_activity
+mkdir dc
+cd dc
 cp -r /home/ubuntu/Share/day4/guppy/transcriptome ./
 ```
 
