@@ -33,6 +33,12 @@ This software uses as input the fastqc.zip files produced by FastQC. After runni
 multiqc ./fastqc_output_raw_reads -o ./fastqc_output_raw_reads
 ```
 
+Transfer files to desktop
+
+```
+scp -i chrsex25.pem ubuntu@44.249.25.243:/path/file ~/Desktop
+```
+
 * **[Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic)** - A read trimming tool for Illumina NGS data
 
 The following command will trim reads to remove adapter sequences, regions where the average Phred score in sliding windows of four bases is <15, reads for which the leading/trailing bases have a Phred score <3, and paired-end reads where either read pair is <50 bp. You can find adapter sequences [here](https://support-docs.illumina.com/SHARE/AdapterSequences/Content/SHARE/FrontPages/AdapterSeq.htm). You can use the command on each pair (forward/R1 + reverse/R2) of fastq files.
