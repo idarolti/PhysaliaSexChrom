@@ -120,13 +120,13 @@ Call SNPs using [HaplotypeCaller](https://gatk.broadinstitute.org/hc/en-us/artic
 ```
 mkdir snp_calling
 
-picard AddOrReplaceReadGroups I=./read_alignments/Poecilia_picta_female1_subset.bam O=./read_alignments/Poecilia_picta_female1_subset_RG.bam RGID=1 RGLB=lib1 RGPL=illumina RGPU=unit1 RGSM=picta_female1
+picard AddOrReplaceReadGroups I=./read_alignments/Poecilia_picta_female1_subset_mapq.bam O=./read_alignments/Poecilia_picta_female1_subset_mapq_RG.bam RGID=1 RGLB=lib1 RGPL=illumina RGPU=unit1 RGSM=picta_female1
 
-samtools index ./read_alignments/Poecilia_picta_female1_subset_RG.bam
+samtools index ./read_alignments/Poecilia_picta_female1_subset_mapq_RG.bam
 
 gatk HaplotypeCaller \
    -R /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta.fna \
-   -I ./read_alignments/Poecilia_picta_female1_subset_RG.bam \
+   -I ./read_alignments/Poecilia_picta_female1_subset_mapq_RG.bam \
    -O ./snp_calling/Poecilia_picta_female1_subset.gvcf --emit-ref-confidence GVCF \
    --min-base-quality-score 30 --pcr-indel-model NONE --sample-name picta_female1
 ```
