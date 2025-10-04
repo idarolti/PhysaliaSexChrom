@@ -78,7 +78,7 @@ bowtie2-build Poecilia_picta.fna Poecilia_picta
 Then, align each pair of reads to the indexed genome using bowtie2 and convert the output alignment sam file into a sorted bam file.
 
 ```
-bowtie2 -p12 -x /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta \
+bowtie2 -p4 -x /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta \
    -1 /home/ubuntu/Share/day1/02.read_mapping/reads/Poecilia_picta_female1_R1_subset.fastq \
    -2 /home/ubuntu/Share/day1/02.read_mapping/reads/Poecilia_picta_female1_R2_subset.fastq \
    | samtools view -b -S - | samtools sort - -o ./read_alignments/Poecilia_picta_female1_subset.bam
