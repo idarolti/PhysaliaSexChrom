@@ -84,6 +84,19 @@ bowtie2 -p4 -x /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia
    | samtools view -b -S - | samtools sort - -o ./read_alignments/Poecilia_picta_female1_subset.bam
 ```
 
+Filter alignment files by mapping quality
+
+```
+samtools view -b -q 10 aligned.bam > filtered.bam
+```
+
+Filter alignment files based on secondary alignments
+
+```
+samtools view -h aligned.bam | grep -v "XS:i:" | samtools view -bS - > filtered.bam
+
+```
+
 **Try running the bowtie mapping for female2 subset.**
 
 ## 03. Variant calling
