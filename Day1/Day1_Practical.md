@@ -29,16 +29,17 @@ for f in /home/ubuntu/Share/day1/01.quality_trimming/raw_reads/*fastq; do fastqc
 
 * **[MultiQC](https://multiqc.info)** - A tool for merging FastQC output reports of individual samples into a single summary report
 
-This software uses as input the fastqc.zip files produced by FastQC. After running, download the .html output file to your computer to visualize the results in a web browser.
+This software uses as input the fastqc.zip files produced by FastQC. After running, download the .html output file to your local machine to visualize the results in a web browser.
 
 ```
 multiqc ./fastqc_output_raw_reads -o ./fastqc_output_raw_reads
 ```
 
-Transfer files to desktop
+Transfer files to local machine
 
 ```
-scp -i chrsex25.pem ubuntu@44.249.25.243:/path/file ~/Desktop
+pwd
+scp -i chrsex25.pem ubuntu@44.249.25.243:/path/*.html ~/Desktop
 ```
 
 * **[Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic)** - A read trimming tool for Illumina NGS data
@@ -71,11 +72,13 @@ for f in ./trimmed_reads/*_paired.fastq.gz; do fastqc $f -o ./fastqc_output_trim
 multiqc ./fastqc_output_trimmed_reads -o ./fastqc_output_trimmed_reads
 ```
 
+Note - for RAD-seq data, trimming also includes removing barcodes and restriction site remnants. Tools like _process_radtags_ from **[STACKS](https://catchenlab.life.illinois.edu/stacks/)** can specifically handle these steps.
+
 ## 02. Read mapping
 
 * **[Bowtie2](https://bowtie-bio.sourceforge.net/bowtie2/manual.shtml)** - A tool for aligning short-read data to a reference genome or genomic sequences
 
-First, build an index for the reference genome. DO NOT RUN!
+First, build an index for the reference genome. This takes a while to run, so skip!
 
 ```
 mkdir 02.read_alignments
@@ -102,7 +105,9 @@ samtools view -b -q 30 Poecilia_picta_female1_subset.bam > Poecilia_picta_female
 
 Filter alignment files by uniquely mapping reads.
 
-Bowtie2 XS flag is used for this, though it can be ambiguous and inconsistent! Earlier BWA version (aln/sampe) XT:A:U flag is more reliable.
+Bowtie2 XS flag is used for this, though it can be ambiguous and inconsistent! 
+Earlier BWA version (aln/sampe) XT:A:U flag is more reliable.
+HISAT2 also has useful options to filter alignments (--no-discordant --no-mixed --no-unal)
 
 ```
 samtools view -h Poecilia_picta_female1_subset.bam | grep -v "XS:i:" | samtools view -bS - > Poecilia_picta_female1_subset_unique.bam
