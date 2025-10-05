@@ -81,20 +81,19 @@ Note - for RAD-seq data, trimming also includes removing barcodes and restrictio
 First, build an index for the reference genome. This takes a while to run, so skip!
 
 ```
-mkdir 02.read_alignments
-
 bowtie2-build Poecilia_picta.fna Poecilia_picta
 ```
 
 Then, align each pair of reads to the indexed genome using bowtie2 and convert the output alignment sam file into a sorted bam file.
 
 ```
+mkdir 02.read_alignments
+cd 02.read_alignments
+
 bowtie2 -p4 -x /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta \
    -1 /home/ubuntu/Share/day1/02.read_mapping/reads/Poecilia_picta_female1_R1_subset.fastq \
    -2 /home/ubuntu/Share/day1/02.read_mapping/reads/Poecilia_picta_female1_R2_subset.fastq \
-   | samtools view -b -S - | samtools sort - -o ./02.read_alignments/Poecilia_picta_female1_subset.bam
-
-cd 02.read_alignments
+   | samtools view -b -S - | samtools sort - -o ./Poecilia_picta_female1_subset.bam
 ```
 
 Filter alignment files by mapping quality.
