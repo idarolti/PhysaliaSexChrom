@@ -7,7 +7,7 @@ This part of the practical will cover the steps for estimating sequence divergen
 ```
 mkdir day3
 cd day3
-conda activate sexchr
+conda activate /home/ubuntu/miniconda3/envs/sexchr
 ```
 
 ## 01. Align gametolog sequences
