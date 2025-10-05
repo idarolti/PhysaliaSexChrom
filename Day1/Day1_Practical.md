@@ -20,6 +20,8 @@ conda activate sexchr
 First, create an output directory for FastQC. Then, run FastQC for all the paired fastq files.
 
 ```
+mkdir 01.trimming
+cd 01.trimming
 mkdir fastqc_output_raw_reads
 
 for f in /home/ubuntu/Share/day1/01.quality_trimming/raw_reads/*fastq; do fastqc $f -o ./fastqc_output_raw_reads; done
@@ -76,7 +78,7 @@ multiqc ./fastqc_output_trimmed_reads -o ./fastqc_output_trimmed_reads
 First, build an index for the reference genome. DO NOT RUN!
 
 ```
-mkdir read_alignments
+mkdir 02.read_alignments
 
 bowtie2-build Poecilia_picta.fna Poecilia_picta
 ```
@@ -87,7 +89,9 @@ Then, align each pair of reads to the indexed genome using bowtie2 and convert t
 bowtie2 -p4 -x /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta \
    -1 /home/ubuntu/Share/day1/02.read_mapping/reads/Poecilia_picta_female1_R1_subset.fastq \
    -2 /home/ubuntu/Share/day1/02.read_mapping/reads/Poecilia_picta_female1_R2_subset.fastq \
-   | samtools view -b -S - | samtools sort - -o ./read_alignments/Poecilia_picta_female1_subset.bam
+   | samtools view -b -S - | samtools sort - -o ./02.read_alignments/Poecilia_picta_female1_subset.bam
+
+cd 02.read_alignments
 ```
 
 Filter alignment files by mapping quality
@@ -124,28 +128,28 @@ gatk CreateSequenceDictionary -R Poecilia_picta.fna -O Poecilia_picta.dict
 Call SNPs using [HaplotypeCaller](https://gatk.broadinstitute.org/hc/en-us/articles/360037225632-HaplotypeCaller)
 
 ```
-mkdir snp_calling
+mkdir 03.snp_calling
 
-picard AddOrReplaceReadGroups I=./read_alignments/Poecilia_picta_female1_subset_mapq.bam O=./read_alignments/Poecilia_picta_female1_subset_mapq_RG.bam RGID=1 RGLB=lib1 RGPL=illumina RGPU=unit1 RGSM=picta_female1
+picard AddOrReplaceReadGroups I=./02.read_alignments/Poecilia_picta_female1_subset_mapq.bam O=./02.read_alignments/Poecilia_picta_female1_subset_mapq_RG.bam RGID=1 RGLB=lib1 RGPL=illumina RGPU=unit1 RGSM=picta_female1
 
-samtools index ./read_alignments/Poecilia_picta_female1_subset_mapq_RG.bam
+samtools index ./02.read_alignments/Poecilia_picta_female1_subset_mapq_RG.bam
 
 gatk HaplotypeCaller \
    -R /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta.fna \
-   -I ./read_alignments/Poecilia_picta_female1_subset_mapq_RG.bam \
-   -O ./snp_calling/Poecilia_picta_female1_subset.gvcf --emit-ref-confidence GVCF \
+   -I ./02.read_alignments/Poecilia_picta_female1_subset_mapq_RG.bam \
+   -O ./03.snp_calling/Poecilia_picta_female1_subset.gvcf --emit-ref-confidence GVCF \
    --min-base-quality-score 30 --pcr-indel-model NONE --sample-name picta_female1
 ```
 
 Perform genotyping of variants using [GenotypeGVCFs](https://gatk.broadinstitute.org/hc/en-us/articles/13832766863259-GenotypeGVCFs). The next steps run more quickly, so we can use as input file a gvcf based on the entire sex chromosome (chr12).
 
 ```
-cp /home/ubuntu/Share/day1/03.snp_calling/Poecilia_picta_female1_chr12.gvcf ./snp_calling
+cp /home/ubuntu/Share/day1/03.snp_calling/Poecilia_picta_female1_chr12.gvcf ./03.snp_calling
 
 gatk GenotypeGVCFs \
    -R /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta.fna \
-   --variant ./snp_calling/Poecilia_picta_female1_chr12.gvcf \
-   -O ./snp_calling/Poecilia_picta_female1_chr12.genotyped.gvcf
+   --variant ./03.snp_calling/Poecilia_picta_female1_chr12.gvcf \
+   -O ./03.snp_calling/Poecilia_picta_female1_chr12.genotyped.gvcf
 ```
 
 Filter variants using [SelectVariants](https://gatk.broadinstitute.org/hc/en-us/articles/360037055952-SelectVariants) and [VariantFiltration](https://gatk.broadinstitute.org/hc/en-us/articles/360037434691-VariantFiltration)
@@ -153,13 +157,13 @@ Filter variants using [SelectVariants](https://gatk.broadinstitute.org/hc/en-us/
 ```
 gatk SelectVariants \
    -R /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta.fna \
-   -V ./snp_calling/Poecilia_picta_female1_chr12.genotyped.gvcf \
-   -O ./snp_calling/Poecilia_picta_female1_chr12.selectvar.gvcf --restrict-alleles-to BIALLELIC --select-type-to-include SNP
+   -V ./03.snp_calling/Poecilia_picta_female1_chr12.genotyped.gvcf \
+   -O ./03.snp_calling/Poecilia_picta_female1_chr12.selectvar.gvcf --restrict-alleles-to BIALLELIC --select-type-to-include SNP
 
 gatk VariantFiltration \
    -R /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta.fna \
-   -V ./snp_calling/Poecilia_picta_female1_chr12.selectvar.gvcf \
-   -O ./snp_calling/Poecilia_picta_female1_chr12.selectvar_filtered.gvcf \
+   -V ./03.snp_calling/Poecilia_picta_female1_chr12.selectvar.gvcf \
+   -O ./03.snp_calling/Poecilia_picta_female1_chr12.selectvar_filtered.gvcf \
    --filter-expression "QUAL <= 30.0 || DP <= 20" --filter-name "low_qual_or_dp"
 ```
 
