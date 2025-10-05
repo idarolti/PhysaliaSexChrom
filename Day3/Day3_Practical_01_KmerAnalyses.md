@@ -7,7 +7,7 @@ This first part of the practical will cover the steps for K-mer analyses for sex
 ```
 mkdir day3
 cd day3
-conda activate sexchr
+conda activate /home/ubuntu/miniconda3/envs/sexchr
 ```
 Download all .sh scripts from this day's GitHub folder and upload to your day3 on the server
 
