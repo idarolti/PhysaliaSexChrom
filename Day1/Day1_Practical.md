@@ -106,7 +106,9 @@ samtools view -b -q 30 Poecilia_picta_female1_subset.bam > Poecilia_picta_female
 Filter alignment files by uniquely mapping reads.
 
 Bowtie2 XS flag is used for this, though it can be ambiguous and inconsistent! 
+
 Earlier BWA version (aln/sampe) XT:A:U flag is more reliable.
+
 HISAT2 also has useful options to filter alignments (--no-discordant --no-mixed --no-unal)
 
 ```
