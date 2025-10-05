@@ -7,7 +7,7 @@ For this part of the practical, we will use an example for quantifying gene expr
 ```
 mkdir day4
 cd day4
-conda activate sexchr
+conda activate /home/ubuntu/miniconda3/envs/sexchr
 ```
 
 ## 01. Map RNA-seq reads
