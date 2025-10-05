@@ -7,7 +7,7 @@ This part of the practical will cover the steps for identifying sex-linked seque
 ```
 mkdir day3
 cd day3
-conda activate sexchr
+conda activate /home/ubuntu/miniconda3/envs/sexchr
 ```
 
 ## 02. Genotyping
