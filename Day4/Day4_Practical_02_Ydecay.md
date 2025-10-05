@@ -7,7 +7,7 @@ In this practical we will explore how to measure Y gene activity decay using est
 ```
 mkdir day4
 cd day4
-conda activate sexchr
+conda activate /home/ubuntu/miniconda3/envs/sexchr
 ```
 
 ## 01. Align RNA-seq reads and call SNPs
