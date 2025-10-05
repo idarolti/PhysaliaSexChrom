@@ -167,3 +167,28 @@ gatk VariantFiltration \
 ```
 
 Try running genotyping and filtering on another chromosome file (/home/ubuntu/Share/day1/03.snp_calling/Poecilia_picta_female1_chr8.gvcf)
+
+## 04. Visualize alignments
+
+Install **[IGV](https://igv.org/doc/desktop/#DownloadPage/ ) locally.
+
+Convert .bam file to .bw format, which allows easier vizualization of number of reads mapping in each genomic region. This step is more computationally intensive given that we want to vizualize read mapping rates across the genome. So you can directyl copy the output .bw files.
+
+```
+bamCoverage -p 8 -b Poecilia_picta_female1.bam -o Poecilia_picta_female1.bw
+```
+
+```
+scp -i chrsex25.pem ubuntu@44.249.25.243:/home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta.fn ~/Desktop
+scp -i chrsex25.pem ubuntu@44.249.25.243:/home/ubuntu/Share/day1/02.read_mapping/read_alignments/Poecilia_picta_female1.bw ~/Desktop
+scp -i chrsex25.pem ubuntu@44.249.25.243:/home/ubuntu/Share/day1/02.read_mapping/read_alignments/Poecilia_picta_male2.bw ~/Desktop
+```
+
+Open IGV and load the genome and .bw files.
+
+In IGV, change track height to 200, change color, select type graph "Bar Chart", Window function "Mean", select log scale.
+
+Look at the read mapping rates for the different chromosomes. Can you identify the sex chromosome?
+
+
+
