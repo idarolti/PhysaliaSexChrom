@@ -170,7 +170,7 @@ Try running genotyping and filtering on another chromosome file (/home/ubuntu/Sh
 
 ## 04. Visualize alignments
 
-Install **[IGV](https://igv.org/doc/desktop/#DownloadPage/ ) locally.
+Install **[IGV](https://igv.org/doc/desktop/#DownloadPage/)** locally.
 
 Convert .bam file to .bw format, which allows easier vizualization of number of reads mapping in each genomic region. This step is more computationally intensive given that we want to vizualize read mapping rates across the genome. So you can directyl copy the output .bw files.
 
