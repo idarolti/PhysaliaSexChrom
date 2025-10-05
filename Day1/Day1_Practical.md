@@ -94,13 +94,15 @@ bowtie2 -p4 -x /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia
 cd 02.read_alignments
 ```
 
-Filter alignment files by mapping quality
+Filter alignment files by mapping quality.
 
 ```
 samtools view -b -q 30 Poecilia_picta_female1_subset.bam > Poecilia_picta_female1_subset_mapq.bam
 ```
 
-Filter alignment files based on secondary alignments based on XS tag (though this is not always available!)
+Filter alignment files by uniquely mapping reads.
+
+Bowtie2 XS flag is used for this, though it can be ambiguous and inconsistent! Earlier BWA version (aln/sampe) XT:A:U flag is more reliable.
 
 ```
 samtools view -h Poecilia_picta_female1_subset.bam | grep -v "XS:i:" | samtools view -bS - > Poecilia_picta_female1_subset_unique.bam
