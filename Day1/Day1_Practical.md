@@ -10,7 +10,7 @@ This practical will cover:
 ```
 mkdir day1
 cd day1
-conda activate sexchr
+conda activate /home/ubuntu/miniconda3/envs/sexchr
 ```
 
 ## 01. Read quality check and trimming
