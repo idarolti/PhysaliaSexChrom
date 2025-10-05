@@ -172,7 +172,7 @@ Try running genotyping and filtering on another chromosome file (/home/ubuntu/Sh
 
 Install **[IGV](https://igv.org/doc/desktop/#DownloadPage/)** locally.
 
-Convert .bam file to .bw format, which allows easier vizualization of number of reads mapping in each genomic region. This step is more computationally intensive given that we want to vizualize read mapping rates across the genome. So you can directyl copy the output .bw files.
+Convert .bam file to .bw format, which allows easier vizualization of number of reads mapping in each genomic region. This step is more computationally intensive given that we want to vizualize read mapping rates across the genome. So you can directly copy the output .bw files.
 
 ```
 bamCoverage -p 8 -b Poecilia_picta_female1.bam -o Poecilia_picta_female1.bw
