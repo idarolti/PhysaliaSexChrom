@@ -114,9 +114,6 @@ Remove duplicates
 picard MarkDuplicates I=Poecilia_picta_female1_subset_mapq.bam O=Poecilia_picta_female1_subset_mapq_rmdup.bam M=dupmetrics.txt REMOVE_DUPLICATES=true
 ```
 
-
-**Try running the bowtie mapping for female2 subset.**
-
 ## 03. Variant calling
 
 * **[GATK](https://gatk.broadinstitute.org/hc/en-us)** - A genomic analysis toolkit focused on variant discovery.
