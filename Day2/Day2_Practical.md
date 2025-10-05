@@ -13,7 +13,7 @@ We will base our analysis on the **[SexFindR pipeline](https://sexfindr.readthed
 ```
 mkdir day2
 cd day2
-conda activate sexchr
+conda activate /home/ubuntu/miniconda3/envs/sexchr
 ```
 
 ## 01. Coverage based analysis
