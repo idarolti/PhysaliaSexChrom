@@ -35,12 +35,14 @@ This software uses as input the fastqc.zip files produced by FastQC. After runni
 multiqc ./fastqc_output_raw_reads -o ./fastqc_output_raw_reads
 ```
 
-Transfer files to local machine
+After running, download the .html output file to your local machine to visualize the results in a web browser.
 
 ```
 pwd
 scp -i chrsex25.pem ubuntu@44.249.25.243:/path/*.html ~/Desktop
 ```
+
+Can find nice examples of different fastqc outputs [here](https://rtsf.natsci.msu.edu/genomics/technical-documents/fastqc-tutorial-and-faq.aspx).
 
 * **[Trimmomatic](http://www.usadellab.org/cms/?page=trimmomatic)** - A read trimming tool for Illumina NGS data
 
