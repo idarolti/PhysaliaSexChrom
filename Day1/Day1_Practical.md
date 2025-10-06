@@ -23,8 +23,9 @@ First, create an output directory for FastQC. Then, run FastQC for all the paire
 mkdir 01.trimming
 cd 01.trimming
 mkdir fastqc_output_raw_reads
+cd fastqc_output_raw_reads
 
-for f in /home/ubuntu/Share/day1/01.quality_trimming/raw_reads/*fastq; do fastqc $f -o ./fastqc_output_raw_reads; done
+for f in /home/ubuntu/Share/day1/01.quality_trimming/raw_reads/*fastq; do fastqc $f -o ./; done
 ```
 
 * **[MultiQC](https://multiqc.info)** - A tool for merging FastQC output reports of individual samples into a single summary report
@@ -32,14 +33,14 @@ for f in /home/ubuntu/Share/day1/01.quality_trimming/raw_reads/*fastq; do fastqc
 This software uses as input the fastqc.zip files produced by FastQC. After running, download the .html output file to your local machine to visualize the results in a web browser.
 
 ```
-multiqc ./fastqc_output_raw_reads -o ./fastqc_output_raw_reads
+multiqc ./ -o ./
 ```
 
 After running, download the .html output file to your local machine to visualize the results in a web browser.
 
 ```
 pwd
-scp -i chrsex25.pem ubuntu@44.249.25.243:/path/*.html ~/Desktop
+scp -i chrsex25.pem ubuntu@44.254.129.237:/pwd/*.html ~/Desktop
 ```
 
 Can find nice examples of different fastqc outputs [here](https://rtsf.natsci.msu.edu/genomics/technical-documents/fastqc-tutorial-and-faq.aspx).
