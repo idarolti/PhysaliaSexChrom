@@ -36,7 +36,7 @@ This step takes a long time, so start running to check it works, then cancel (ct
 
 ```
 cd picta
-from_bams_to_unionbed.sh ~/Share/day2/bam_files/Poecilia_picta_female1_subset.bam ~/Share/day2/bam_files/Poecilia_picta_male2_subset.bam
+~/bin/dif_cover_scripts/from_bams_to_unionbed.sh ~/Share/day2/bam_files/Poecilia_picta_female1_subset.bam ~/Share/day2/bam_files/Poecilia_picta_male2_subset.bam
 ```
 
 ### Step 2. Calculate the coverage ratio per window
@@ -62,7 +62,7 @@ l = minimum size of window to output (set to 1000)
 Then run the command below to generate the unionbed coverage file
 
 ```
-~/bin/dif_cover_scripts/from_unionbed_to_ratio_per_window_CC0 -a a -A A -b b -B B -v v -l l ~/Share/day2/coverage/picta/sample1_sample2.unionbedcv
+from_unionbed_to_ratio_per_window_CC0 -a a -A A -b b -B B -v v -l l ~/Share/day2/coverage/picta/sample1_sample2.unionbedcv
 ```
 
 ### Step 3. Adjust coverage based on the bam ratio in covstats.tab and generate DNAcopy output file
