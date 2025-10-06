@@ -166,7 +166,7 @@ Filter variants using [SelectVariants](https://gatk.broadinstitute.org/hc/en-us/
 ```
 gatk SelectVariants \
    -R /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta.fna \
-   -V ./03.snp_calling/Poecilia_picta_female1_chr12.genotyped.gvcf \
+   -V /home/ubuntu/Share/day1/03.snp_calling/Poecilia_picta_female1_chr12.genotyped.gvcf \
    -O ./03.snp_calling/Poecilia_picta_female1_chr12.selectvar.gvcf --restrict-alleles-to BIALLELIC --select-type-to-include SNP
 
 gatk VariantFiltration \
