@@ -8,6 +8,7 @@ This practical will cover:
 
 ## 00. Prepare work folder for day 1
 ```
+ssh -i chrsex25.pem ubuntu@44.249.25.243
 mkdir day1
 cd day1
 conda activate /home/ubuntu/miniconda3/envs/sexchr
