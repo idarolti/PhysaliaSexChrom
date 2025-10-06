@@ -25,8 +25,8 @@ mkdir coverage
 cd coverage
 mkdir picta
 mkdir reticulata
-cp /Share/day2/Poecilia_picta_*male1_chr8_chr11_chr12.bam* picta/
-cp /Share/day2/Poecilia_reticulata_*male1_chr8_chr11_chr12.bam* reticulata/
+cp /Share/day2/Poecilia_picta_*male*_chr8_chr11_chr12.bam* picta/
+cp /Share/day2/Poecilia_reticulata_*male*_chr8_chr11_chr12.bam* reticulata/
 ```
 
 ### Step 1. create unionbed file
