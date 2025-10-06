@@ -20,17 +20,14 @@ mkdir kmersGWAS
 cd kmersGWAS
 mkdir Ppicta
 cd Ppicta
-cp /Share/day3/Ppicta_dirlist.txt .
-cp /Share/day3/Ppicta_phenotype.txt .
-cp /Share/day3/Poecilia_picta* .
-cp /Share/day3/*.sh .
+cp ~/Share/day3/kmersGWAS/picta_kmers.assoc .
+cp ~/Share/day3/kmersGWAS/Ppicta_phenotype.txt .
 cd ..
 ```
 
 ## 02. Generate K-mer counts
 
-
-This generates a table of all kmers and their presence/absence across all individuals:
+This first step generates a table of all kmers and their presence/absence across all individuals. It can be run with the script below, but takes a very long time, so we won't run it today. 
 
 ```
 bash run_kmersGWAS_step1_Ppicta.sh
