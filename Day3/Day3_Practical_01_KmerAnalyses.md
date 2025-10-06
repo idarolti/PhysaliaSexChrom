@@ -75,7 +75,7 @@ cut -f 9 picta_kmers.assoc.tab | grep -v 'P' | sort -g | head -1
 Edit the command for the p-value output from the step above
 
 ```
-awk '$9 < P' picta_kmers.assoc.tab > picta_most_significant_assoc.tab
+awk '$9 <= P' picta_kmers.assoc.tab > picta_most_significant_assoc.tab
 ```
 
 ## 05. Assemble contigs from significant kmers    
