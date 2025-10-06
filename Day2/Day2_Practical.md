@@ -13,7 +13,7 @@ We will base our analysis on the **[SexFindR pipeline](https://sexfindr.readthed
 ```
 mkdir day2
 cd day2
-conda activate /home/ubuntu/miniconda3/envs/sexchr
+conda activate /home/ubuntu/miniconda_envs/sexchr2
 ```
 
 ## 01. Coverage based analysis
@@ -25,8 +25,6 @@ mkdir coverage
 cd coverage
 mkdir picta
 mkdir reticulata
-cp ~/Share/day2/Poecilia_picta_*male*_chr8_chr11_chr12.bam* picta/
-cp ~/Share/day2/Poecilia_reticulata_*male*_chr8_chr11_chr12.bam* reticulata/
 ```
 
 ### Step 1. Create BED file
@@ -36,17 +34,14 @@ This step takes a long time, so start running to check it works, then cancel (ct
 
 ```
 cd picta
-~/bin/dif_cover_scripts/from_bams_to_unionbed.sh Poecilia_picta_female1_chr8_chr11_chr12.bam Poecilia_picta_male1_chr8_chr11_chr12.bam
+~/bin/dif_cover_scripts/from_bams_to_unionbed.sh ~/Share/bam_files/Poecilia_picta_female1_subset.bam ~/Share/bam_files/Poecilia_picta_male2_subset.bam
 ```
 
 ### Step 2. Calculate the coverage ratio per window
 
-In order to run this command, copy the premade output of day2 to your working directory.
+In order to run this command, use the premade output of day2.
 We will calculate average coverage of valid bases across all merged bed intervals for the female and the male file
 
-```
-cp ~/Share/day2/coverage/picta_sample1_sample2.unionbedcv .
-```
 Inspect the coverage statistics from the covstats file located in Day2/coverage to determine the parameter values for the command below   
 
 ```
@@ -64,7 +59,7 @@ l = minimum size of window to output (set to 1000)
 Then run the command below to generate the unionbed coverage file
 
 ```
-~/bin/dif_cover_scripts/from_unionbed_to_ratio_per_window_CC0 -a a -A A -b b -B B -v v -l l picta_sample1_sample2.unionbedcv
+~/bin/dif_cover_scripts/from_unionbed_to_ratio_per_window_CC0 -a a -A A -b b -B B -v v -l l ~/Share/day2/coverage/picta_sample1_sample2.unionbedcv
 ```
 
 ### Step 3. Adjust coverage based on the bam ratio in covstats.tab and generate DNAcopy output file
