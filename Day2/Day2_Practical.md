@@ -114,7 +114,7 @@ Here, we need to use a different conda environment, because we will use differen
 
 ```
 conda deactivate
-conda activate 
+conda activate ~/miniconda_envs/sexchr2
 ```
 
 On the server in your home set up directories and files
