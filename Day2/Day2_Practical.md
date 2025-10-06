@@ -17,6 +17,7 @@ mkdir day2
 cd day2
 conda activate /home/ubuntu/miniconda3/envs/sexchr
 ```
+Don't forget to open a Filezilla connection  
 
 ## 01. Coverage based analysis
 We will follow the workflow of **[DifCover](https://github.com/timnat/DifCover)** to generate a coverage file for females and males, we start with the coordinate sorted BAM files generated yesterday.       
@@ -78,7 +79,7 @@ This script uses the R package **[DNAcopy[(https://bioconductor.org/packages/rel
 ```
 Rscript ~/bin/dif_cover_scripts/run_DNAcopy_from_bash.R sample1_sample2.ratio_per_w_CC0_*.log2adj_*
 ```
-Dowload the pdf file to your machine and inspect it.
+Dowload the pdf file to your machine using Filezilla (or equivalent) and inspect it.
 
 ### Step 5. Filter only genomic regions with enrichment scores > p.
 
@@ -87,19 +88,19 @@ The script extracts from file *.DNAcopyout fragments with enrichment scores ≥ 
 Set p to 2, to filter sites with double coverage in one sample compared to the other.
 
 ```
-from_DNAcopyout_to_p_fragments.sh sample1_sample2.*.DNAcopyout" 2
+~/bin/dif_cover_scripts/from_DNAcopyout_to_p_fragments.sh sample1_sample2.*.DNAcopyout" 2
 ```
 
 ### Step 6. generate histograms for further inspection
 
 ```
-get_DNAcopyout_with_length_of_intervals.sh *.DNAcopyout ref.length.Vk1s_sorted
+~/bin/dif_cover_scripts/get_DNAcopyout_with_length_of_intervals.sh *.DNAcopyout ref.length.Vk1s_sorted
 
 echo "Generate rough histogram with given precision order"
-generate_DNAcopyout_len_histogram.sh *.DNAcopyout.len 1
+~/bin/dif_cover_scripts/generate_DNAcopyout_len_histogram.sh *.DNAcopyout.len 1
 
 echo "Generate histogram with bins centered at value X reporting scores from [X-0.25 to X+0.25)"
-generate_DNAcopyout_len_vs_scores_histogram_bin0.5.sh *.DNAcopyout.len
+~/bin/dif_cover_scripts/generate_DNAcopyout_len_vs_scores_histogram_bin0.5.sh *.DNAcopyout.len
 ```
 
 ### Now run this again for P. reticulata  
