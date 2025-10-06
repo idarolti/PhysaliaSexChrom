@@ -106,7 +106,7 @@ blastn -query picta_plink_abyss_output.txt -db $REF_FASTA -outfmt 6 -out picta_k
 
 ## 07. Visualize genomic locations of the assembled contigs in R
 
-Download the outout file of the BLAST above kmers_blast.out file to your local machine   
+Download the output file of the BLAST above picta_kmers_blast.out file to your local machine. Also download the file chrlength_Ppicta.tsv from this github.  
 Open **[R](https://cran.r-project.org)** or **[RStudio](https://posit.co/products/open-source/rstudio/?sid=1)**   
 
 In R execute the code below
@@ -116,7 +116,7 @@ install.packages("tidyverse")
 library(tidyverse)
 
 # Read in data
-kmerblast_out <- read_tsv("kmers_blast.out") %>%
+kmerblast_out <- read_tsv("picta_kmers_blast.out") %>%
   rename("query_sid" = 1,
          "scaf" = 2,
          "ident.match_p" = 3,
