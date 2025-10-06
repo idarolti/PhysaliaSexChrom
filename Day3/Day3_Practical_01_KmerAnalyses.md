@@ -20,7 +20,6 @@ mkdir kmersGWAS
 cd kmersGWAS
 mkdir Ppicta
 cd Ppicta
-cp ~/Share/day3/kmersGWAS/picta/picta_kmers.table* .
 cp ~/Share/day3/kmersGWAS/picta/Ppicta_phenotype.txt .
 cd ..
 ```
@@ -36,7 +35,7 @@ cat ~/Share/day3/kmersGWAS/run_kmersGWAS_step1_Ppicta.sh
 The output of this step is a file called kmers.table.table. This is a long list of every kmer found in the samples and their presence/absence in each individual. The file is already saved in the server, and we can now use this file for the later steps.  
 
 ```
-cp ~/Share/day3/kmersGWAS/picta/picta_kmers.table* .
+cp ~/Share/day3/kmersGWAS/picta/kmers_table* .
 ```
 
 ## 03. Generate kinship table  
@@ -48,7 +47,7 @@ Generate kinship table, in case useful for future analysis:
 ```
 
 ## 04. Test for association of K-mers and phenotype    
-Testing for association with phenotype using the software **[PLINK](https://www.cog-genomics.org/plink/)**   
+Testing for association with sex using the software **[PLINK](https://www.cog-genomics.org/plink/)**   
 First generate PLINK compatible input file and filter for allele frequency
 
 ```
@@ -64,19 +63,19 @@ plink --noweb --bfile kmerGWAS_plink.0 --allow-no-sex --assoc --out kmers
 Edit format of output file
 
 ```
-awk -v OFS='\t' '{ $1=$1; print }' kmers.assoc > kmers.assoc.tab
+awk -v OFS='\t' '{ $1=$1; print }' picta_kmers.assoc > picta_kmers.assoc.tab
 ```
 
 Check the output file for the most significant p-value, and filter for only kmers with this value
 
 ```
-cut -f 9 kmers.assoc.tab | grep -v 'P' | sort -g | head -1
+cut -f 9 picta_kmers.assoc.tab | grep -v 'P' | sort -g | head -1
 ```
 
 Edit the command for the p-value output from the step above
 
 ```
-awk '$9 < P' kmers.assoc.tab > most_significant_assoc.txt
+awk '$9 < P' picta_kmers.assoc.tab > picta_most_significant_assoc.txt
 ```
 
 ## 05. Assemble contigs from significant kmers    
@@ -84,13 +83,13 @@ awk '$9 < P' kmers.assoc.tab > most_significant_assoc.txt
 Convert PLINK association file to a fasta input file for assembly of potentially sex-specific contigs
 
 ```
-python plink_to_abyss_kmers.py most_significant_assoc.tab plink_abyss_input.txt
+python plink_to_abyss_kmers.py picta_most_significant_assoc.tab picta_plink_abyss_input.txt
 ```
 
 Assemble small contigs with ABYSS
 
 ```
-ABYSS -k25 -c0 -e0 plink_abyss_input.txt -o plink_abyss_output.txt
+ABYSS -k25 -c0 -e0 picta_plink_abyss_input.txt -o picta_plink_abyss_output.txt
 ```
 
 ## 06. Locate the assembled contigs in reference genome    
@@ -102,7 +101,7 @@ REF_FASTA=~/Share/day1/02.read_mapping/reference_genome/Poecilia_picta.fna
 
 makeblastdb -in $REF_FASTA -dbtype nucl
 
-blastn -query plink_abyss_output.txt -db $REF_FASTA -outfmt 6 -out kmers_blast.out
+blastn -query picta_plink_abyss_output.txt -db $REF_FASTA -outfmt 6 -out picta_kmers_blast.out
 ```
 
 ## 07. Visualize genomic locations of the assembled contigs in R
