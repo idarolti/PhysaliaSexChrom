@@ -13,7 +13,7 @@ We will base our analysis on the **[SexFindR pipeline](https://sexfindr.readthed
 ```
 mkdir day2
 cd day2
-conda activate /home/ubuntu/miniconda3/envs/sexchr
+conda activate /miniconda3/envs/sexchr
 ```
 
 ## 01. Coverage based analysis
@@ -25,8 +25,8 @@ mkdir coverage
 cd coverage
 mkdir picta
 mkdir reticulata
-cp /Share/day2/Poecilia_picta_*male*_chr8_chr11_chr12.bam* picta/
-cp /Share/day2/Poecilia_reticulata_*male*_chr8_chr11_chr12.bam* reticulata/
+cp ~/Share/day2/Poecilia_picta_*male*_chr8_chr11_chr12.bam* picta/
+cp ~/Share/day2/Poecilia_reticulata_*male*_chr8_chr11_chr12.bam* reticulata/
 ```
 
 ### Step 1. create unionbed file
@@ -35,7 +35,7 @@ This step takes a long time, so start running to check it works, then cancel (ct
 
 ```
 cd picta
-/home/ubuntu/bin/dif_cover_scripts/from_bams_to_unionbed.sh Poecilia_picta_female1_chr8_chr11_chr12.bam Poecilia_picta_male1_chr8_chr11_chr12.bam
+~/bin/dif_cover_scripts/from_bams_to_unionbed.sh Poecilia_picta_female1_chr8_chr11_chr12.bam Poecilia_picta_male1_chr8_chr11_chr12.bam
 ```
 
 ### Step 2. find the coverage ratio per window
@@ -43,12 +43,12 @@ cd picta
 Copy the premade output of day2 to the working directory.
 
 ```
-/home/ubuntu/bin/dif_cover_scripts/picta_sample1_sample2.unionbedcv .
+~/Share/day2/coverage/picta_sample1_sample2.unionbedcv .
 ```
 Read the coverage statistics from the covstats file located in Day2/coverage
 
 ```
-cat /home/ubuntu/Share/day2/covstats.tab
+cat ~/Share/day2/covstats.tab
 ```
 
 Use these values to set the parameters for the following command
@@ -61,19 +61,19 @@ v = target number of valid bases in the window (set to 10000)
 l = minimum size of window to output (set to 1000)
 
 ```
-/home/ubuntu/bin/dif_cover_scripts/from_unionbed_to_ratio_per_window_CC0 -a a -A A -b b -B B -v v -l l picta_sample1_sample2.unionbedcv
+~/bin/dif_cover_scripts/from_unionbed_to_ratio_per_window_CC0 -a a -A A -b b -B B -v v -l l picta_sample1_sample2.unionbedcv
 ```
 
 ### Step 3. adjust coverage based on the bam ratio in covstats.tab
 
 ```
-/home/ubuntu/bin/dif_cover_scripts/from_ratio_per_window_to_prepare_for_DNAcopy_output.sh sample1_sample2.ratio_per_w_CC0_* bam_ratio
+~/bin/dif_cover_scripts/from_ratio_per_window_to_prepare_for_DNAcopy_output.sh sample1_sample2.ratio_per_w_CC0_* bam_ratio
 ```
 
 ### Step 4. create plots in R
 
 ```
-Rscript /home/ubuntu/bin/dif_cover_scripts/run_DNAcopy_from_bash.R sample1_sample2.ratio_per_w_CC0_*.log2adj_*
+Rscript ~/bin/dif_cover_scripts/run_DNAcopy_from_bash.R sample1_sample2.ratio_per_w_CC0_*.log2adj_*
 ```
 Check the output pdf file
 
@@ -84,19 +84,19 @@ The script extracts from file *.DNAcopyout fragments with enrichment scores ≥ 
 Set p to 2, to filter sites with double coverage in one sample compared to the other.
 
 ```
-/home/ubuntu/bin/dif_cover_scripts/from_DNAcopyout_to_p_fragments.sh sample1_sample2.*.DNAcopyout" 2
+~/bin/dif_cover_scripts/from_DNAcopyout_to_p_fragments.sh sample1_sample2.*.DNAcopyout" 2
 ```
 
 ### Step 6. generate histograms for further inspection
 
 ```
-/home/ubuntu/bin/dif_cover_scripts/get_DNAcopyout_with_length_of_intervals.sh *.DNAcopyout ref.length.Vk1s_sorted
+~/bin/dif_cover_scripts/get_DNAcopyout_with_length_of_intervals.sh *.DNAcopyout ref.length.Vk1s_sorted
 
 echo "Generate rough histogram with given precision order"
-/home/ubuntu/bin/dif_cover_scripts/generate_DNAcopyout_len_histogram.sh *.DNAcopyout.len 1
+~/bin/dif_cover_scripts/generate_DNAcopyout_len_histogram.sh *.DNAcopyout.len 1
 
 echo "Generate histogram with bins centered at value X reporting scores from [X-0.25 to X+0.25)"
-/home/ubuntu/bin/dif_cover_scripts/generate_DNAcopyout_len_vs_scores_histogram_bin0.5.sh *.DNAcopyout.len
+~/bin/dif_cover_scripts/generate_DNAcopyout_len_vs_scores_histogram_bin0.5.sh *.DNAcopyout.len
 ```
 
 ### Now run this again for P. reticulata  
@@ -107,15 +107,16 @@ echo "Generate histogram with bins centered at value X reporting scores from [X-
 Set up directories and files
 
 ```
+cd day2
 mkdir Fst
 mkdir GWAS
 mkdir SNPden
-cp /home/ubuntu/Share/day2/picta_female.list Fst/
-cp /home/ubuntu/Share/day2/picta_male.list Fst/
-cp /home/ubuntu/Share/day2/picta_sex.list GWAS/
-cp /home/ubuntu/Share/day2/picta_female.list SNPden/
-cp /home/ubuntu/Share/day2/picta_male.list SNPden/
-cp /home/ubuntu/Share/day2/Poecilia_picta_allchromo_merged.vcf.gz .
+cp ~/Share/day2/SNPbased/picta_female.list Fst/
+cp ~/Share/day2/SNPbased/picta_male.list Fst/
+cp ~/Share/day2/SNPbased/picta_sex.list GWAS/
+cp ~/Share/day2/SNPbased/picta_female.list SNPden/
+cp ~/Share/day2/SNPbased/picta_male.list SNPden/
+cp ~/Share/day2/vcf_files/Poecilia_picta_allchromo_merged.vcf.gz .
 ```
 
 ## 03. Calculate intersex Fst 
