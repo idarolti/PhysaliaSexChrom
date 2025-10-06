@@ -15,7 +15,7 @@ Open your terminal application as yesterday, connect to the server as yesterday,
 ssh -i ~/YOURLOCALFOLDER/chrsex5.pem user5@44.247.37.169
 mkdir day2
 cd day2
-conda activate /home/ubuntu/miniconda_envs/sexchr2
+conda activate /home/ubuntu/miniconda3/envs/sexchr
 ```
 
 ## 01. Coverage based analysis
@@ -36,7 +36,7 @@ This step takes a long time, so start running to check it works, then cancel (ct
 
 ```
 cd picta
-~/bin/dif_cover_scripts/from_bams_to_unionbed.sh ~/Share/bam_files/Poecilia_picta_female1_subset.bam ~/Share/bam_files/Poecilia_picta_male2_subset.bam
+from_bams_to_unionbed.sh ~/Share/day2/bam_files/Poecilia_picta_female1_subset.bam ~/Share/day2/bam_files/Poecilia_picta_male2_subset.bam
 ```
 
 ### Step 2. Calculate the coverage ratio per window
@@ -62,7 +62,7 @@ l = minimum size of window to output (set to 1000)
 Then run the command below to generate the unionbed coverage file
 
 ```
-~/bin/dif_cover_scripts/from_unionbed_to_ratio_per_window_CC0 -a a -A A -b b -B B -v v -l l ~/Share/day2/coverage/picta_sample1_sample2.unionbedcv
+from_unionbed_to_ratio_per_window_CC0 -a a -A A -b b -B B -v v -l l ~/Share/day2/coverage/picta/sample1_sample2.unionbedcv
 ```
 
 ### Step 3. Adjust coverage based on the bam ratio in covstats.tab and generate DNAcopy output file
@@ -87,19 +87,19 @@ The script extracts from file *.DNAcopyout fragments with enrichment scores ≥ 
 Set p to 2, to filter sites with double coverage in one sample compared to the other.
 
 ```
-~/bin/dif_cover_scripts/from_DNAcopyout_to_p_fragments.sh sample1_sample2.*.DNAcopyout" 2
+from_DNAcopyout_to_p_fragments.sh sample1_sample2.*.DNAcopyout" 2
 ```
 
 ### Step 6. generate histograms for further inspection
 
 ```
-~/bin/dif_cover_scripts/get_DNAcopyout_with_length_of_intervals.sh *.DNAcopyout ref.length.Vk1s_sorted
+get_DNAcopyout_with_length_of_intervals.sh *.DNAcopyout ref.length.Vk1s_sorted
 
 echo "Generate rough histogram with given precision order"
-~/bin/dif_cover_scripts/generate_DNAcopyout_len_histogram.sh *.DNAcopyout.len 1
+generate_DNAcopyout_len_histogram.sh *.DNAcopyout.len 1
 
 echo "Generate histogram with bins centered at value X reporting scores from [X-0.25 to X+0.25)"
-~/bin/dif_cover_scripts/generate_DNAcopyout_len_vs_scores_histogram_bin0.5.sh *.DNAcopyout.len
+generate_DNAcopyout_len_vs_scores_histogram_bin0.5.sh *.DNAcopyout.len
 ```
 
 ### Now run this again for P. reticulata  
@@ -108,6 +108,13 @@ echo "Generate histogram with bins centered at value X reporting scores from [X-
 
    
 ## 02. SNP based analyses
+
+Here, we need to use a different conda environment, because we will use different tools.
+
+```
+conda deactivate
+conda activate 
+```
 
 On the server in your home set up directories and files
 
