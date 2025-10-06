@@ -13,11 +13,11 @@ We will base our analysis on the **[SexFindR pipeline](https://sexfindr.readthed
 ```
 mkdir day2
 cd day2
-conda activate /miniconda3/envs/sexchr
+conda activate /home/ubuntu/miniconda3/envs/sexchr
 ```
 
 ## 01. Coverage based analysis
-
+We will follow the workflow of **[DifCover](https://github.com/timnat/DifCover)** to generate a coverage file for females and males, we start with the coordinate sorted BAM files generated yesterday       
 Set up directories and files
 
 ```
@@ -29,8 +29,9 @@ cp ~/Share/day2/Poecilia_picta_*male*_chr8_chr11_chr12.bam* picta/
 cp ~/Share/day2/Poecilia_reticulata_*male*_chr8_chr11_chr12.bam* reticulata/
 ```
 
-### Step 1. create unionbed file
+### Step 1. Create BED file
 
+Usinf **[BEDtools](https://bedtools.readthedocs.io/en/latest/)** we transform the coverage information of the BAM files into a unionbed file   
 This step takes a long time, so start running to check it works, then cancel (ctrl+c).
 
 ```
@@ -38,14 +39,15 @@ cd picta
 ~/bin/dif_cover_scripts/from_bams_to_unionbed.sh Poecilia_picta_female1_chr8_chr11_chr12.bam Poecilia_picta_male1_chr8_chr11_chr12.bam
 ```
 
-### Step 2. find the coverage ratio per window
+### Step 2. Calculate the coverage ratio per window
 
-Copy the premade output of day2 to the working directory.
+In order to trun this command, copy the premade output of day2 to your working directory.
+We will calculate average coverage of valid bases across all merged bed intervals for the female and the male file
 
 ```
-~/Share/day2/coverage/picta_sample1_sample2.unionbedcv .
+cp ~/Share/day2/coverage/picta_sample1_sample2.unionbedcv .
 ```
-Read the coverage statistics from the covstats file located in Day2/coverage
+Inspect the coverage statistics from the covstats file located in Day2/coverage to determine the parameter values for the command below   
 
 ```
 cat ~/Share/day2/covstats.tab
@@ -58,14 +60,15 @@ A = maximum coverage sample1
 b = minimum coverage sample2  
 B = maximum coverage sample2  
 v = target number of valid bases in the window (set to 10000)  
-l = minimum size of window to output (set to 1000)
+l = minimum size of window to output (set to 1000)   
+Then run the command below to generate the unionbed coverage file
 
 ```
 ~/bin/dif_cover_scripts/from_unionbed_to_ratio_per_window_CC0 -a a -A A -b b -B B -v v -l l picta_sample1_sample2.unionbedcv
 ```
 
-### Step 3. adjust coverage based on the bam ratio in covstats.tab
-
+### Step 3. Adjust coverage based on the bam ratio in covstats.tab and generate DNAcopy output file
+Run the following command which will XXXXXX   
 ```
 ~/bin/dif_cover_scripts/from_ratio_per_window_to_prepare_for_DNAcopy_output.sh sample1_sample2.ratio_per_w_CC0_* bam_ratio
 ```
