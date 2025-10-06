@@ -43,8 +43,8 @@ Copy the outputs of mpileup2snp to your directory.
 ```
 mkdir ase
 cd ase
-cp -r /home/ubuntu/Share/day4/guppy/ase_scripts ./
-cp -r /home/ubuntu/Share/day4/guppy/snp_calling/ ./
+cp -r /home/ubuntu/Share/day4/ase/ase_scripts ./
+cp -r /home/ubuntu/Share/day4/ase/snp_calling/ ./
 cd snp_calling
 ```
 
