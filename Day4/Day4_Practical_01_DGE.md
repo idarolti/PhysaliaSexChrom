@@ -33,7 +33,7 @@ cp -r /home/ubuntu/Share/day4/willow/reads/ ./
 mkdir hisat
 cd hisat
 
-hisat2 ../genome/genome_assembly_1k -1 ../reads/female1_catkin_R1.fastq -2 ../reads/female1_catkin_R2.fastq -q --no-discordant --no-mixed --no-unal --dta -S female1_catkin.sam
+hisat2 /home/ubuntu/Share/day4/willow/genome/genome_assembly_1k -1 /home/ubuntu/Share/day4/willow/reads/female1_catkin_R1.fastq -2 /home/ubuntu/Share/day4/willow/reads/female1_catkin_R2.fastq -q --no-discordant --no-mixed --no-unal --dta -S female1_catkin.sam
 
 samtools view -bS female1_catkin.sam | samtools sort -o female1_catkin_coordsorted.bam
 rm female1_catkin.sam
