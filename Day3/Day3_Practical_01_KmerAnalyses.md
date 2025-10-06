@@ -20,17 +20,23 @@ mkdir kmersGWAS
 cd kmersGWAS
 mkdir Ppicta
 cd Ppicta
-cp ~/Share/day3/kmersGWAS/picta_kmers.assoc .
-cp ~/Share/day3/kmersGWAS/Ppicta_phenotype.txt .
+cp ~/Share/day3/kmersGWAS/picta/picta_kmers.table* .
+cp ~/Share/day3/kmersGWAS/picta/Ppicta_phenotype.txt .
 cd ..
 ```
 
 ## 02. Generate K-mer counts
 
-This first step generates a table of all kmers and their presence/absence across all individuals. It can be run with the script below, but takes a very long time, so we won't run it today. 
+This first step generates a list of all kmers and their presence/absence across all individuals. It can be run with the script below, but takes a very long time, so we won't run it today. Have a look at the file using the code below, and see if you can understand what it does.
 
 ```
-bash run_kmersGWAS_step1_Ppicta.sh
+cat ~/Share/day3/kmersGWAS/run_kmersGWAS_step1_Ppicta.sh
+```
+
+The output of this step is a file called kmers.table.table. This is a long list of every kmer found in the samples and their presence/absence in each individual. The file is already saved in the server, and we can now use this file for the later steps.  
+
+```
+cp ~/Share/day3/kmersGWAS/picta/picta_kmers.table* .
 ```
 
 ## 03. Generate kinship table  
@@ -38,7 +44,7 @@ bash run_kmersGWAS_step1_Ppicta.sh
 Generate kinship table, in case useful for future analysis:
 
 ```
-emma_kinship_kmers -t kmers_table -k 31 --maf 0.05 > kmers_table.kinship
+~/bin/emma_kinship_kmers -t kmers_table -k 31 --maf 0.05 > kmers_table.kinship
 ```
 
 ## 04. Test for association of K-mers and phenotype    
@@ -46,7 +52,7 @@ Testing for association with phenotype using the software **[PLINK](https://www.
 First generate PLINK compatible input file and filter for allele frequency
 
 ```
-kmers_table_to_bed -t kmers_table -k 31 -p Ppicta_phenotype.txt --maf 0.05 --mac 2 -b 1000000000 -o kmerGWAS_plink
+~/bin/kmers_table_to_bed -t kmers_table -k 31 -p Ppicta_phenotype.txt --maf 0.05 --mac 2 -b 1000000000 -o kmerGWAS_plink
 ```
 
 Then run association test with PLINK
@@ -92,7 +98,7 @@ ABYSS -k25 -c0 -e0 plink_abyss_input.txt -o plink_abyss_output.txt
 Use **[BlastN](https://blast.ncbi.nlm.nih.gov/Blast.cgi?PROGRAM=blastn&BLAST_SPEC=GeoBlast&PAGE_TYPE=BlastSearch)**  to locate contigs in the reference genome, for this first generate a blast reference database for the reference genome and then run blast
 
 ```
-REF_FASTA=Poecilia_picta.fna
+REF_FASTA=~/Share/day1/02.read_mapping/reference_genome/Poecilia_picta.fna
 
 makeblastdb -in $REF_FASTA -dbtype nucl
 
