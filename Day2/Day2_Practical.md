@@ -56,6 +56,7 @@ b = minimum coverage sample2
 B = maximum coverage sample2  
 v = target number of valid bases in the window (set to 10000)  
 l = minimum size of window to output (set to 1000)   
+
 Then run the command below to generate the unionbed coverage file
 
 ```
@@ -69,15 +70,15 @@ The covstats.tab file also contains a value 'bam_ratio', which is the ratio of t
 ~/bin/dif_cover_scripts/from_ratio_per_window_to_prepare_for_DNAcopy_output.sh sample1_sample2.ratio_per_w_CC0_* bam_ratio
 ```
 
-### Step 4. create plots in R
+### Step 4. Create coverage plots in R
 
-This script uses DNA copy to generate output plots of the coverage ratio. DNAcopy uses both the raw coverage ratio, and computes the average coverage ratio of adjacent windows to create the plot.
+This script uses the R package **[DNAcopy[(https://bioconductor.org/packages/release/bioc/html/DNAcopy.html)** to generate output plots of the coverage ratio. DNAcopy uses both the raw coverage ratio, and computes the average coverage ratio of adjacent windows to create the plot. Run this on the server
 ```
 Rscript ~/bin/dif_cover_scripts/run_DNAcopy_from_bash.R sample1_sample2.ratio_per_w_CC0_*.log2adj_*
 ```
-Check the output pdf file
+Dowload the pdf file to your machine and inspect it.
 
-### Step 5. filter only genomic regions with enrichment scores > p.
+### Step 5. Filter only genomic regions with enrichment scores > p.
 
 The script extracts from file *.DNAcopyout fragments with enrichment scores ≥ p and stores them in *.DNAcopyout{p}, (i.e. fragments where read coverage in sample1 is higher than sample2 ), and *.DNAcopyout.down{-p} fragments with enrichment scores ≤-p, (i.e. fragments where coverage in sample2 is higher than sample1 ).
 
@@ -104,7 +105,7 @@ echo "Generate histogram with bins centered at value X reporting scores from [X-
 
 ## 02. SNP based analyses
 
-Set up directories and files
+On the server in hour home set up directories and files
 
 ```
 cd day2
