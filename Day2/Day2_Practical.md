@@ -9,8 +9,10 @@ We will base our analysis on the **[SexFindR pipeline](https://sexfindr.readthed
 
 
 ## 00. Prepare work folder for day 2
+Open your terminal application as yesterday, connect to the server as yesterday, replace "25" with the number of your user account and use today's IP adress
 
 ```
+ssh -i ~/YOURLOCALFOLDER/chrsex5.pem user5@44.247.37.169
 mkdir day2
 cd day2
 conda activate /home/ubuntu/miniconda_envs/sexchr2
@@ -103,11 +105,14 @@ echo "Generate histogram with bins centered at value X reporting scores from [X-
 ### Now run this again for P. reticulata  
 ### If you finish both species, try adjusting the window size in step 2, and see how this changes the results. Try smaller windows, e.g. 1,000 or larger, e.g. 50,000
 
+
+   
 ## 02. SNP based analyses
 
-On the server in hour home set up directories and files
+On the server in your home set up directories and files
 
 ```
+cd 
 cd day2
 mkdir Fst
 mkdir GWAS
