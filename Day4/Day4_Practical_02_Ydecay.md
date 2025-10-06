@@ -41,6 +41,8 @@ VarScan.v2.3.9.jar mpileup2snp males.mpileup --min-coverage 2 --min-ave-qual 20 
 Copy the outputs of mpileup2snp to your directory.
 
 ```
+mkdir ase
+cd ase
 cp -r /home/ubuntu/Share/day4/guppy/ase_scripts ./
 cp -r /home/ubuntu/Share/day4/guppy/snp_calling/ ./
 cd snp_calling
