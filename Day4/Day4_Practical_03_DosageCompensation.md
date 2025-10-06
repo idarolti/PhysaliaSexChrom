@@ -3,7 +3,7 @@
 
 ## 00. Prepare work folder
 
-A lot of the steps will be done in R, so prepare a work folder locally.
+A lot of the steps will be done in R, so prepare a work folder on your local machine.
 
 ```
 mkdir Desktop/physalia/day4/dosage_compensation
@@ -27,8 +27,8 @@ salmon quant --numBootstraps 100 --gcBias --seqBias -p 12 -l A -i Poecilia_picta
 Both steps take a while to run, so you can copy the outputs directly to your working folder.
 
 ```
-scp -i chrsex25.pem ubuntu@44.249.25.243:/home/ubuntu/Share/day4/guppy/transcriptome ./
-scp -i chrsex25.pem ubuntu@44.249.25.243:/home/ubuntu/Share/day4/guppy/salmon_quantification ./
+scp -i chrsex25.pem ubuntu@44.254.129.237:/home/ubuntu/Share/day4/guppy/transcriptome ./
+scp -i chrsex25.pem ubuntu@44.254.129.237:/home/ubuntu/Share/day4/guppy/salmon_quantification ./
 ```
 
 ## 02. Obtain merged counts data
