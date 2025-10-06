@@ -31,7 +31,7 @@ cp ~/Share/day2/Poecilia_reticulata_*male*_chr8_chr11_chr12.bam* reticulata/
 
 ### Step 1. Create BED file
 
-Usinf **[BEDtools](https://bedtools.readthedocs.io/en/latest/)** we transform the coverage information of the BAM files into a unionbed file   
+Using **[BEDtools](https://bedtools.readthedocs.io/en/latest/)** we transform the coverage information of the BAM files into a unionbed file   
 This step takes a long time, so start running to check it works, then cancel (ctrl+c).
 
 ```
