@@ -189,7 +189,7 @@ bamCoverage -p 8 -b Poecilia_picta_female1.bam -o Poecilia_picta_female1.bw
 ```
 
 ```
-scp -i chrsex25.pem ubuntu@44.249.25.243:/home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta.fn ~/Desktop
+scp -i chrsex25.pem ubuntu@44.249.25.243:/home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_picta.fna ~/Desktop
 scp -i chrsex25.pem ubuntu@44.249.25.243:/home/ubuntu/Share/day1/02.read_mapping/read_alignments/Poecilia_picta_female1.bw ~/Desktop
 scp -i chrsex25.pem ubuntu@44.249.25.243:/home/ubuntu/Share/day1/02.read_mapping/read_alignments/Poecilia_picta_male2.bw ~/Desktop
 ```
