@@ -17,7 +17,7 @@ conda activate /home/ubuntu/miniconda3/envs/sexchr
 ```
 
 ## 01. Coverage based analysis
-We will follow the workflow of **[DifCover](https://github.com/timnat/DifCover)** to generate a coverage file for females and males, we start with the coordinate sorted BAM files generated yesterday       
+We will follow the workflow of **[DifCover](https://github.com/timnat/DifCover)** to generate a coverage file for females and males, we start with the coordinate sorted BAM files generated yesterday.       
 Set up directories and files
 
 ```
@@ -41,7 +41,7 @@ cd picta
 
 ### Step 2. Calculate the coverage ratio per window
 
-In order to trun this command, copy the premade output of day2 to your working directory.
+In order to run this command, copy the premade output of day2 to your working directory.
 We will calculate average coverage of valid bases across all merged bed intervals for the female and the male file
 
 ```
@@ -68,13 +68,15 @@ Then run the command below to generate the unionbed coverage file
 ```
 
 ### Step 3. Adjust coverage based on the bam ratio in covstats.tab and generate DNAcopy output file
-Run the following command which will XXXXXX   
+The covstats.tab file also contains a value 'bam_ratio', which is the ratio of the sizes of the two .bam files. We use this to adjust the ratio per window, to account for the fact that one sample might have been sequenced to a higher coverage than the other. This then adjusts the ratio calculated in the previous step by this value. Change the value of 'bam_ratio' in the following command to the value in covstats.tab, and run.  
+
 ```
 ~/bin/dif_cover_scripts/from_ratio_per_window_to_prepare_for_DNAcopy_output.sh sample1_sample2.ratio_per_w_CC0_* bam_ratio
 ```
 
 ### Step 4. create plots in R
 
+This script uses DNA copy to generate output plots of the coverage ratio. DNAcopy uses both the raw coverage ratio, and computes the average coverage ratio of adjacent windows to create the plot.
 ```
 Rscript ~/bin/dif_cover_scripts/run_DNAcopy_from_bash.R sample1_sample2.ratio_per_w_CC0_*.log2adj_*
 ```
@@ -114,11 +116,11 @@ cd day2
 mkdir Fst
 mkdir GWAS
 mkdir SNPden
-cp ~/Share/day2/SNPbased/picta_female.list Fst/
-cp ~/Share/day2/SNPbased/picta_male.list Fst/
+cp ~/Share/day2/SNPbased/picta_FEMALE.list Fst/
+cp ~/Share/day2/SNPbased/picta_MALE.list Fst/
 cp ~/Share/day2/SNPbased/picta_sex.list GWAS/
-cp ~/Share/day2/SNPbased/picta_female.list SNPden/
-cp ~/Share/day2/SNPbased/picta_male.list SNPden/
+cp ~/Share/day2/SNPbased/picta_FEMALE.list SNPden/
+cp ~/Share/day2/SNPbased/picta_MALE.list SNPden/
 cp ~/Share/day2/vcf_files/Poecilia_picta_allchromo_merged.vcf.gz .
 ```
 
