@@ -313,6 +313,7 @@ Run the analysis based on the leaf gene expression, and see what differences can
 
 ```
 library("edgeR")
+library("ggplot2")
 
 data <- read.table("read_counts_catkin.txt",stringsAsFactors=F,header=T, row.names=1)
 head(data)
@@ -322,11 +323,15 @@ expr <- DGEList(counts=data,group=conditions)
 norm_expr <- calcNormFactors(expr)
 norm_expr
 
+# Estimates a single common dispersion parameter across all genes. This dispersion parameter represents the biological variability across samples
 norm_expr <- estimateCommonDisp(norm_expr)
+# Estimates dispersions for each gene (tag) individually, allowing for gene-level variability
 norm_expr <- estimateTagwiseDisp(norm_expr)
+# Performs the differential expression exact test using the modeled dispersions to find genes with significant expression changes.
 et <- exactTest(norm_expr)
 et
 
+# Correct for multiple testing
 p <- et$table$PValue
 p_FDR <- p.adjust(p, method = c("fdr"), n = length(p))
 
@@ -346,10 +351,24 @@ sum(de_results_catkin$Padj < 0.05 & de_results_catkin$logFC < -1)
 # 5675
 
 # Create an MA plot
-plot(de_results_catkin$logCPM, de_results_catkin$logFC, main="MA plot", xlab="log CPM", ylab="log FC")
-sig <- de_results_catkin$Padj < 0.05 & (de_results_catkin$logFC > 1 | de_results_catkin$logFC < -1)
+plot(de_results_catkin$logCPM, de_results_catkin$logFC, main="MA plot", xlab="log2 CPM", ylab="log2 Fold Change")
+sig <- de_results_catkin$Padj < 0.05 & abs(de_results_catkin$logFC) > 1)
 points(de_results_catkin$logCPM[sig], de_results_catkin$logFC[sig], col="orange", pch=19)
 abline(h=c(-1,1), lty="dashed", col="grey")
+
+# Volcano Plot
+de_results_catkin$negLogFDR <- -log10(de_results_catkin$Padj)
+
+ggplot(de_results_catkin, aes(x=logFC, y=negLogFDR)) +
+	geom_point(alpha=0.4, size=1) +
+	theme_minimal() +
+	xlab("log2 Fold Change") +
+	ylab("-log10 Adjusted P-value") +
+	ggtitle("Volcano Plot") +
+	geom_hline(yintercept = -log10(0.05), col="red", linetype="dashed") +
+	geom_vline(xintercept = c(-1,1), col="blue", linetype = "dashed") +
+	geom_point(data=subset(de_results_catkin, Padj < 0.05 & abs(logFC) > 1),
+		aes(x=logFC, y=negLogFDR), color="orange", size=1.5)
 ```
 
 <img width="615" height="639" alt="Screenshot 2025-10-01 at 23 16 23" src="https://github.com/user-attachments/assets/29199cbe-792d-4b00-95ea-b7323418b97c" />
