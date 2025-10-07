@@ -17,9 +17,9 @@ First, obtain alignment bam files and transcriptome assembly.
 ```
 mkdir sexdetector
 cd sexdetector
-cp -r /home/ubuntu/Share/day3/sexdetector/transcriptome_assembly/ ./
-cp -r /home/ubuntu/Share/day3/sexdetector/bam_files/ ./
-cp -r /home/ubuntu/Share/day3/sexdetector/scripts/ ./
+cp -r ~/Share/day3/sexdetector/transcriptome_assembly/ ./
+cp -r ~/Share/day3/sexdetector/bam_files/ ./
+cp -r ~/Share/day3/sexdetector/scripts/ ./
 ```
 
 Genotyping will be done using **[reads2snp](https://kimura.univ-montp2.fr/PopPhyl/index.php?section=tools)**. 
