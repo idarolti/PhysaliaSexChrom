@@ -21,7 +21,7 @@ cp -r ~/Share/day3/gametologs_divergence/1.gametolog_sequences ./
 cp -r ~/Share/day3/gametologs_divergence/scripts ./
 ```
 
-Align sequences with **[Prank](http://wasabiapp.org/software/prank/)**. Aligning sequences is important because dS estimation depends on the correct placement of codons and identifying homologous nucleotide positions. This part takes a few seconds to run per gametolog pair, so we can start the command and then quit
+Align sequences with **[Prank](http://wasabiapp.org/software/prank/)**. Aligning sequences is important because dS estimation depends on the correct placement of codons and identifying homologous nucleotide positions. This part takes a few seconds to run per gametolog pair, so we can start the command and then quit.
 
 ```
 cd scripts
