@@ -114,7 +114,7 @@ Here, we need to use a different conda environment, because we will use differen
 
 ```
 conda deactivate
-conda activate ~/miniconda_envs/sexchr2
+conda activate /home/ubuntu/miniconda_envs/sexchr2
 ```
 
 On the server in your home set up directories and files
@@ -169,7 +169,7 @@ cd SNPden
 
 for SAMPLE in `cat picta_FEMALE.list`;
   do
-  ~/bin/bcftools-1.22/bcftools view -a -s ${SAMPLE} -o FEMALE_${SAMPLE}.vcf Poecilia_picta_allchromo_merged.vcf
+  /home/ubuntu/bin/bcftools-1.22/bcftools view -a -s ${SAMPLE} -o FEMALE_${SAMPLE}.vcf Poecilia_picta_allchromo_merged.vcf
   bgzip -c FEMALE_${SAMPLE}.vcf > FEMALE_${SAMPLE}.vcf.gz
   ~/bin/bcftools-1.22/bcftools index FEMALE_${SAMPLE}.vcf.gz
   vcftools --gzvcf FEMALE_${SAMPLE}.vcf.gz --SNPdensity 10000 --out FEMALE_${SAMPLE}.snpden
@@ -177,7 +177,7 @@ done
 
 for SAMPLE in `cat picta_MALE.list`;
   do
-  ~/bin/bcftools-1.22/bcftools view -a -s ${SAMPLE} -o MALE_${SAMPLE}.vcf Poecilia_picta_allchromo_merged.vcf
+  /home/ubuntu/bin/bcftools-1.22/bcftools view -a -s ${SAMPLE} -o MALE_${SAMPLE}.vcf Poecilia_picta_allchromo_merged.vcf
   bgzip -c MALE_${SAMPLE}.vcf > MALE_${SAMPLE}.vcf.gz
   ~/bin/bcftools-1.22/bcftools index MALE_${SAMPLE}.vcf.gz
   vcftools --gzvcf MALE_${SAMPLE}.vcf.gz --SNPdensity 10000 --out MALE_${SAMPLE}.snpden
