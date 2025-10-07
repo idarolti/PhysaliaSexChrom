@@ -190,6 +190,11 @@ for SAMPLE in `cat picta_MALE.list`;
    ~/Share/day2/SNPbased/bcftools-1.22/bcftools index MALE_${SAMPLE}.vcf.gz
   vcftools --gzvcf MALE_${SAMPLE}.vcf.gz --SNPdensity 10000 --out MALE_${SAMPLE}.snpden
 done
+
+
+#if the above command take to long you can get the outputs of these commands from here
+cp ~/Share/day2/SNPbased/MALE_picta* .
+cp ~/Share/day2/SNPbased/FEMALE_picta* .
 ```
 
 ## Now do the same for Poecilia reticulata
