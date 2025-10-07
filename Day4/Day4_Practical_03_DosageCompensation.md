@@ -6,13 +6,13 @@
 A lot of the steps will be done in R, so prepare a work folder on your local machine.
 
 ```
-mkdir Desktop/physalia/day4/dosage_compensation
-cd Desktop/physalia/day4/dosage_compensation
+mkdir ~Desktop/physalia/day4/dosage_compensation
+cd ~Desktop/physalia/day4/dosage_compensation
 ```
 
 ## 01. Quantify gene expression
 
-Obtain read counts using **[Salmon](https://combine-lab.github.io/salmon/)**. Salmon is a fast quasi-mapping approach that directly maps reads to the transcriptome without full base-to-base alignment, drastically reducing runtime and storage compared to other aligners.
+Obtain read counts using **[Salmon](https://combine-lab.github.io/salmon/)**. Salmon is a fast quasi-mapping approach that directly maps reads to the transcriptome without full base-to-base alignment, drastically reducing runtime and storage compared to other aligners. It does take a while to run, so you can copy the outputs directly to your working folder.
 
 <img width="760" height="517" alt="Screenshot 2025-10-04 at 14 43 01" src="https://github.com/user-attachments/assets/166c0336-0fd1-428d-8e1b-28e39d942279" />
 
@@ -23,8 +23,6 @@ salmon index -t Poecilia_picta_transcripts.fasta -i Poecilia_picta_transcripts
 
 salmon quant --numBootstraps 100 --gcBias --seqBias -p 12 -l A -i Poecilia_picta_transcripts -1 female1_R1.fastq.gz -2 female1_R2.fastq.gz -o female1
 ```
-
-Both steps take a while to run, so you can copy the outputs directly to your working folder.
 
 ```
 scp -i chrsex25.pem ubuntu@44.254.129.237:/home/ubuntu/Share/day4/guppy/transcriptome ./
@@ -65,7 +63,7 @@ df <- data.frame(gene = rownames(txi$counts), txi$counts, check.names = FALSE)
 write.table(df, file="./expression/Poecilia_picta_counts.txt", quote = FALSE, sep = ",", row.names = FALSE)
 ```
 
-## 03. Convert counts to RPKM
+## 03. Convert raw counts to RPKM
 
 First, obtain gene lengths.
 
@@ -80,26 +78,27 @@ Covert read counts to RPKM.
 ```
 library("edgeR")
 
-data <- read.table("./expression/Poecilia_picta_counts.txt",stringsAsFactors=F, header=T, row.names=1, sep=",")
+data <- read.table("Poecilia_picta_counts.txt",stringsAsFactors=F, header=T, row.names=1, sep=",")
 head(data)
 dim(data)
 
 #Extract RPKM
 expr <- DGEList(counts=data)
-gene_length <- read.table("./transcriptome/gene_lengths.txt",stringsAsFactors=F)
+gene_length <- read.table("gene_lengths.txt",stringsAsFactors=F)
 head(gene_length)
+names(gene_length) <- c("gene","length")
 dim(gene_length)
 
 expressed_genes <- rownames(data)
 length(expressed_genes)
-gene_length <- subset(gene_length, V1 %in% expressed_genes)
-gene_length <- gene_length[match(rownames(expr),gene_length$V1),]
-gene_length_vector <- c(gene_length$V2)
+gene_length <- subset(gene_length, gene %in% expressed_genes)
+gene_length <- gene_length[match(rownames(expr),gene_length$gene),]
+gene_length_vector <- c(gene_length$length)
 all(gene_length$V1 == rownames(expr))
 #should print TRUE
 
 rpkm <- rpkm(expr, log=FALSE, gene.length=gene_length_vector)
-write.table(rpkm, file="./expression/Poecilia_picta_rpkm.txt",quote=F, sep=",")
+write.table(rpkm, file="Poecilia_picta_rpkm.txt",quote=F, sep=",")
 ```
 
 ## 04. Remove lowly-expressed genes
@@ -229,11 +228,11 @@ library(tidyr)
 library(dplyr)
 
 # Read expression matrix
-expr <- read.table("./expression/Poecilia_picta_rpkm_normalized.txt", stringsAsFactors = FALSE,sep=",",header=T)
+expr <- read.table("Poecilia_picta_rpkm_normalized.txt", stringsAsFactors = FALSE,sep=",",header=T)
 head(expr)
 
 # Read gene-to-chromosome mapping (no header assumed)
-genes_chr <- read.table("./transcriptome/gene_chromosome.txt", stringsAsFactors = FALSE, col.names = c("gene", "chromosome"))
+genes_chr <- read.table("gene_chromosome.txt", stringsAsFactors = FALSE, col.names = c("gene", "chromosome"))
 head(genes_chr)
 
 # Merge by gene
