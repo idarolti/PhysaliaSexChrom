@@ -149,7 +149,7 @@ SNPchr <- left_join(SNP, scaffold_length) %>%
     labs(x = "", color = "") +
     labs(y = "10kb SNP density \n(male mean - female mean)", color = "") +
     labs(
-      title = bquote("Density of sex-associated SNPs for P. reticulata"),
+      title = bquote("Density of sex-associated SNPs for P. picta"),
       subtitle = "Per window",
       color = ""
     ) +
