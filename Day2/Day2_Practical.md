@@ -99,7 +99,7 @@ Set p to 2, to filter sites with double coverage in one sample compared to the o
 ../dif_cover_scripts/get_DNAcopyout_with_length_of_intervals.sh *.DNAcopyout ref.length.Vk1s_sorted
 
 echo "Generate rough histogram with given precision order"
-~/bin/dif_cover_scripts/generate_DNAcopyout_len_histogram.sh *.DNAcopyout.len 1
+../dif_cover_scripts/generate_DNAcopyout_len_histogram.sh *.DNAcopyout.len 1
 
 echo "Generate histogram with bins centered at value X reporting scores from [X-0.25 to X+0.25)"
 ../dif_cover_scripts/generate_DNAcopyout_len_vs_scores_histogram_bin0.5.sh *.DNAcopyout.len
@@ -116,6 +116,11 @@ Here, we need to use a different conda environment, because we will use differen
 
 ```
 conda deactivate
+conda init
+```
+Relaunch your terminal and login again
+```
+ssh -i ~/YOURLOCALFOLDER/chrsex5.pem user5@44.251.209.2
 conda activate /home/ubuntu/miniconda_envs/sexchr2
 ```
 
