@@ -197,4 +197,7 @@ cp ~/Share/day2/SNPbased/MALE_picta* .
 cp ~/Share/day2/SNPbased/FEMALE_picta* .
 ```
 
+Copy all files called *.snpden to your local machine  
+Open Rstudio, download the script https://github.com/idarolti/PhysaliaSexChrom/blob/main/Day2/SNPbased/picta_SNPden_plots.R and load it
+
 ## Now do the same for Poecilia reticulata
