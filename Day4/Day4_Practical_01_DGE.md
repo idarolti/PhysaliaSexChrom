@@ -21,7 +21,7 @@ mkdir differential_gene_expression
 cd differential_gene_expression
 mkdir genome
 cd genome
-cp /home/ubuntu/Share/day4/willow/genome/genome_assembly_1k.fa ./
+cp ~/Share/day4/willow/genome/genome_assembly_1k.fa ./
 hisat2-build -f genome_assembly_1k.fa genome_assembly_1k
 ```
 
@@ -29,11 +29,11 @@ Align paired-end reads to the genome, then sort.
 
 ```
 cd ..
-cp -r /home/ubuntu/Share/day4/willow/reads/ ./
+cp -r ~/Share/day4/willow/reads/ ./
 mkdir hisat
 cd hisat
 
-hisat2 /home/ubuntu/Share/day4/willow/genome/genome_assembly_1k -1 /home/ubuntu/Share/day4/willow/reads/female1_catkin_R1.fastq -2 /home/ubuntu/Share/day4/willow/reads/female1_catkin_R2.fastq -q --no-discordant --no-mixed --no-unal --dta -S female1_catkin.sam
+hisat2 ../genome/genome_assembly_1k -1 ../reads/female1_catkin_R1.fastq -2 ../reads/female1_catkin_R2.fastq -q --no-discordant --no-mixed --no-unal --dta -S female1_catkin.sam
 
 samtools view -bS female1_catkin.sam | samtools sort -o female1_catkin_coordsorted.bam
 rm female1_catkin.sam
@@ -56,7 +56,7 @@ reads_dir="../reads"
 # Genome index prefix
 genome_index="../genome/genome_assembly_1k"
 
-# Loop over all R1 fastq files
+# Loop over all fastq files
 for r1 in ${reads_dir}/*_R1.fastq; do
     # Extract base name (e.g., female1_catkin)
     base=$(basename "$r1" "_R1.fastq")
@@ -128,17 +128,18 @@ Copy the htseq-count output on the full dataset and copy scripts for downstream 
 
 ```
 cd ../../
-cp -r /home/ubuntu/Share/day4/willow/scripts ./
+cp -r ~/Share/day4/willow/scripts ./
 mkdir htseq
-cp -r /home/ubuntu/Share/day4/willow/htseq/catkin ./htseq/
-cp -r /home/ubuntu/Share/day4/willow/htseq/leaf ./htseq/
+cp -r ~/Share/day4/willow/htseq/catkin ./htseq/
+cp -r ~/Share/day4/willow/htseq/leaf ./htseq/
 ```
 
-Merge read count outputs per tissue. Below is an example for catkin. Run the same for the leaf tissue.
+Merge read count outputs per tissue.
 
 ```
 cd scripts
 python3 extract-counts.py ../htseq/catkin ../htseq/catkin/read_counts_catkin.txt
+head ../htseq/catkin/read_counts_catkin.txt
 ```
 
 ## 04. Filter lowly expressed genes
@@ -148,41 +149,43 @@ Copy the merged.gtf file based on the full dataset, then create a file with the 
 ```
 cd ../stringtie
 mkdir fullset
-cp /home/ubuntu/Share/day4/willow/stringtie_gtfs/fullset/merged.gtf ./fullset/
+cp ~/Share/day4/willow/stringtie_gtfs/fullset/merged.gtf ./fullset/
 cd ../scripts
 python3 extract-gene-lengths.py ../htseq/catkin/read_counts_catkin.txt ../stringtie/fullset/merged.gtf ../stringtie/fullset/gene_length.txt
+head ../stringtie/fullset/gene_length.txt
 ```
 
-Download the read counts file for each tissue and the gene_length txt to your local directory. Use edgeR to convert counts to RPKM.
+Download the read counts file for each tissue and the gene_length txt to your local directory. First, use edgeR to convert counts to RPKM.
 
 ```
 library("edgeR")
 
-data <- read.table("read_counts.txt",stringsAsFactors=F,header=T, row.names=1)
+data <- read.table("read_counts_catkin.txt",stringsAsFactors=F,header=T, row.names=1)
+head(data)
 names(data)
 dim(data)
 
+#Extract RPKM
 expr <- DGEList(counts=data)
 gene_length <- read.table("gene_length.txt",stringsAsFactors=F)
 head(gene_length)
+names(gene_length) <- c("gene","length")
 dim(gene_length)
 expressed_genes <- rownames(data)
 length(expressed_genes)
-gene_length <- subset(gene_length, V1 %in% expressed_genes)
-gene_length <- gene_length[match(rownames(expr),gene_length$V1),]
-gene_length_vector <- c(gene_length$V2)
+gene_length <- subset(gene_length, gene %in% expressed_genes)
+gene_length <- gene_length[match(rownames(expr),gene_length$gene),]
+gene_length_vector <- c(gene_length$length)
 all(gene_length$V1 == rownames(expr))
 #should print TRUE
 rpkm <- rpkm(expr, log=FALSE,gene.length=gene_length_vector)
-write.table(rpkm, file="rpkm.txt",quote=F, sep="\t")
+write.table(rpkm, file="rpkm_catkin.txt",quote=F, sep="\t")
 ```
 
-Filter genes that do not have a minimum of 2 RPKM expression in at least half of the individuals of one sex.
+Filter genes that do not have a minimum of 2 RPKM expression in at least half of the individuals of one sex. 
 
 ```
-python filter-expression.py rpkm_catkin.txt read_counts_catkin.txt rpkm_catkin_filtered.txt read_counts_catkin_filtered.txt 'F,F,F,M,M,M'
-
-awk -F, '
+awk -F"\t" '
 NR==1 { print; next }
 {
   female_count = 0
@@ -192,7 +195,7 @@ NR==1 { print; next }
   if (female_count >= 2 || male_count >= 2) print
 }' rpkm_catkin.txt > rpkm_catkin_filtered.txt
 
-awk -F, 'NR==FNR {genes[$1]; next} FNR==1 || $1 in genes' rpkm_catkin_filtered.txt read_counts_catkin.txt > read_counts_catkin_filtered.txt
+awk -F"\t" 'NR==FNR {genes[$1]; next} FNR==1 || $1 in genes' rpkm_catkin_filtered.txt read_counts_catkin.txt > read_counts_catkin_filtered.txt
 ```
 
 ## 05. Normalization of gene expression with edgeR
@@ -200,7 +203,7 @@ awk -F, 'NR==FNR {genes[$1]; next} FNR==1 || $1 in genes' rpkm_catkin_filtered.t
 ```
 library("edgeR")
 
-data <- read.table("read_counts_catkin.txt",stringsAsFactors=F,header=T, row.names=1)
+data <- read.table("read_counts_catkin_filtered.txt",stringsAsFactors=F,header=T, row.names=1)
 head(data)
 dim(data)
 conditions <- factor(c("F","F","F","M","M","M"))
@@ -234,7 +237,9 @@ lines(sample6, type="l",lwd=2,col="blue")
 
 
 ```
-#Check normalised read count data
+# Check normalised read count data
+# calcNormFactors computes normalization factors, 
+# accounting for differences in sequencing depth and RNA composition between samples
 norm_expr <- calcNormFactors(expr)
 plotMDS(norm_expr,xlim=c(-6,6))
 ```
@@ -267,16 +272,17 @@ expr <- DGEList(counts=data)
 norm_expr <- calcNormFactors(expr)
 gene_length <- read.table("gene_length.txt",stringsAsFactors=F)
 head(gene_length)
+names(gene_length) <- c("gene","length")
 dim(gene_length)
 expressed_genes <- rownames(data)
 length(expressed_genes)
-gene_length <- subset(gene_length, V1 %in% expressed_genes)
-gene_length <- gene_length[match(rownames(expr),gene_length$V1),]
-gene_length_vector <- c(gene_length$V2)
+gene_length <- subset(gene_length, gene %in% expressed_genes)
+gene_length <- gene_length[match(rownames(expr),gene_length$gene),]
+gene_length_vector <- c(gene_length$length)
 all(gene_length$V1 == rownames(expr))
 #should print TRUE
 rpkm_norm <- rpkm(norm_expr, log=FALSE,gene.length=gene_length_vector)
-write.table(rpkm_norm, file="",quote=F, sep="\t")
+write.table(rpkm_norm, file="rpkm_catkin_normalized.txt",quote=F, sep="\t")
 ```
 
 Plot the clustering of samples by gene expression information.
@@ -286,7 +292,6 @@ Plot the clustering of samples by gene expression information.
 library(pheatmap)
 library(pvclust)
 
-palette2 <-colorRamps::"matlab.like2"(n=200)
 bootstraps = pvclust(log2(rpkm_norm+1), method.hclust="average", method.dist="euclidean")
 plot(bootstraps)
 ```
