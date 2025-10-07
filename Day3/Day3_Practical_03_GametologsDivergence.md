@@ -17,15 +17,17 @@ First, obtain gametolog sequences and scripts.
 ```
 mkdir gametologs_divergence
 cd gametologs_divergence
-cp -r /home/ubuntu/Share/day3/gametologs_divergence/1.gametolog_sequences ./
-cp -r /home/ubuntu/Share/day3/gametologs_divergence/scripts ./
+cp -r ~/Share/day3/gametologs_divergence/1.gametolog_sequences ./
+cp -r ~/Share/day3/gametologs_divergence/scripts ./
 ```
 
-Align sequences with **[Prank](http://wasabiapp.org/software/prank/)**.
+Align sequences with **[Prank](http://wasabiapp.org/software/prank/)**. This part takes a few seconds to run per gametolog pair, so we can start the command and then quit
 
 ```
 cd scripts
 python 01.run-prank.py ../1.gametolog_sequences
+rm -r ../1.gametolog_sequences
+cp -r ~/Share/test_day3/1.gametolog_sequences/ ../
 ```
 
 Remove gaps in alignments and short sequences.
@@ -37,6 +39,8 @@ python 02.remove-gaps.py ../1.gametolog_sequences ../invalid_gametologs -cutoff 
 ## 02. Prepare files for PAML
 
 Convert fasta file to **[phylip](https://www.phylo.org/index.php/help/phylip)** format, which is required by PAML. PRANK includes a built-in feature for format conversion using the -convert option along with the -f flag to specify the output format.
+
+This next step will delete all the files that don't end in "gapsrm.fa" and the convert that file to phylip format. So if we want to still have a copy of the previous files, we can duplicate the 1.gametolog_sequences folder.
 
 ```
 cp -r ../1.gametolog_sequences ../2.gametolog_sequences_phylip
@@ -88,9 +92,8 @@ The pairwise dS values can be found in the 2YN.dS files. We can extract the dS v
 ```
 cd ../
 mkdir plot
-cp -r /home/ubuntu/Share/day3/gametologs_divergence/5.paml ./
-cd 5.paml
 
+cd 2.gametolog_sequences_phylip
 for d in ./Gametologs_ENSORLT000000*; do
    folder=$(basename "$d")
    colname=${folder#Gametologs_}
@@ -107,14 +110,18 @@ head gametologs_dS.txt
 Merge the file with dS values with the file with positional information on the sex chromosome for each gametolog.
 
 ```
-cp /home/ubuntu/Share/day3/gametologs_divergence/gametologs_position.txt ./
+cp ~/Share/day3/gametologs_divergence/gametologs_position.txt ./
+head gametologs_position.txt
+
 join -t $'\t' -1 1 -2 1 <(sort gametologs_dS.txt) <(sort gametologs_position.txt) > gametologs_dS_position.txt
 head gametologs_dS_position.txt
-
-scp -i chrsex25.pem ubuntu@44.249.25.243:/path/gametologs_dS_position.txt ~/Desktop
 ```
 
-Visualize results in **[R](https://www.r-project.org/)**.
+Download the gametologs_dS_position.txt file and visualize results in **[R](https://www.r-project.org/)**.
+
+```
+scp -i chrsex25.pem ubuntu@44.249.25.243:/path/gametologs_dS_position.txt ~/Desktop
+```
 
 ```
 library(ggplot2)
