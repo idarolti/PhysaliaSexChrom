@@ -12,13 +12,14 @@ conda activate /home/ubuntu/miniconda3/envs/sexchr
 
 ## 02. Genotyping
 
-First, obtain alignment bam files and transcriptome assembly.
+First, obtain alignment bam files and transcriptome assembly. (explain more) + prep supporting slides for pipieline for sexdetector
 
 ```
 mkdir sexdetector
 cd sexdetector
 cp -r /home/ubuntu/Share/day3/sexdetector/transcriptome_assembly/ ./
 cp -r /home/ubuntu/Share/day3/sexdetector/bam_files/ ./
+cp -r /home/ubuntu/Share/day3/sexdetector/scripts/ ./
 ```
 
 Genotyping will be done using **[reads2snp](https://kimura.univ-montp2.fr/PopPhyl/index.php?section=tools)**. 
@@ -27,9 +28,7 @@ Make a list of bam files to run reads2snp.
 
 ```
 cd bam_files
-ls *.bam > bam_list.txt
-
-(or try: ls -d "$PWD"/* > bam_list.txt)
+ls -d "$PWD"/* > bam_list.txt
 ```
 
 Run reads2snp:
@@ -45,11 +44,18 @@ Run reads2snp:
 -rqt: minimum read mapping quality
 
 ```
+cd ../scripts
 mkdir ../reads2snp
-reads2snp -aeb -min 3 -par 0 -bqt 20 -rqt 10 -bamlist bam_list.txt -bamref ../transcriptome_assembly/trinity.fasta -out ../reads2snp/reads2snp_output
+./reads2snp_2.0.64.bin -aeb -min 3 -par 0 -bqt 20 -rqt 10 -bamlist ../bam_files/bam_list.txt -bamref ../transcriptome_assembly/trinity.fasta -out ../reads2snp/reads2snp_output
 ```
 
 Have a look at the two main reads2snp outputs: .alr and .gen
+
+```
+cd ../reads2snp
+head reads2snp_output.alr
+head reads2snp_output.gen
+```
 
 The output .alr file is a tab delimited file that shows each position of each gene on a different line with the major allele (most common allele in number of reads), then M if the position is monomorphic or P if the position shows different alleles, then for each individual the total read number if the position is monomorphic or the total read number followed by the number of reads for each base [A/C/G/T] if the position is polymorphic:
 
@@ -69,45 +75,61 @@ The output .gen file is a tab delimited file showing each position of each gene 
   2	TT|1	TT|0.98
 ```
 
-## 03. SNP segregation analysis
+## 03. SNP segregation analysis (subset)
 
 Identify sex-linked sequences with SEX-DETector. The software can be found **[here](https://gitlab.in2p3.fr/sex-det-family)**. For this practical we will use the original version of the software.
 
-Copy the SEX-DETector scripts to your folder and create a folder for the output files.
-
 ```
-cd day3/sexdetector/
-cp /home/ubuntu/Share/day3/sexdetector/scripts/ ./
-mkdir sexdetector_output
-cd scripts
+mkdir ../sexdetector_output
+cd ../scripts
 ```
 
 Generate gen_summary file - allows SEX-DETector to run faster. The following options should be use for the command below, -hom string (names of homogametic progeny individuals separated by commas), -het string (the names of the heterogametic progeny individuals separated by commas), -hom_par string (homogametic parent name), -het_par string (heterogametic parent name). The gen_summary file is similar to the gen file except that it shows only one occurence of each possible SNP in the dataset and shows the number of times it happens in the first column instead of the position number of the SNP.
 
 ```
-./SEX-DETector_prepare_file.pl ../reads2snp/reads2snp_output.gen ../reads2snp_output.gen_summary -hom Female_Offspring1,Female_Offspring2,Female_Offspring3,Female_Offspring4,Female_Offspring5 -het Male_Offspring1,Male_Offspring2,Male_Offspring3,Male_Offspring4,Male_Offspring5 -hom_par Female_Mother -het_par Male_Father
+./SEX-DETector_prepare_file.pl ../reads2snp/reads2snp_output.gen ../reads2snp/reads2snp_output.gen_summary -hom Female_Offspring1,Female_Offspring2,Female_Offspring3,Female_Offspring4,Female_Offspring5 -het Male_Offspring1,Male_Offspring2,Male_Offspring3,Male_Offspring4,Male_Offspring5 -hom_par Female_Mother -het_par Male_Father
+
+head ../reads2snp/reads2snp_output.gen_summary
 ```
 
 Run SEX-DETector
 
 ```
 ./SEX-DETector.pl -alr ../reads2snp/reads2snp_output.alr -alr_gen ../reads2snp/reads2snp_output.gen -alr_gen_sum ../reads2snp/reads2snp_output.gen_summary -system xy -hom Female_Offspring1,Female_Offspring2,Female_Offspring3,Female_Offspring4,Female_Offspring5 -het Male_Offspring1,Male_Offspring2,Male_Offspring3,Male_Offspring4,Male_Offspring5 -hom_par Female_Mother -het_par Male_Father -seq -detail -detail-sex-linked -out ../sexdetector_output/Poecilia_reticulata
+
+cd ../sexdetector_output
 ```
 
+The main outputs from SEX-DETector are:
+
+
 Look at the outputs produced by SEX-DETector and see which genes are inferred to be sex-linked and why.
+
+
+## 04. SNP segregation analysis (full dataset)
 
 Next, using the SEX-DETector output for the full dataset, check where on the genome do the sex-linked genes map.
 
 ```
-cd day3/sexdetector
+cd ~/day3/sexdetector
 cp -r /home/ubuntu/Share/day3/sexdetector/sexdetector_output_full ./
 cd sexdetector_output_full
+```
 
+Get the number of sex-linked genes identified by SEX-DETector
+
+```
 grep "^>" Poecilia_reticulata_sex-linked_sequences.fasta | sed 's/_[^_]*$//' | sort | uniq | wc -l
+```
+
+Obtain a single sequence for each gene (to then blast onto the assembly)
+
+```
+head Poecilia_reticulata_sex-linked_sequences.fasta
 
 awk '
   /^>/ {
-    # Extract gene name by removing trailing underscore and suffix (_X, _Y, etc.)
+    # Extract a single sequence per gene
     gene = $0
     sub(/^>/, "", gene)
     sub(/_[^_]+$/, "", gene)
@@ -127,11 +149,26 @@ awk '
 ' Poecilia_reticulata_sex-linked_sequences.fasta > Poecilia_reticulata_sex-linked_sequences_unique.fasta
 
 grep ">" Poecilia_reticulata_sex-linked_sequences_unique.fasta | wc -l
+```
 
+Use Blast so see where on the genome the identifyied sex-linked genes align.
+
+```
 blastn -db /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_reticulata -query Poecilia_reticulata_sex-linked_sequences_unique.fasta -out blastout -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore sseq"
 
-python2 ../scripts/blast_tophit.py blastout blastout_tophits
+head blastout
+```
 
+Identify top blast hits for each sequence. This script takes a blast output file (format: outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore sseq") and identifies the top blast hit for each query. Top blast hit = minimum 30 pidentity, greatest blast score and greatest pidentity. If a query has two hits with identical blast score and pidentity one is chosen randomly as the tophit. 
+
+```
+python ../scripts/blast_tophit.py blastout blastout_tophits
+head blastout_tophits
+```
+
+Count the number of times a chromosome is assigned a sex-linked gene.
+
+```
 awk -F',' '
 {
   key = $2 SUBSEP $1   # chromosome + gene combined key
@@ -157,7 +194,7 @@ Extract the inferred sex-linked genes that align to the sex chromosome (CM002717
 awk -F',' '$2 == "CM002717.1"' blastout_tophits > blastout_tophits_sexchromo
 ```
 
-Lastly, in R, plot the distribution of sex-linked genes across the sex chromosome.
+Trsafer this file to your local machine, and plot the distribution of sex-linked genes across the sex chromosome usind R.
 
 ```
 sexlinked = read.csv("blastout_tophits_sexchromo", header=F)
