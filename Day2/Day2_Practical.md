@@ -112,16 +112,10 @@ echo "Generate histogram with bins centered at value X reporting scores from [X-
    
 ## 02. SNP based analyses
 
-Here, we need to use a different conda environment, because we will use different tools.
+If you logged out, remember to reactivate the conda environment
 
 ```
-conda deactivate
-conda init
-```
-Relaunch your terminal and login again
-```
-ssh -i ~/YOURLOCALFOLDER/chrsex5.pem user5@44.251.209.2
-conda activate /home/ubuntu/miniconda_envs/sexchr2
+conda activate /home/ubuntu/miniconda_envs/sexchr
 ```
 
 On the server in your home set up directories and files
@@ -178,7 +172,7 @@ for SAMPLE in `cat picta_FEMALE.list`;
   do
   /home/ubuntu/bin/bcftools-1.22/bcftools view -a -s ${SAMPLE} -o FEMALE_${SAMPLE}.vcf Poecilia_picta_allchromo_merged.vcf
   bgzip -c FEMALE_${SAMPLE}.vcf > FEMALE_${SAMPLE}.vcf.gz
-  /home/ubuntu//bin/bcftools-1.22/bcftools index FEMALE_${SAMPLE}.vcf.gz
+  /home/ubuntu/bin/bcftools-1.22/bcftools index FEMALE_${SAMPLE}.vcf.gz
   vcftools --gzvcf FEMALE_${SAMPLE}.vcf.gz --SNPdensity 10000 --out FEMALE_${SAMPLE}.snpden
 done
 
