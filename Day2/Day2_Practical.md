@@ -65,7 +65,7 @@ l = minimum size of window to output (set to 1000)
 Then run the command below to generate the unionbed coverage file
 
 ```
-../dif_cover_scripts/from_unionbed_to_ratio_per_window_CC0 -a a -A A -b b -B B -v v -l l ~/Share/day2/coverage/picta/sample1_sample2.unionbedcv
+from_unionbed_to_ratio_per_window_CC0 -a a -A A -b b -B B -v v -l l ~/Share/day2/coverage/picta/sample1_sample2.unionbedcv
 ```
 
 ### Step 3. Adjust coverage based on the bam ratio in covstats.tab and generate DNAcopy output file
