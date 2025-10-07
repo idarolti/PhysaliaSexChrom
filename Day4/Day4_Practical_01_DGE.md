@@ -181,6 +181,18 @@ Filter genes that do not have a minimum of 2 RPKM expression in at least half of
 
 ```
 python filter-expression.py rpkm_catkin.txt read_counts_catkin.txt rpkm_catkin_filtered.txt read_counts_catkin_filtered.txt 'F,F,F,M,M,M'
+
+awk -F, '
+NR==1 { print; next }
+{
+  female_count = 0
+  male_count = 0
+  for (i=2; i<=4; i++) if ($i > 2) female_count++
+  for (i=5; i<=7; i++) if ($i > 2) male_count++
+  if (female_count >= 2 || male_count >= 2) print
+}' rpkm_catkin.txt > rpkm_catkin_filtered.txt
+
+awk -F, 'NR==FNR {genes[$1]; next} FNR==1 || $1 in genes' rpkm_catkin_filtered.txt read_counts_catkin.txt > read_counts_catkin_filtered.txt
 ```
 
 ## 05. Normalization of gene expression with edgeR
