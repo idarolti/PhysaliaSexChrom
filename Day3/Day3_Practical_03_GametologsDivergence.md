@@ -30,7 +30,7 @@ rm -r ../1.gametolog_sequences
 cp -r ~/Share/day3/gametologs_divergence/1.gametolog_sequences_prank/ ../
 ```
 
-Remove gaps in alignments and short sequences.
+Remove gaps in alignments and short sequences. Gaps represent insertions or deletions (indels) that can disrupt the reading frame and homology established at the codon level. For statistical reasons, you can also filter for a minimum gene length (shorter sequences provide very few codons for substitution rate estimation, which can lead to unstable and unreliable substitution estimates due to insufficient mutation counts and sampling noise).
 
 ```
 python 02.remove-gaps.py ../1.gametolog_sequences_prank ../invalid_gametologs -cutoff 300
@@ -49,7 +49,7 @@ python 03.convert-fasta-phylip.py ../2.gametolog_sequences_phylip gapsrm.fa
 
 **[PAML](https://snoweye.github.io/phyclust/document/pamlDOC.pdf)** is a suite of programs for phylogenetic analyses of DNA or protein sequences using maximum likelihood (ML). The **[yn00]()** module is a method for estimating synonymous and nonsynonymous substitution rates in pairwise comparison of protein-coding DNA sequences. 
 
-We must first create a paml control file that specifies input alignment and output files, plus options like the genetic code and analyses to perform. Then run pmal yn00.
+We must first create a paml control file that specifies input alignment and output files, plus options like the genetic code and the analyses to be performed. Then run pmal yn00.
 
 ```
 cd ../2.gametolog_sequences_phylip
@@ -127,11 +127,13 @@ scp -i chrsex25.pem ubuntu@44.249.25.243:/path/gametologs_dS_position.txt ~/Desk
 library(ggplot2)
 
 gametologs <- read.csv("gametologs_dS_position.txt", row.names=1,header=F,sep="\t")
+head(gametologs)
+names(gametologs) <- c("dS","Position")
 
-ggplot(gametologs, aes(x=V3, y=V2)) + 
+ggplot(gametologs, aes(x=Position, y=dS)) + 
 	geom_point(size=2, alpha=0.7) +
 	labs(title="Gametologs divergence",
-			x="Chromosomal position (Mb)",
+			x="Sex chromosome position (Mb)",
 			y="Pairwise divergence dSxy") +
 	theme_minimal()
 ```
