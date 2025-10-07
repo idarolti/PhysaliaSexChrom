@@ -371,7 +371,7 @@ ggplot(de_results_catkin, aes(x=logFC, y=negLogFDR)) +
 		aes(x=logFC, y=negLogFDR), color="orange", size=1.5)
 ```
 
-<img width="615" height="639" alt="Screenshot 2025-10-01 at 23 16 23" src="https://github.com/user-attachments/assets/29199cbe-792d-4b00-95ea-b7323418b97c" />
+[volcanoPlot_catkin.pdf](https://github.com/user-attachments/files/22754815/volcanoPlot_catkin.pdf)
 
 
 Run the differential gene expression on the leaf samples, and see what contrasts can you make to the catkin results.
