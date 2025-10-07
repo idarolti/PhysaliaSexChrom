@@ -50,7 +50,7 @@ We will calculate average coverage of valid bases across all merged bed interval
 Inspect the coverage statistics from the covstats file located in Day2/coverage to determine the parameter values for the command below   
 
 ```
-cat ~/Share/day2/covstats.tab
+cat ~/Share/day2/coverage/covstats.tab
 ```
 
 Use these values to set the parameters for the following command
