@@ -12,7 +12,7 @@ We will base our analysis on the **[SexFindR pipeline](https://sexfindr.readthed
 Open your terminal application as yesterday, connect to the server as yesterday, replace "25" with the number of your user account and use today's IP adress
 
 ```
-ssh -i ~/YOURLOCALFOLDER/chrsex5.pem user5@44.247.37.169
+ssh -i ~/YOURLOCALFOLDER/chrsex5.pem user5@44.251.209.2
 mkdir day2
 cd day2
 conda activate /home/ubuntu/miniconda3/envs/sexchr
