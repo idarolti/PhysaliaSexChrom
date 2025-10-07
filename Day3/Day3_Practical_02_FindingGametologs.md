@@ -167,32 +167,6 @@ blastn -db ~/Share/day1/02.read_mapping/reference_genome/Poecilia_reticulata -qu
 head blastout
 ```
 
-qseqid: Query sequence identifier (the sequence being searched)
-
-sseqid: Subject sequence identifier (the matched database sequence)
-
-pident: Percentage of identical matches in the alignment
-
-length: Length of the alignment region
-
-mismatch: Number of mismatched positions in the alignment
-
-gapopen: Number of gap openings in the alignment
-
-qstart: Start position of the alignment in the query sequence
-
-qend: End position of the alignment in the query sequence
-
-sstart: Start position of the alignment in the subject sequence
-
-send: End position of the alignment in the subject sequence
-
-evalue: Expectation value (E-value) indicating the statistical significance of the alignment; lower values indicate more significant matches
-
-bitscore: Bit score representing the alignment score normalized for scoring system and search space; higher values indicate better alignments
-
-sseq: The aligned part of the subject sequence (actual nucleotides or amino acids in the alignment)
-
 Identify top blast hits for each sequence. This script takes a blast output file (format: outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore sseq") and identifies the top blast hit for each query. Top blast hit = minimum 30 pidentity, greatest blast score and greatest pidentity. If a query has two hits with identical blast score and pidentity one is chosen randomly as the tophit. 
 
 ```
@@ -205,17 +179,22 @@ Count the number of times a chromosome is assigned a sex-linked gene.
 ```
 awk -F',' '
 {
-  key = $2 SUBSEP $1   # chromosome + gene combined key
-  count[key] = 1      # mark unique pairs
+  # chromosome + gene combined key
+  key = $2 SUBSEP $1
+  # mark unique pairs
+  count[key] = 1
 }
 END {
   for (k in count) {
+	# split key back into chromosome and gene
     split(k, parts, SUBSEP)
     chrom = parts[1]
     gene = parts[2]
+	# increment count of unique genes per chromosome
     genes_per_chrom[chrom]++
   }
   for (chrom in genes_per_chrom) {
+	# output chromosome and gene count
     print chrom, genes_per_chrom[chrom]
   }
 }
@@ -234,11 +213,13 @@ Trsafer this file to your local machine, and plot the distribution of sex-linked
 sexlinked = read.csv("blastout_tophits_sexchromo", header=F)
 
 dim(sexlinked)
+head(sexlinked)
 
-names(sexlinked)
+names(sexlinked) <- c("Gene","Chromosome","Bitscore","PIdentity","Start","End")
+head(sexlinked)
 
-positions <- sexlinked$V5
-genes <- sexlinked$V1
+positions <- sexlinked$Start
+genes <- sexlinked$Gene
 
-dotchart(positions,labels=genes,cex=.7,main="Sex-linked genes",xlab="Chr12 start position",xlim=c(0,26000000))
+dotchart(sexlinked$Start/1000000,labels=sexlinked$Gene,cex=.7,main="Sex-linked genes",xlab="Sex chromosome position (Mb)",xlim=c(0,26))
 ```
