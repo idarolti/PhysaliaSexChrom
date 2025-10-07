@@ -207,7 +207,7 @@ Extract the inferred sex-linked genes that align to the sex chromosome (CM002717
 awk -F',' '$2 == "CM002717.1"' blastout_tophits > blastout_tophits_sexchromo
 ```
 
-Trsafer this file to your local machine, and plot the distribution of sex-linked genes across the sex chromosome usind R.
+Transfer this file to your local machine, and plot the distribution of sex-linked genes across the sex chromosome usind R.
 
 ```
 sexlinked = read.csv("blastout_tophits_sexchromo", header=F)
@@ -222,4 +222,11 @@ positions <- sexlinked$Start
 genes <- sexlinked$Gene
 
 dotchart(sexlinked$Start/1000000,labels=sexlinked$Gene,cex=.7,main="Sex-linked genes",xlab="Sex chromosome position (Mb)",xlim=c(0,26))
+```
+
+Run the last part of the analysis (04.SNP segregation analysis) using the SEX-DETector output from another reticulata cross. What differences can you notice in the distribution of sex-linked genes? 
+
+```
+cd ~/day3/sexdetector/
+cp -r ~/Share/day3/sexdetector/sexdetector_output_full_Ret9 ./
 ```
