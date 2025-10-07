@@ -13,7 +13,6 @@ conda activate /home/ubuntu/miniconda3/envs/sexchr
 ## 02. Genotyping
 
 First, obtain alignment bam files and transcriptome assembly.
-
 ```
 mkdir sexdetector
 cd sexdetector
@@ -22,7 +21,7 @@ cp -r ~/Share/day3/sexdetector/bam_files/ ./
 cp -r ~/Share/day3/sexdetector/scripts/ ./
 ```
 
-Genotyping will be done using **[reads2snp](https://kimura.univ-montp2.fr/PopPhyl/index.php?section=tools)**. 
+Genotyping will be done using **[reads2snp](https://kimura.univ-montp2.fr/PopPhyl/index.php?section=tools)**. This is preferred when using SEX-DETector with RNA-seq data because it allows for allelic expression biases (important for sex chromosome studies because Y or W alleles may be less expressed).
 
 Make a list of bam files to run reads2snp.
 
