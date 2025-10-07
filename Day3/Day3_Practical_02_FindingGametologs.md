@@ -12,7 +12,7 @@ conda activate /home/ubuntu/miniconda3/envs/sexchr
 
 ## 02. Genotyping
 
-First, obtain alignment bam files and transcriptome assembly. (explain more) + prep supporting slides for pipieline for sexdetector
+First, obtain alignment bam files and transcriptome assembly.
 
 ```
 mkdir sexdetector
