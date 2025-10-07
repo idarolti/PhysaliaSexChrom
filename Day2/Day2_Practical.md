@@ -169,6 +169,9 @@ Result is in the output/ folder. Download the Poecilia_picta.gemma.assoc file an
 We will format the SNP variant file with **[bcftools](https://samtools.github.io/bcftools/bcftools.html)** to subset female and male entries into separate files  
 We will then calculate SNP density in 10kb windows with VCFtools
 ```
+cd
+cd day2
+cp ~/Share/day2/vcf_files/Poecilia_picta_allchromo_merged.vcf.gz .
 gunzip Poecilia_picta_allchromo_merged.vcf.gz > SNPden/Poecilia_picta_allchromo_merged.vcf
 cd SNPden
 
