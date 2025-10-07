@@ -43,8 +43,8 @@ Copy the outputs of mpileup2snp to your directory.
 ```
 mkdir ase
 cd ase
-cp -r /home/ubuntu/Share/day4/ase/ase_scripts ./
-cp -r /home/ubuntu/Share/day4/ase/snp_calling/ ./
+cp -r ~/Share/day4/ase/scripts ./
+cp -r ~/Share/day4/ase/snp_calling/ ./
 cd snp_calling
 ```
 
@@ -53,7 +53,7 @@ Measurements of allele-specific expression can be biased when RNA-seq reads are 
 To mitigate this, remove regions with a high density of SNPs.
 
 ```
-cd ../ase_scripts/
+cd ../scripts/
 python exclude_snp_clusters.py ../snp_calling/males.vcf -l 75 -m 5
 ```
 
