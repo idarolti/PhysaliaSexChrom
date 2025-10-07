@@ -135,5 +135,3 @@ ggplot(gametologs, aes(x=V3, y=V2)) +
 			y="Pairwise divergence dSxy") +
 	theme_minimal()
 ```
-
-<img width="801" height="437" alt="gametologs divergence plot" src="https://github.com/user-attachments/assets/0ab6471f-418d-44ae-a060-199e4f6c44c0" />
