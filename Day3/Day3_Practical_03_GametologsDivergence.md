@@ -27,13 +27,13 @@ Align sequences with **[Prank](http://wasabiapp.org/software/prank/)**. This par
 cd scripts
 python 01.run-prank.py ../1.gametolog_sequences
 rm -r ../1.gametolog_sequences
-cp -r ~/Share/test_day3/1.gametolog_sequences/ ../
+cp -r ~/Share/day3/gametologs_divergence/1.gametolog_sequences_prank/ ../
 ```
 
 Remove gaps in alignments and short sequences.
 
 ```
-python 02.remove-gaps.py ../1.gametolog_sequences ../invalid_gametologs -cutoff 300
+python 02.remove-gaps.py ../1.gametolog_sequences_prank ../invalid_gametologs -cutoff 300
 ```
 
 ## 02. Prepare files for PAML
@@ -43,7 +43,7 @@ Convert fasta file to **[phylip](https://www.phylo.org/index.php/help/phylip)** 
 This next step will delete all the files that don't end in "gapsrm.fa" and the convert that file to phylip format. So if we want to still have a copy of the previous files, we can duplicate the 1.gametolog_sequences folder.
 
 ```
-cp -r ../1.gametolog_sequences ../2.gametolog_sequences_phylip
+cp -r ../1.gametolog_sequences_prank ../2.gametolog_sequences_phylip
 python 03.convert-fasta-phylip.py ../2.gametolog_sequences_phylip gapsrm.fa
 ```
 
