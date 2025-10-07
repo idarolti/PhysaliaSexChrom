@@ -89,7 +89,7 @@ python average_major_allele_fraction_distribution.py ../major_allele_ratio/males
 Prepare input for R plot.
 
 ```
-python prepare_R_input.py ../major_allele_ratio/males_autosomes_major_allele_ratio.txt ../major_allele_ratio/males_sexchromosomes_major_allele_ratio.txt ../major_allele_ratio/males_ase_forR.txt
+python prepare_R_input.py ../major_allele_ratio/males_autosomes_major_allele_ratio.txt ../major_allele_ratio/males_sexchromosomes_major_allele_ratio.txt ../major_allele_ratio/males_allele_specific_expression.txt
 ```
 
 Transfer the file to your desktop directory, and use R to plot the major allele ratio density for the autosomes and sex chromosomes.
@@ -97,7 +97,7 @@ Transfer the file to your desktop directory, and use R to plot the major allele 
 ```
 library(ggplot2)
 
-data_m <- read.table("males_ase_forR.txt",stringsAsFactors=F,header=T,sep=",")
+data_m <- read.table("males_allele_specific_expression.txt",stringsAsFactors=F,header=T,sep=",")
 
 plot = ggplot(data_m, aes(x=ratio, fill=category)) + 
 		geom_density(alpha=0.7) + 
@@ -126,8 +126,5 @@ plot = ggplot(data_m, aes(x=ratio, fill=category)) +
        labs(title="P. picta males",x="Major allele ratio",y="Density")
 plot
 ```
-
-<img width="603" height="567" alt="males_ASE_plot" src="https://github.com/user-attachments/assets/3980d8b4-2b02-48be-ab6c-23a9f4af233c" />
-
 
 Run the analysis on the female dataset and compare results.
