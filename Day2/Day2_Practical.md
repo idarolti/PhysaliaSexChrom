@@ -70,6 +70,10 @@ from_unionbed_to_ratio_per_window_CC0 -a a -A A -b b -B B -v v -l l ~/Share/day2
 
 ### Step 3. Adjust coverage based on the bam ratio in covstats.tab and generate DNAcopy output file
 The covstats.tab file also contains a value 'bam_ratio', which is the ratio of the sizes of the two .bam files. We use this to adjust the ratio per window, to account for the fact that one sample might have been sequenced to a higher coverage than the other. This then adjusts the ratio calculated in the previous step by this value. Change the value of 'bam_ratio' in the following command to the value in covstats.tab, and run.  
+If step 2 took to long, retrieve the input for step3 like this, if not proceed to second command
+```
+cp ~/Share/day2/coverage/sample1_sample2.ratio_per_w_CC0_a0_A8077_b0_B8077_v10000_l1000 .
+```
 
 ```
 ../dif_cover_scripts/from_ratio_per_window_to_prepare_for_DNAcopy_output.sh sample1_sample2.ratio_per_w_CC0_* bam_ratio
