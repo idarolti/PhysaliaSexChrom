@@ -36,7 +36,7 @@ Run reads2snp:
 
 -min: minimum number of reads to call a genotype
 
--par: 0 no paraclean usage (do not clean for paralogous SNPs because X/Y SNPs can look like paralogous SNPs)
+-par: 0 (do not remove SNPs that appear to come from paralogous sequences, avoid overfiltering as X/Y SNPs can look like paralogous SNPs)
 
 -bqt: minimum base quality
 
