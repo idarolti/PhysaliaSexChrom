@@ -76,7 +76,7 @@ The output .gen file is a tab delimited file showing each position of each gene 
 
 ## 03. SNP segregation analysis (subset)
 
-Identify sex-linked sequences with SEX-DETector. The software can be found **[here](https://gitlab.in2p3.fr/sex-det-family)**. For this practical we will use the original version of the software.
+Identify sex-linked sequences with SEX-DETector. The software can be found **[here](https://gitlab.in2p3.fr/sex-det-family)**. For this practical we will use the original version of the software. Newer versions can also identify the type of sex chromosome system (XY or ZW) if you don't know it a priori.
 
 ```
 mkdir ../sexdetector_output
@@ -94,14 +94,19 @@ head ../reads2snp/reads2snp_output.gen_summary
 Run SEX-DETector
 
 ```
+./SEX-DETector.pl
+
 ./SEX-DETector.pl -alr ../reads2snp/reads2snp_output.alr -alr_gen ../reads2snp/reads2snp_output.gen -alr_gen_sum ../reads2snp/reads2snp_output.gen_summary -system xy -hom Female_Offspring1,Female_Offspring2,Female_Offspring3,Female_Offspring4,Female_Offspring5 -het Male_Offspring1,Male_Offspring2,Male_Offspring3,Male_Offspring4,Male_Offspring5 -hom_par Female_Mother -het_par Male_Father -seq -detail -detail-sex-linked -out ../sexdetector_output/Poecilia_reticulata
 
 cd ../sexdetector_output
 ```
 
 The main outputs from SEX-DETector are:
-
-
+- SNPs_detail.txt: information on each SNP of each gene (position in gene, likelihood autosomal/sex-linked, genotypes)
+- sex-linked_detail.txt: information on SNP inferred as sex-linked (position, likelihood, expression of each allele, error rates)
+- sex-linked_sequences.fasta: X and Y sequences fasta file
+- assignment.txt: outputs the probability for each gene to be autosomal, sex-linked (with X/Y alleles), sex-linked (XO hemizygous)
+  
 Look at the outputs produced by SEX-DETector and see which genes are inferred to be sex-linked and why.
 
 
@@ -207,5 +212,3 @@ genes <- sexlinked$V1
 
 dotchart(positions,labels=genes,cex=.7,main="Sex-linked genes",xlab="Chr12 start position",xlim=c(0,26000000))
 ```
-
-<img width="1069" height="628" alt="sex_linked_genes_distribution" src="https://github.com/user-attachments/assets/8c47fc86-ecfc-45c9-939a-10b8f119938c" />
