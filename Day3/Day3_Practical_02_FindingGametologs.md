@@ -167,20 +167,31 @@ blastn -db ~/Share/day1/02.read_mapping/reference_genome/Poecilia_reticulata -qu
 head blastout
 ```
 
-qseqid: Query sequence identifier (the sequence being searched).
-sseqid: Subject sequence identifier (the matched database sequence).
-pident: Percentage of identical matches in the alignment.
-length: Length of the alignment region.
-mismatch: Number of mismatched positions in the alignment.
-gapopen: Number of gap openings in the alignment.
-qstart: Start position of the alignment in the query sequence.
-qend: End position of the alignment in the query sequence.
-sstart: Start position of the alignment in the subject sequence.
-send: End position of the alignment in the subject sequence.
-evalue: Expectation value (E-value) indicating the statistical significance of the alignment; lower values indicate more significant matches.
-bitscore: Bit score representing the alignment score normalized for scoring system and search space; higher values indicate better alignments.
+qseqid: Query sequence identifier (the sequence being searched)
 
-sseq: The aligned part of the subject sequence (actual nucleotides or amino acids in the alignment).
+sseqid: Subject sequence identifier (the matched database sequence)
+
+pident: Percentage of identical matches in the alignment
+
+length: Length of the alignment region
+
+mismatch: Number of mismatched positions in the alignment
+
+gapopen: Number of gap openings in the alignment
+
+qstart: Start position of the alignment in the query sequence
+
+qend: End position of the alignment in the query sequence
+
+sstart: Start position of the alignment in the subject sequence
+
+send: End position of the alignment in the subject sequence
+
+evalue: Expectation value (E-value) indicating the statistical significance of the alignment; lower values indicate more significant matches
+
+bitscore: Bit score representing the alignment score normalized for scoring system and search space; higher values indicate better alignments
+
+sseq: The aligned part of the subject sequence (actual nucleotides or amino acids in the alignment)
 
 Identify top blast hits for each sequence. This script takes a blast output file (format: outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore sseq") and identifies the top blast hit for each query. Top blast hit = minimum 30 pidentity, greatest blast score and greatest pidentity. If a query has two hits with identical blast score and pidentity one is chosen randomly as the tophit. 
 
