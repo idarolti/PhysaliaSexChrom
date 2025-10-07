@@ -17,7 +17,7 @@ mkdir day2
 cd day2
 conda activate /home/ubuntu/miniconda3/envs/sexchr
 ```
-Don't forget to open a Filezilla connection  
+Don't forget to open a Filezilla connection, and change the IP to today's address  
 
 ## 01. Coverage based analysis
 We will follow the workflow of **[DifCover](https://github.com/timnat/DifCover)** to generate a coverage file for females and males, we start with the coordinate sorted BAM files generated yesterday.       
