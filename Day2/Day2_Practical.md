@@ -170,17 +170,17 @@ cd SNPden
 
 for SAMPLE in `cat picta_FEMALE.list`;
   do
-  /home/ubuntu/bin/bcftools-1.22/bcftools view -a -s ${SAMPLE} -o FEMALE_${SAMPLE}.vcf Poecilia_picta_allchromo_merged.vcf
+  ~/Share/day2/SNPbased/bcftools-1.22/bcftools view -a -s ${SAMPLE} -o FEMALE_${SAMPLE}.vcf Poecilia_picta_allchromo_merged.vcf
   bgzip -c FEMALE_${SAMPLE}.vcf > FEMALE_${SAMPLE}.vcf.gz
-  /home/ubuntu/bin/bcftools-1.22/bcftools index FEMALE_${SAMPLE}.vcf.gz
+  ~/Share/day2/SNPbased/bcftools-1.22/bcftools index FEMALE_${SAMPLE}.vcf.gz
   vcftools --gzvcf FEMALE_${SAMPLE}.vcf.gz --SNPdensity 10000 --out FEMALE_${SAMPLE}.snpden
 done
 
 for SAMPLE in `cat picta_MALE.list`;
   do
-  /home/ubuntu/bin/bcftools-1.22/bcftools view -a -s ${SAMPLE} -o MALE_${SAMPLE}.vcf Poecilia_picta_allchromo_merged.vcf
+  ~/Share/day2/SNPbased/bcftools-1.22/bcftools view -a -s ${SAMPLE} -o MALE_${SAMPLE}.vcf Poecilia_picta_allchromo_merged.vcf
   bgzip -c MALE_${SAMPLE}.vcf > MALE_${SAMPLE}.vcf.gz
-   /home/ubuntu/bin/bcftools-1.22/bcftools index MALE_${SAMPLE}.vcf.gz
+   ~/Share/day2/SNPbased/bcftools-1.22/bcftools index MALE_${SAMPLE}.vcf.gz
   vcftools --gzvcf MALE_${SAMPLE}.vcf.gz --SNPdensity 10000 --out MALE_${SAMPLE}.snpden
 done
 ```
