@@ -350,13 +350,7 @@ sum(de_results_catkin$Padj < 0.05 & de_results_catkin$logFC > 1)
 sum(de_results_catkin$Padj < 0.05 & de_results_catkin$logFC < -1)
 # 5675
 
-# Create an MA plot
-plot(de_results_catkin$logCPM, de_results_catkin$logFC, main="MA plot", xlab="log2 CPM", ylab="log2 Fold Change")
-sig <- de_results_catkin$Padj < 0.05 & abs(de_results_catkin$logFC) > 1)
-points(de_results_catkin$logCPM[sig], de_results_catkin$logFC[sig], col="orange", pch=19)
-abline(h=c(-1,1), lty="dashed", col="grey")
-
-# Volcano Plot
+# Volcano Plot (apply -log10 for better visualization)
 de_results_catkin$negLogFDR <- -log10(de_results_catkin$Padj)
 
 ggplot(de_results_catkin, aes(x=logFC, y=negLogFDR)) +
