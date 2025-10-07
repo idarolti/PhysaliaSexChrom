@@ -80,7 +80,7 @@ done
 **[StringTie](https://ccb.jhu.edu/software/stringtie/index.shtml)** - A fast and highly efficient assembler of RNA-Seq alignments into potential transcripts. 
 
 ```
-cd ../
+cp -r ~/Share/test_day4/differential_gene_expression/hisat/ ./
 mkdir stringtie
 cd stringtie
 mkdir subset
@@ -148,8 +148,8 @@ Copy the merged.gtf file based on the full dataset, then create a file with the 
 ```
 cd ../stringtie
 mkdir fullset
-cp /home/ubuntu/Share/day4/willow/stringtie_gtfs/fullset/merged.gtf ./stringtie/fullset/
-cd scripts
+cp /home/ubuntu/Share/day4/willow/stringtie_gtfs/fullset/merged.gtf ./fullset/
+cd ../scripts
 python3 extract-gene-lengths.py ../htseq/catkin/read_counts_catkin.txt ../stringtie/fullset/merged.gtf ../stringtie/fullset/gene_length.txt
 ```
 
