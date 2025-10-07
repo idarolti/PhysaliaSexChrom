@@ -28,7 +28,8 @@ mkdir coverage
 cd coverage
 mkdir picta
 mkdir reticulata
-cp ~/Share/day2/coverage/dif_cover_scripts/* ./
+mkdir dif_cover_scripts
+cp ~/Share/day2/coverage/dif_cover_scripts/* ./dif_cover_scripts
 ```
 
 ### Step 1. Create BED file
