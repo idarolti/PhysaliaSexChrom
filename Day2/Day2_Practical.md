@@ -28,6 +28,7 @@ mkdir coverage
 cd coverage
 mkdir picta
 mkdir reticulata
+cp ~/Share/day2/coverage/dif_cover_scripts/* ./
 ```
 
 ### Step 1. Create BED file
@@ -37,7 +38,7 @@ This step takes a long time, so start running to check it works, then cancel (ct
 
 ```
 cd picta
-~/bin/dif_cover_scripts/from_bams_to_unionbed.sh ~/Share/day2/bam_files/Poecilia_picta_female1_subset.bam ~/Share/day2/bam_files/Poecilia_picta_male2_subset.bam
+../dif_cover_scripts/from_bams_to_unionbed.sh ~/Share/day2/bam_files/Poecilia_picta_female1_subset.bam ~/Share/day2/bam_files/Poecilia_picta_male2_subset.bam
 ```
 
 ### Step 2. Calculate the coverage ratio per window
@@ -63,21 +64,21 @@ l = minimum size of window to output (set to 1000)
 Then run the command below to generate the unionbed coverage file
 
 ```
-from_unionbed_to_ratio_per_window_CC0 -a a -A A -b b -B B -v v -l l ~/Share/day2/coverage/picta/sample1_sample2.unionbedcv
+../dif_cover_scripts/from_unionbed_to_ratio_per_window_CC0 -a a -A A -b b -B B -v v -l l ~/Share/day2/coverage/picta/sample1_sample2.unionbedcv
 ```
 
 ### Step 3. Adjust coverage based on the bam ratio in covstats.tab and generate DNAcopy output file
 The covstats.tab file also contains a value 'bam_ratio', which is the ratio of the sizes of the two .bam files. We use this to adjust the ratio per window, to account for the fact that one sample might have been sequenced to a higher coverage than the other. This then adjusts the ratio calculated in the previous step by this value. Change the value of 'bam_ratio' in the following command to the value in covstats.tab, and run.  
 
 ```
-~/bin/dif_cover_scripts/from_ratio_per_window_to_prepare_for_DNAcopy_output.sh sample1_sample2.ratio_per_w_CC0_* bam_ratio
+../dif_cover_scripts/from_ratio_per_window_to_prepare_for_DNAcopy_output.sh sample1_sample2.ratio_per_w_CC0_* bam_ratio
 ```
 
 ### Step 4. Create coverage plots in R
 
 This script uses the R package **[DNAcopy[(https://bioconductor.org/packages/release/bioc/html/DNAcopy.html)** to generate output plots of the coverage ratio. DNAcopy uses both the raw coverage ratio, and computes the average coverage ratio of adjacent windows to create the plot. Run this on the server
 ```
-Rscript ~/bin/dif_cover_scripts/run_DNAcopy_from_bash.R sample1_sample2.ratio_per_w_CC0_*.log2adj_*
+Rscript ../dif_cover_scripts/run_DNAcopy_from_bash.R sample1_sample2.ratio_per_w_CC0_*.log2adj_*
 ```
 Dowload the pdf file to your machine using Filezilla (or equivalent) and inspect it.
 
@@ -88,19 +89,19 @@ The script extracts from file *.DNAcopyout fragments with enrichment scores ≥ 
 Set p to 2, to filter sites with double coverage in one sample compared to the other.
 
 ```
-~/bin/dif_cover_scripts/from_DNAcopyout_to_p_fragments.sh sample1_sample2.*.DNAcopyout" 2
+../dif_cover_scripts/from_DNAcopyout_to_p_fragments.sh sample1_sample2.*.DNAcopyout" 2
 ```
 
 ### Step 6. generate histograms for further inspection
 
 ```
-~/bin/dif_cover_scripts/get_DNAcopyout_with_length_of_intervals.sh *.DNAcopyout ref.length.Vk1s_sorted
+../dif_cover_scripts/get_DNAcopyout_with_length_of_intervals.sh *.DNAcopyout ref.length.Vk1s_sorted
 
 echo "Generate rough histogram with given precision order"
 ~/bin/dif_cover_scripts/generate_DNAcopyout_len_histogram.sh *.DNAcopyout.len 1
 
 echo "Generate histogram with bins centered at value X reporting scores from [X-0.25 to X+0.25)"
-~/bin/dif_cover_scripts/generate_DNAcopyout_len_vs_scores_histogram_bin0.5.sh *.DNAcopyout.len
+../dif_cover_scripts/generate_DNAcopyout_len_vs_scores_histogram_bin0.5.sh *.DNAcopyout.len
 ```
 
 ### Now run this again for P. reticulata  
@@ -177,9 +178,9 @@ done
 
 for SAMPLE in `cat picta_MALE.list`;
   do
-  ~/bin/bcftools-1.22/bcftools view -a -s ${SAMPLE} -o MALE_${SAMPLE}.vcf Poecilia_picta_allchromo_merged.vcf
+  /home/ubuntu/bin/bcftools-1.22/bcftools view -a -s ${SAMPLE} -o MALE_${SAMPLE}.vcf Poecilia_picta_allchromo_merged.vcf
   bgzip -c MALE_${SAMPLE}.vcf > MALE_${SAMPLE}.vcf.gz
-  ~/bin/bcftools-1.22/bcftools index MALE_${SAMPLE}.vcf.gz
+   /home/ubuntu/bin/bcftools-1.22/bcftools index MALE_${SAMPLE}.vcf.gz
   vcftools --gzvcf MALE_${SAMPLE}.vcf.gz --SNPdensity 10000 --out MALE_${SAMPLE}.snpden
 done
 ```
