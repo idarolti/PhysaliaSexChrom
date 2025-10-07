@@ -136,7 +136,48 @@ SNP <- read_tsv("SNPdensity_SexFindR_picta.txt") %>%
 # SNP density
 
 # find points to highlight
-SNPchr <- left_join(SNP, scaffold_length)
+SNPchr <- left_join(SNP, scaffold_length) %>%
+  filter(grepl("CM", scaf))
+
+(
+  site <-
+    SNPchr %>%
+    ggplot(aes(x = base,
+               y = mean_MvF_dif)) +
+    geom_point(size = 1) +
+    facet_wrap(~scaf) +
+    labs(x = "", color = "") +
+    labs(y = "10kb SNP density \n(male mean - female mean)", color = "") +
+    labs(
+      title = bquote("Density of sex-associated SNPs for P. reticulata"),
+      subtitle = "Per window",
+      color = ""
+    ) +
+    scale_color_manual(values = cols,
+                       guide = "none") +
+    scale_y_continuous(
+      limits = c(
+        min(SNPchr$mean_MvF_dif, na.rm = TRUE) * 1.25,
+        max(SNPchr$mean_MvF_dif, na.rm = TRUE) * 1.25
+      ),
+      expand = c(0, 0)
+    ) +
+    theme_bw() +
+    theme(legend.position = "none") +
+    theme(
+      axis.text.x = element_text(size = 10, vjust = .5),
+      axis.title.x = element_text(size = 15),
+      axis.text.y = element_text(size = 8),
+      axis.title.y = element_text(
+        size = 15,
+        angle = 90,
+        hjust = .5,
+        vjust = .5,
+        face = "plain"
+      ),
+      title = element_text(size = 15)
+    )
+)
 
 (
   site <-
