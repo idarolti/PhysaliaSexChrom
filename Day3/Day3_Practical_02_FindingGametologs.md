@@ -107,38 +107,42 @@ The main outputs from SEX-DETector are:
 - sex-linked_sequences.fasta: X and Y sequences fasta file
 - assignment.txt: outputs the probability for each gene to be autosomal, sex-linked (with X/Y alleles), sex-linked (XO hemizygous)
   
-Look at the outputs produced by SEX-DETector and see which genes are inferred to be sex-linked and why.
+Look at the outputs produced by SEX-DETector. How many genes are inferred to be sex-linked?
 
 
 ## 04. SNP segregation analysis (full dataset)
 
-Next, using the SEX-DETector output for the full dataset, check where on the genome do the sex-linked genes map.
+Next, get the SEX-DETector output for the full dataset.
 
 ```
 cd ~/day3/sexdetector
-cp -r /home/ubuntu/Share/day3/sexdetector/sexdetector_output_full ./
+cp -r ~/Share/day3/sexdetector/sexdetector_output_full ./
 cd sexdetector_output_full
 ```
 
-Get the number of sex-linked genes identified by SEX-DETector
+Find how many genes are inferred as autosomal versus sex-linked.
 
 ```
-grep "^>" Poecilia_reticulata_sex-linked_sequences.fasta | sed 's/_[^_]*$//' | sort | uniq | wc -l
+cat Poecilia_reticulata_assignment.txt | grep -w "sex-linked" -c
+cat Poecilia_reticulata_assignment.txt | grep -w "autosomal" -c
 ```
 
-Obtain a single sequence for each gene (to then blast onto the assembly)
+Obtain a single sequence for each gene (to then blast onto the assembly).
 
 ```
 head Poecilia_reticulata_sex-linked_sequences.fasta
 
 awk '
+  # on lines that start with ">"
   /^>/ {
-    # Extract a single sequence per gene
+	# save the header line in a variable "gene"
     gene = $0
+	# remove the leading ">" symbol, leaving just the gene name
     sub(/^>/, "", gene)
+	# remove the suffix after the last underscore in the gene name
     sub(/_[^_]+$/, "", gene)
+	# use an array "seen: to check if this gene ID was seen before
     if (seen[gene]++) {
-      # skip this sequence (do not print header)
       skip = 1
     } else {
       # print header
@@ -152,16 +156,31 @@ awk '
   }
 ' Poecilia_reticulata_sex-linked_sequences.fasta > Poecilia_reticulata_sex-linked_sequences_unique.fasta
 
-grep ">" Poecilia_reticulata_sex-linked_sequences_unique.fasta | wc -l
+grep ">" Poecilia_reticulata_sex-linked_sequences_unique.fasta -c
 ```
 
-Use Blast so see where on the genome the identifyied sex-linked genes align.
+Use Blast so see where on the genome the identifyied sex-linked genes align. A Blast database (with makeblastdb) has been already created in the Shared folder.
 
 ```
-blastn -db /home/ubuntu/Share/day1/02.read_mapping/reference_genome/Poecilia_reticulata -query Poecilia_reticulata_sex-linked_sequences_unique.fasta -out blastout -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore sseq"
+blastn -db ~/Share/day1/02.read_mapping/reference_genome/Poecilia_reticulata -query Poecilia_reticulata_sex-linked_sequences_unique.fasta -out blastout -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore sseq"
 
 head blastout
 ```
+
+qseqid: Query sequence identifier (the sequence being searched).
+sseqid: Subject sequence identifier (the matched database sequence).
+pident: Percentage of identical matches in the alignment.
+length: Length of the alignment region.
+mismatch: Number of mismatched positions in the alignment.
+gapopen: Number of gap openings in the alignment.
+qstart: Start position of the alignment in the query sequence.
+qend: End position of the alignment in the query sequence.
+sstart: Start position of the alignment in the subject sequence.
+send: End position of the alignment in the subject sequence.
+evalue: Expectation value (E-value) indicating the statistical significance of the alignment; lower values indicate more significant matches.
+bitscore: Bit score representing the alignment score normalized for scoring system and search space; higher values indicate better alignments.
+
+sseq: The aligned part of the subject sequence (actual nucleotides or amino acids in the alignment).
 
 Identify top blast hits for each sequence. This script takes a blast output file (format: outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore sseq") and identifies the top blast hit for each query. Top blast hit = minimum 30 pidentity, greatest blast score and greatest pidentity. If a query has two hits with identical blast score and pidentity one is chosen randomly as the tophit. 
 
