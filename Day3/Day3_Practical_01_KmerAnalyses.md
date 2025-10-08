@@ -85,7 +85,7 @@ Check the output file for the most significant p-value, and filter for only kmer
 cut -f 9 picta_kmers.assoc.tab | grep -v 'P' | sort -g | head -1
 ```
 
-This might take some time, and should results in the value 0.000532
+This might take some time, and should results in the value 0.000532  
 Edit the command for the p-value output from the step above.
 
 ```
