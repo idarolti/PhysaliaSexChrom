@@ -49,6 +49,11 @@ Align sequences with **[Prank](http://wasabiapp.org/software/prank/)**. Aligning
 ```
 cd scripts
 python 01.run-prank.py ../1.gametolog_sequences
+```
+
+This part takes a few seconds to run per gametolog pair, so we can start the command and then quit if it takes too long.
+
+```
 rm -r ../1.gametolog_sequences
 cp -r ~/Share/day3/gametologs_divergence/1.gametolog_sequences_prank/ ../
 ```
