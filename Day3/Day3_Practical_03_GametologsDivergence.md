@@ -21,6 +21,29 @@ cp -r ~/Share/day3/gametologs_divergence/1.gametolog_sequences ./
 cp -r ~/Share/day3/gametologs_divergence/scripts ./
 ```
 
+Simplify gene names in the fasta files.
+
+```
+root_dir="1.sex_linked_sequences"
+
+# Loop through all subfolders
+for subdir in "$root_dir"/Gametologs_*; do
+    # Define the expected fasta filename inside the subdir
+    fasta_file=$(find "$subdir" -maxdepth 1 -type f -name "*.stripped.cdna.fa")
+    
+    # Skip if no such fasta file found
+    if [[ -z "$fasta_file" ]]; then
+        echo "No .stripped.cdna.fa file found in $subdir"
+        continue
+    fi
+    
+    echo "Processing $fasta_file ..."
+    
+    # Use sed to simplify headers in place
+    sed -E '/^>/ s/(_.*)//' "$fasta_file" > "${fasta_file}.tmp" && mv "${fasta_file}.tmp" "$fasta_file"
+done
+```
+
 Align sequences with **[Prank](http://wasabiapp.org/software/prank/)**. Aligning sequences is important because dS estimation depends on the correct placement of codons and identifying homologous nucleotide positions. This part takes a few seconds to run per gametolog pair, so we can start the command and then quit if it takes too long.
 
 ```
