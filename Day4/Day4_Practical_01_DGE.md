@@ -270,7 +270,7 @@ lines(sample6, type="l",lwd=2,col="blue")
 
 
 ```
-#Normalise and extract rpkm
+#Normalise and extract rpkm (with the calcnormfactors() function that uses edgeR's TMM method)
 expr <- DGEList(counts=data)
 norm_expr <- calcNormFactors(expr)
 gene_length <- read.table("gene_length.txt",stringsAsFactors=F)
