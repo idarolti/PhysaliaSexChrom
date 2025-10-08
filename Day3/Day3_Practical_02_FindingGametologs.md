@@ -31,16 +31,15 @@ ls -d "$PWD"/* > bam_list.txt
 ```
 
 Run reads2snp:
+- -aeb: allows alleles to have different expression levels, which is important for sex chromosome anaylses as the Y copy can be less expressed than the X copy
 
--aeb: allows alleles to have different expression levels, which is important for sex chromosome anaylses as the Y copy can be less expressed than the X copy
+- -min: minimum number of reads to call a genotype
 
--min: minimum number of reads to call a genotype
+- -par: 0 (do not remove SNPs that appear to come from paralogous sequences, avoid overfiltering as X/Y SNPs can look like paralogous SNPs)
 
--par: 0 (do not remove SNPs that appear to come from paralogous sequences, avoid overfiltering as X/Y SNPs can look like paralogous SNPs)
+- -bqt: minimum base quality
 
--bqt: minimum base quality
-
--rqt: minimum read mapping quality
+- -rqt: minimum read mapping quality
 
 ```
 cd ../scripts
