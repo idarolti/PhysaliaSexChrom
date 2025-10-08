@@ -154,7 +154,7 @@ awk '
 grep ">" Poecilia_reticulata_sex-linked_sequences_unique.fasta -c
 ```
 
-Use Blast so see where on the genome the identifyied sex-linked genes align. A Blast database (with makeblastdb) has been already created in the Shared folder.
+Use Blast to see where on the genome the identifyied sex-linked genes align. A Blast database (with makeblastdb) has been already created in the Shared folder.
 
 ```
 blastn -db ~/Share/day1/02.read_mapping/reference_genome/Poecilia_reticulata -query Poecilia_reticulata_sex-linked_sequences_unique.fasta -out blastout -outfmt "6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore sseq"
