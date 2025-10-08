@@ -1,7 +1,7 @@
 # Day 3 Practical - 01. K-mer analyses
 
 This first part of the practical will cover the steps for K-mer analyses for sex chromosome discovery.
-Open your terminal and connect to the server, set up a new working directory for today and activate the conda environment
+Start FileZilla with today's IP, open your terminal and connect to the server, set up a new working directory for today, and activate the conda environment
 
 ## 00. Prepare work folder for day 3
 
@@ -15,11 +15,13 @@ Download all .sh scripts from this day's GitHub folder and upload to your day3 o
 
 ## 01. Setup for K-mer analyses
 
-Within day3, set up directories for K-mer analyses and copy the phneotype data to your directory
+Within day3, set up directories for K-mer analyses, copy all scripts needed and copy the phneotype data to your directory
 
 ```
 mkdir kmersGWAS
 cd kmersGWAS
+cp ~/Share/day3/gemma_kinship_kmers .
+cp ~/Share/day3/kmers_table_to_bed .
 mkdir Ppicta
 cd Ppicta
 cp ~/Share/day3/kmersGWAS/picta/Ppicta_phenotype.txt .
@@ -45,7 +47,7 @@ cp ~/Share/day3/kmersGWAS/picta/kmers_table* .
 Generate kinship table, in case useful for future analysis:
 
 ```
-~/bin/emma_kinship_kmers -t kmers_table -k 31 --maf 0.05 > kmers_table.kinship
+../gemma_kinship_kmers -t kmers_table -k 31 --maf 0.05 > kmers_table.kinship
 ```
 
 ## 04. Test for association of K-mers and phenotype    
@@ -53,7 +55,7 @@ Testing for association with sex using the software **[PLINK](https://www.cog-ge
 First generate PLINK compatible input file and filter for allele frequency
 
 ```
-~/bin/kmers_table_to_bed -t kmers_table -k 31 -p Ppicta_phenotype.txt --maf 0.05 --mac 2 -b 1000000000 -o kmerGWAS_plink
+../kmers_table_to_bed -t kmers_table -k 31 -p Ppicta_phenotype.txt --maf 0.05 --mac 2 -b 1000000000 -o kmerGWAS_plink
 ```
 
 Then run association test with PLINK
