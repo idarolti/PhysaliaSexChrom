@@ -18,23 +18,22 @@ Mapping reads can be done with **[HISAT2](https://daehwankimlab.github.io/hisat2
 Generate genome index.
 
 ```
+hisat2-build -f genome_assembly.fa genome_assembly
+```
+
+```
 mkdir differential_gene_expression
 cd differential_gene_expression
-mkdir genome
-cd genome
-cp ~/Share/day4/willow/genome/genome_assembly_1k.fa ./
-hisat2-build -f genome_assembly_1k.fa genome_assembly_1k
 ```
 
 Align paired-end reads to the genome, then sort.
 
 ```
-cd ..
 cp -r ~/Share/day4/willow/reads/ ./
 mkdir hisat
 cd hisat
 
-hisat2 ../genome/genome_assembly_1k -1 ../reads/female1_catkin_R1.fastq -2 ../reads/female1_catkin_R2.fastq -q --no-discordant --no-mixed --no-unal --dta -S female1_catkin.sam
+hisat2 ~/Share/day4/willow/genome/genome_assembly_1k -1 ../reads/female1_catkin_R1.fastq -2 ../reads/female1_catkin_R2.fastq -q --no-discordant --no-mixed --no-unal --dta -S female1_catkin.sam
 
 samtools view -bS female1_catkin.sam | samtools sort -o female1_catkin_coordsorted.bam
 rm female1_catkin.sam
@@ -55,7 +54,7 @@ Run hisat2 and sorting for all the samples.
 ```
 reads_dir="../reads"
 # Genome index prefix
-genome_index="../genome/genome_assembly_1k"
+genome_index="~/Share/day4/willow/genome/genome_assembly_1k"
 
 # Loop over all fastq files
 for r1 in ${reads_dir}/*_R1.fastq; do
@@ -76,12 +75,19 @@ for r1 in ${reads_dir}/*_R1.fastq; do
 done
 ```
 
+If hisat2 is taking too long to run, then copy the outputs to your folder
+
+```
+cd ~/day4/differential_gene_expression
+rm -r hisat
+cp -r ~/Share/test_day4/differential_gene_expression/hisat ./
+```
+
 ## 02. Extract gene coordinates
 
 **[StringTie](https://ccb.jhu.edu/software/stringtie/index.shtml)** - A fast and highly efficient assembler of RNA-Seq alignments into potential transcripts. 
 
 ```
-cp -r ~/Share/test_day4/differential_gene_expression/hisat/ ./
 mkdir stringtie
 cd stringtie
 mkdir subset
@@ -122,13 +128,14 @@ We will use **[HTSeq]([http://www-huber.embl.de/users/anders/HTSeq/doc/count.htm
 
 ```
 samtools sort -n -T namesorted -O bam -o ../hisat/female1_catkin_namesorted.bam female1_catkin_coordsorted.bam
+
 htseq-count -f bam -r name -s no female1_catkin_namesorted.bam ../stringtie/merged.gtf > female1_catkin_htseqcount.txt
 ```
 
 Copy the htseq-count output on the full dataset and copy scripts for downstream analyses.
 
 ```
-cd ../../
+cd ~/day4/differential_gene_expression
 cp -r ~/Share/day4/willow/scripts ./
 mkdir htseq
 cp -r ~/Share/day4/willow/htseq/catkin ./htseq/
