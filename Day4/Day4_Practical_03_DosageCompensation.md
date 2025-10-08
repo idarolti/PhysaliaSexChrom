@@ -365,3 +365,5 @@ ggplot(expr_lg12, aes(x=start/1000000)) +
   coord_cartesian(ylim = c(0, 8))
 ```
 
+<img width="752" height="436" alt="Screenshot 2025-10-08 at 09 53 02" src="https://github.com/user-attachments/assets/f354ebec-2dfb-4a91-b177-0b0b365aace9" />
+
