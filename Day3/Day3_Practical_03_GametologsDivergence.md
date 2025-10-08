@@ -81,6 +81,7 @@ We must first create a paml control file that specifies input alignment and outp
 
 ```
 cd ../2.gametolog_sequences_phylip
+
 for d in Gametologs_*; do
     if [ -d "$d" ]; then
         base="${d#Gametologs_}"
