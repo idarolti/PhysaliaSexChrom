@@ -303,5 +303,65 @@ ggplot(combined_males, aes(x = chr_type, y = expression, fill = chr_type)) +
 
 <img width="352" height="531" alt="auto_sexchr_males" src="https://github.com/user-attachments/assets/a21bcd00-5b6f-4e78-801c-cb8effa56589" />
 
-**Try plotting the same for the female dataset**
+### Try plotting the same for the female dataset
+
+## 09. Moving average plot of male and female expression
+
+```
+library(dplyr)
+library(ggplot2)
+library(zoo)
+
+# Read your expression data csv
+expr <- read.csv("Poecilia_picta_rpkm_normalized.txt")
+
+# Remove the "-RA" suffix in the gene name
+expr$gene <- sub("-RA$", "", expr$gene)
+
+# Log-transform all RPKM columns
+expr[, -which(names(expr) == "gene")] <- log2(expr[, -which(names(expr) == "gene")] + 1)
+
+# Read GFF
+gff <- read.table("../transcriptome/Poecilia_picta_annotation.gff3", sep="\t", header=FALSE, stringsAsFactors=FALSE)
+
+# Assign meaningful colnames to GFF columns (based on GFF3 specification)
+colnames(gff) <- c("seqname", "source", "feature", "start", "end", "score", "strand", "frame", "attribute")
+head(gff)
+
+# Filter for chromosome LG12 (the sex chromosome)
+lg12_genes <- gff %>%
+  filter(seqname == "LG12" & feature == "gene")
+
+# Extract gene ID from `attribute` column, assuming format 'ID=GENEID;...'
+lg12_genes$gene <- sub(".*ID=([^;]+);.*", "\\1", lg12_genes$attribute)
+
+# Join expression data with gene positions; only keep genes present in expression data
+expr_lg12 <- expr %>%
+  filter(gene %in% lg12_genes$gene) %>%
+  left_join(lg12_genes[, c("gene", "start")], by = "gene")
+
+# Order genes by start position on LG12
+expr_lg12 <- expr_lg12 %>%
+  arrange(start)
+
+# Calculate average expression per sex per gene
+expr_lg12 <- expr_lg12 %>%
+  mutate(female_avg = rowMeans(select(., starts_with("female"))),
+         male_avg = rowMeans(select(., starts_with("male"))))
+
+# Calculate moving average (window size = e.g. 10 genes)
+expr_lg12$female_ma <- zoo::rollmean(expr_lg12$female_avg, k=20, fill=NA)
+expr_lg12$male_ma <- zoo::rollmean(expr_lg12$male_avg, k=20, fill=NA)
+
+# Plot moving averages
+ggplot(expr_lg12, aes(x=start/1000000)) +
+  geom_line(aes(y=female_ma, color="Female")) +
+  geom_line(aes(y=male_ma, color="Male")) +
+  labs(title="Gene expression moving average on sex chromosome",
+       x="Genomic position (bp)",
+       y="Log2 RPKM") +
+  scale_color_manual(values=c("Female"="firebrick", "Male"="dodgerblue")) +
+  theme_classic()+
+  coord_cartesian(ylim = c(0, 8))
+```
 
