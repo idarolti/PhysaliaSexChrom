@@ -1,6 +1,8 @@
 # Day 3 Practical - 01. K-mer analyses
 
 This first part of the practical will cover the steps for K-mer analyses for sex chromosome discovery. We will largely follow the **[KmersGwas](https://github.com/voichek/kmersGWAS/tree/master)** pipeline.  
+This builds on the program **[KMC](https://github.com/refresh-bio/KMC)** to generate Kmer tables and **[PLINK](https://www.cog-genomics.org/plink/2.0/assoc)** for assocation tests.  
+
 Start FileZilla with today's IP, open your terminal and connect to the server, set up a new working directory for today, and activate the conda environment
 
 ## 00. Prepare work folder for day 3
@@ -84,7 +86,7 @@ awk '$9 <= P' picta_kmers.assoc.tab > picta_most_significant_assoc.tab
 
 ## 05. Assemble contigs from significant kmers    
 
-Convert PLINK association file to a fasta input file for assembly of potentially sex-specific contigs
+Convert PLINK association file to a fasta input file for assembly of potentially sex-specific contigs using the short read assembler **[ABYSS](https://github.com/bcgsc/abyss)**
 
 ```
 python ../plink_to_abyss_kmers.py picta_most_significant_assoc.tab picta_plink_abyss_input.txt
