@@ -197,4 +197,3 @@ kmer_chr$n_prop <- kmer_chr$n / kmer_chr$length
       )
 ```
 
-#####ADD EXAMPLE OF PLOTS AS IMAGE FILE###
