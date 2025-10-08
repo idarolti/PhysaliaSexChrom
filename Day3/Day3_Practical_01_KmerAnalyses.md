@@ -6,12 +6,11 @@ Start FileZilla with today's IP, open your terminal and connect to the server, s
 ## 00. Prepare work folder for day 3
 
 ```
-ssh -i ~/YOURLOCALFOLDER/chrsex5.pem user5@44.251.209.2
+ssh -i ~/YOURLOCALFOLDER/chrsex5.pem user5@18.237.201.56
 mkdir day3
 cd day3
 conda activate /home/ubuntu/miniconda3/envs/sexchr
 ```
-Download all .sh scripts from this day's GitHub folder and upload to your day3 on the server
 
 ## 01. Setup for K-mer analyses
 
@@ -20,8 +19,8 @@ Within day3, set up directories for K-mer analyses, copy all scripts needed and 
 ```
 mkdir kmersGWAS
 cd kmersGWAS
-cp ~/Share/day3/emma_kinship_kmers .
-cp ~/Share/day3/kmers_table_to_bed .
+cp ~/Share/day3/kmersGWAS/emma_kinship_kmers .
+cp ~/Share/day3/kmersGWAS/kmers_table_to_bed .
 mkdir Ppicta
 cd Ppicta
 cp ~/Share/day3/kmersGWAS/picta/Ppicta_phenotype.txt .
