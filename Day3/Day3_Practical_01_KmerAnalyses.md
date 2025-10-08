@@ -21,6 +21,7 @@ mkdir kmersGWAS
 cd kmersGWAS
 cp ~/Share/day3/kmersGWAS/emma_kinship_kmers .
 cp ~/Share/day3/kmersGWAS/kmers_table_to_bed .
+cp ~/Share/day3/kmersGWAS/plink_to_abyss_kmers.py .
 mkdir Ppicta
 cd Ppicta
 cp ~/Share/day3/kmersGWAS/picta/Ppicta_phenotype.txt .
@@ -86,7 +87,7 @@ awk '$9 <= P' picta_kmers.assoc.tab > picta_most_significant_assoc.tab
 Convert PLINK association file to a fasta input file for assembly of potentially sex-specific contigs
 
 ```
-python plink_to_abyss_kmers.py picta_most_significant_assoc.tab picta_plink_abyss_input.txt
+python ../plink_to_abyss_kmers.py picta_most_significant_assoc.tab picta_plink_abyss_input.txt
 ```
 
 Assemble small contigs with ABYSS
