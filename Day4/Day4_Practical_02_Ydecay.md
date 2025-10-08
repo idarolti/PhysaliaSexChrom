@@ -69,6 +69,14 @@ Filter for minimum site coverage of 15 and minimum minor allele coverage of 4
 python filter_coverage.py ../snp_calling/picta_males_noclusters_filt.vcf ../snp_calling/picta_males_noclusters_filt_coverage.vcf
 ```
 
+If any of the filtering steps are taking too long, you can copy the outputs to your folder. E.g. for picta males:
+
+```
+~/Share/day4/ase/snp_calling_filter/picta_males_noclusters.vcf ../snp_calling/
+~/Share/day4/ase/snp_calling_filter/picta_males_noclusters_filt.vcf ../snp_calling/
+~/Share/day4/ase/snp_calling_filter/picta_males_noclusters_filt_coverage.vcf ../snp_calling/
+```
+
 ## 03. Extract major allele ratio information
 
 Split vcfs into autosomes and sex chromosomes.
