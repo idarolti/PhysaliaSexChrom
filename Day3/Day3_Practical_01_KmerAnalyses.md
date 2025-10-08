@@ -9,7 +9,7 @@ Start FileZilla with today's IP, open your terminal and connect to the server, s
 ssh -i ~/YOURLOCALFOLDER/chrsex5.pem user5@18.237.201.56
 mkdir day3
 cd day3
-conda activate /home/ubuntu/miniconda3/envs/sexchr
+conda activate /home/ubuntu/miniconda3/envs/sexchr/
 ```
 
 ## 01. Setup for K-mer analyses
@@ -47,7 +47,7 @@ cp ~/Share/day3/kmersGWAS/picta/kmers_table* .
 Generate kinship table, in case useful for future analysis:
 
 ```
-../gemma_kinship_kmers -t kmers_table -k 31 --maf 0.05 > kmers_table.kinship
+../emma_kinship_kmers -t picta_kmers_table -k 31 --maf 0.05 > picta_kmers_table.kinship
 ```
 
 ## 04. Test for association of K-mers and phenotype    
@@ -55,13 +55,19 @@ Testing for association with sex using the software **[PLINK](https://www.cog-ge
 First generate PLINK compatible input file and filter for allele frequency
 
 ```
-../kmers_table_to_bed -t kmers_table -k 31 -p Ppicta_phenotype.txt --maf 0.05 --mac 2 -b 1000000000 -o kmerGWAS_plink
+../kmers_table_to_bed -t picta_kmers_table -k 31 -p Ppicta_phenotype.txt --maf 0.05 --mac 2 -b 1000000000 -o picta_kmerGWAS_plink
 ```
 
 Then run association test with PLINK
 
 ```
-plink --noweb --bfile kmerGWAS_plink.0 --allow-no-sex --assoc --out kmers
+plink --noweb --bfile picta_kmerGWAS_plink.0 --allow-no-sex --assoc --out picta_kmers
+```
+
+WARNING: this step may fail due to lack of memory. This shouldn't be an issue when working in your own university/institute cluster. If it does, copy the output from the shared folder.
+
+```
+cp ~/Share/day3/kmersGWAS/picta/picta_kmers.assoc .
 ```
 
 Edit format of output file
@@ -76,7 +82,8 @@ Check the output file for the most significant p-value, and filter for only kmer
 cut -f 9 picta_kmers.assoc.tab | grep -v 'P' | sort -g | head -1
 ```
 
-Edit the command for the p-value output from the step above
+This might take some time, and should results in the value 0.000532
+Edit the command for the p-value output from the step above.
 
 ```
 awk '$9 <= P' picta_kmers.assoc.tab > picta_most_significant_assoc.tab
@@ -101,11 +108,11 @@ ABYSS -k25 -c0 -e0 picta_plink_abyss_input.txt -o picta_plink_abyss_output.txt
 Use **[BlastN](https://blast.ncbi.nlm.nih.gov/Blast.cgi?PROGRAM=blastn&BLAST_SPEC=GeoBlast&PAGE_TYPE=BlastSearch)**  to locate contigs in the reference genome, for this first generate a blast reference database for the reference genome and then run blast
 
 ```
-REF_FASTA=~/Share/day1/02.read_mapping/reference_genome/Poecilia_picta.fna
+cp ~/Share/day1/02.read_mapping/reference_genome/Poecilia_picta.fna .
 
-makeblastdb -in $REF_FASTA -dbtype nucl
+makeblastdb -in Poecilia_picta.fna -dbtype nucl
 
-blastn -query picta_plink_abyss_output.txt -db $REF_FASTA -outfmt 6 -out picta_kmers_blast.out
+blastn -query picta_plink_abyss_output.txt -db Poecilia_picta.fna -outfmt 6 -out picta_kmers_blast.out
 ```
 
 ## 07. Visualize genomic locations of the assembled contigs in R
