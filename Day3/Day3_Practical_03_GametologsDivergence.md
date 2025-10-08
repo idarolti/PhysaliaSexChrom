@@ -24,7 +24,7 @@ cp -r ~/Share/day3/gametologs_divergence/scripts ./
 Simplify gene names in the fasta files.
 
 ```
-root_dir="1.sex_linked_sequences"
+root_dir="1.gametolog_sequences"
 
 # Loop through all subfolders
 for subdir in "$root_dir"/Gametologs_*; do
