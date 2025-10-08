@@ -371,4 +371,5 @@ ggplot(de_results_catkin, aes(x=logFC, y=negLogFDR)) +
 <img width="676" height="665" alt="Screenshot 2025-10-08 at 00 08 52" src="https://github.com/user-attachments/assets/56bb457f-53a2-4d04-887c-9c95d105cb13" />
 
 
-Run the differential gene expression on the leaf samples, and see what contrasts can you make to the catkin results.
+
+**Run the differential gene expression on the leaf samples, and see what contrasts can you make to the catkin results.**
