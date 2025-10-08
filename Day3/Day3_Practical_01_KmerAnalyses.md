@@ -189,7 +189,7 @@ kmer_chr$n_prop <- kmer_chr$n / kmer_chr$length
 ### kmer positions
   
   (points <-
-      filter(kmerblast_filter, scaf == "CM065354.1") %>%
+      filter(kmerblast_filter, scaf == "CM065364.1") %>%
       ggplot(aes(x = ref_start, y = ident.match_p)) +
       geom_point(
         size = 1) +
