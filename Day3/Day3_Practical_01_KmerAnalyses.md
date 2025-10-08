@@ -1,10 +1,12 @@
 # Day 3 Practical - 01. K-mer analyses
 
 This first part of the practical will cover the steps for K-mer analyses for sex chromosome discovery.
+Open your terminal and connect to the server, set up a new working directory for today and activate the conda environment
 
 ## 00. Prepare work folder for day 3
 
 ```
+ssh -i ~/YOURLOCALFOLDER/chrsex5.pem user5@44.251.209.2
 mkdir day3
 cd day3
 conda activate /home/ubuntu/miniconda3/envs/sexchr
@@ -13,7 +15,7 @@ Download all .sh scripts from this day's GitHub folder and upload to your day3 o
 
 ## 01. Setup for K-mer analyses
 
-Within day3, set up folder for K-mer analyses
+Within day3, set up directories for K-mer analyses and copy the phneotype data to your directory
 
 ```
 mkdir kmersGWAS
@@ -107,7 +109,7 @@ blastn -query picta_plink_abyss_output.txt -db $REF_FASTA -outfmt 6 -out picta_k
 ## 07. Visualize genomic locations of the assembled contigs in R
 
 Download the output file of the BLAST above picta_kmers_blast.out file to your local machine. Also download the file chrlength_Ppicta.tsv from this github.  
-Open **[R](https://cran.r-project.org)** or **[RStudio](https://posit.co/products/open-source/rstudio/?sid=1)**   
+On your machine open **[R](https://cran.r-project.org)** or **[RStudio](https://posit.co/products/open-source/rstudio/?sid=1)**   
 
 In R execute the code below
 
