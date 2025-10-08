@@ -364,8 +364,7 @@ ggplot(de_results_catkin, aes(x=logFC, y=negLogFDR)) +
 	ggtitle("Volcano Plot") +
 	geom_hline(yintercept = -log10(0.05), col="red", linetype="dashed") +
 	geom_vline(xintercept = c(-1,1), col="blue", linetype = "dashed") +
-	geom_point(data=subset(de_results_catkin, Padj < 0.05 & abs(logFC) > 1),
-		aes(x=logFC, y=negLogFDR), color="orange", size=1.5)
+	geom_point(data=subset(de_results_catkin, Padj < 0.05 & abs(logFC) > 1),aes(x=logFC, y=negLogFDR), color="orange", size=1.5)
 ```
 
 <img width="676" height="665" alt="Screenshot 2025-10-08 at 00 08 52" src="https://github.com/user-attachments/assets/56bb457f-53a2-4d04-887c-9c95d105cb13" />
