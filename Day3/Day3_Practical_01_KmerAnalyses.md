@@ -50,6 +50,7 @@ Generate kinship table, in case useful for future analysis:
 
 ```
 ../emma_kinship_kmers -t picta_kmers_table -k 31 --maf 0.05 > picta_kmers_table.kinship
+cat picta_kmers_table.kinship
 ```
 
 ## 04. Test for association of K-mers and phenotype    
