@@ -1,6 +1,6 @@
 # Day 3 Practical - 01. K-mer analyses
 
-This first part of the practical will cover the steps for K-mer analyses for sex chromosome discovery.
+This first part of the practical will cover the steps for K-mer analyses for sex chromosome discovery. We will largely follow the **[KmersGwas](https://github.com/voichek/kmersGWAS/tree/master)** pipeline
 Start FileZilla with today's IP, open your terminal and connect to the server, set up a new working directory for today, and activate the conda environment
 
 ## 00. Prepare work folder for day 3
