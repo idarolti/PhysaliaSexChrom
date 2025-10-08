@@ -25,8 +25,8 @@ salmon quant --numBootstraps 100 --gcBias --seqBias -p 12 -l A -i Poecilia_picta
 ```
 
 ```
-scp -i chrsex25.pem ubuntu@44.254.129.237:/home/ubuntu/Share/day4/guppy/transcriptome ./
-scp -i chrsex25.pem ubuntu@44.254.129.237:/home/ubuntu/Share/day4/guppy/salmon_quantification ./
+scp -i chrsex25.pem ubuntu@44.254.129.237:~/Share/day4/guppy/transcriptome ./
+scp -i chrsex25.pem ubuntu@44.254.129.237:~/Share/day4/guppy/salmon_quantification ./
 ```
 
 ## 02. Obtain merged counts data
