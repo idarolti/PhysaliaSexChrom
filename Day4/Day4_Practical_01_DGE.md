@@ -143,6 +143,8 @@ python3 extract-counts.py ../htseq/catkin ../htseq/catkin/read_counts_catkin.txt
 head ../htseq/catkin/read_counts_catkin.txt
 ```
 
+**[Here](https://hbctraining.github.io/DGE_workshop/lessons/02_DGE_count_normalization.html)** is a very useuful resource on the different normalization methods and the facotrs to consider during this process.
+
 ## 04. Filter lowly expressed genes
 
 Copy the merged.gtf file based on the full dataset, then create a file with the length of each gene. You only need to run this using one tissue, as all genes are included in both.
