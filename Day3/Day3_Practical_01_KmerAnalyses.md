@@ -27,7 +27,6 @@ cp ~/Share/day3/kmersGWAS/plink_to_abyss_kmers.py .
 mkdir Ppicta
 cd Ppicta
 cp ~/Share/day3/kmersGWAS/picta/Ppicta_phenotype.txt .
-cd ..
 ```
 
 ## 02. Generate K-mer counts
