@@ -148,6 +148,9 @@ Merge read count outputs per tissue.
 cd scripts
 python3 extract-counts.py ../htseq/catkin ../htseq/catkin/read_counts_catkin.txt
 head ../htseq/catkin/read_counts_catkin.txt
+
+python3 extract-counts.py ../htseq/leaf ../htseq/leaf/read_counts_leaf.txt
+head ../htseq/leaf/read_counts_leaf.txt
 ```
 
 **[Here](https://hbctraining.github.io/DGE_workshop/lessons/02_DGE_count_normalization.html)** is a very useuful resource on the different normalization methods and the facotrs to consider during this process.
