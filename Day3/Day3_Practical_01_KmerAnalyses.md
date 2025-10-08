@@ -20,7 +20,7 @@ Within day3, set up directories for K-mer analyses, copy all scripts needed and 
 ```
 mkdir kmersGWAS
 cd kmersGWAS
-cp ~/Share/day3/gemma_kinship_kmers .
+cp ~/Share/day3/emma_kinship_kmers .
 cp ~/Share/day3/kmers_table_to_bed .
 mkdir Ppicta
 cd Ppicta
