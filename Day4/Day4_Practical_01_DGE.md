@@ -47,7 +47,7 @@ HISAT2 options:
 
 --no-unal: suppresses the output of SAM records for reads that fail to align
 
---dta/--downstream-transcriptome-assembly: report alignments tailored for transcript assemblers including StringTie. With this option, HISAT2 requires longer anchor lengths for de novo discovery of splice sites. This leads to fewer alignments with short-anchors, which helps transcript assemblers improve significantly in computationa and memory usage.
+--dta/--downstream-transcriptome-assembly: report alignments tailored for transcript assemblers including StringTie. With this option, HISAT2 requires longer anchor lengths for de novo discovery of splice sites. This leads to fewer alignments with short-anchors, which helps transcript assemblers improve significantly in computation and memory usage.
 
 Run hisat2 and sorting for all the samples.
 
@@ -322,7 +322,7 @@ pheatmap(log2(rpkm_norm+1), show_colnames=T, show_rownames=F, color = palette2, 
 
 Run the analysis based on the leaf gene expression, and see what differences can you observe.
 
-## 06. Differential gene expression
+## 06. Differential gene expression (with edgeR)
 
 ```
 library("edgeR")
@@ -379,6 +379,66 @@ ggplot(de_results_catkin, aes(x=logFC, y=negLogFDR)) +
 
 <img width="676" height="665" alt="Screenshot 2025-10-08 at 00 08 52" src="https://github.com/user-attachments/assets/56bb457f-53a2-4d04-887c-9c95d105cb13" />
 
+## 07. Differential gene expression (with DESeq2)
 
+```
+# install DESeq2 if not there already
+BiocManager::install("DESeq2")
+
+library("DESeq2")
+library("ggplot2")
+
+# Load your count data matrix (genes x samples)
+data <- read.table("read_counts_catkin_filtered.txt", stringsAsFactors = FALSE, header = TRUE, row.names = 1)
+
+# Define sample conditions (female 'F' and male 'M')
+conditions <- factor(c("F", "F", "F", "M", "M", "M"))
+
+# Create a metadata dataframe for DESeq2
+colData <- data.frame(condition = conditions)
+rownames(colData) <- colnames(data)
+
+# Create DESeq2 dataset object
+dds <- DESeqDataSetFromMatrix(countData = data, colData = colData, design = ~ condition)
+
+# Filter low count genes (we already filtered so can skip)
+dds <- dds[rowSums(counts(dds)) > 1, ]
+
+# Run DESeq normalization and differential expression
+dds <- DESeq(dds)
+
+# Extract results for the condition comparison (default: second level vs first level)
+res <- results(dds, contrast=c("condition","M","F"))
+
+# Add an adjusted p-value cutoff to identify significant genes
+res$Padj <- p.adjust(res$pvalue, method = "fdr")
+
+# How many genes are significant at FDR < 0.05
+sum(res$Padj < 0.05, na.rm=TRUE)
+15556 
+
+# How many genes have 2-fold or greater enrichment in males (log2FC > 1)
+sum(res$Padj < 0.05 & res$log2FoldChange > 1, na.rm=TRUE)
+6766
+
+# How many genes have 2-fold or greater enrichment in females (log2FC < -1)
+sum(res$Padj < 0.05 & res$log2FoldChange < -1, na.rm=TRUE)
+5716
+
+# Volcano plot preparation
+res$negLogFDR <- -log10(res$Padj)
+res$log2FoldChange[is.na(res$log2FoldChange)] <- 0  # Replace NA logFC with 0 for plotting
+
+ggplot(as.data.frame(res), aes(x = log2FoldChange, y = negLogFDR)) +
+  geom_point(alpha = 0.4, size = 1) +
+  theme_minimal() +
+  xlab("log2 Fold Change") +
+  ylab("-log10 Adjusted P-value") +
+  ggtitle("Volcano Plot DESeq2") +
+  geom_hline(yintercept = -log10(0.05), col = "red", linetype = "dashed") +
+  geom_vline(xintercept = c(-1, 1), col = "blue", linetype = "dashed") +
+  geom_point(data = subset(res, Padj < 0.05 & abs(log2FoldChange) > 1),
+             aes(x = log2FoldChange, y = negLogFDR), color = "orange", size = 1.5)
+```
 
 ### Run the differential gene expression on the leaf samples, and see what contrasts can you make to the catkin results.
