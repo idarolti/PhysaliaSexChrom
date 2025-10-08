@@ -318,7 +318,7 @@ Run the analysis based on the leaf gene expression, and see what differences can
 library("edgeR")
 library("ggplot2")
 
-data <- read.table("read_counts_catkin.txt",stringsAsFactors=F,header=T, row.names=1)
+data <- read.table("read_counts_catkin_filtered.txt",stringsAsFactors=F,header=T, row.names=1)
 head(data)
 dim(data)
 conditions <- factor(c("F","F","F","M","M","M"))
