@@ -41,7 +41,7 @@ cat ~/Share/day3/kmersGWAS/run_kmersGWAS_step1_Ppicta.sh
 The output of this step is a file called kmers.table.table. This is a long list of every kmer found in the samples and their presence/absence in each individual. The file is already saved in the server, and we can now use this file for the later steps.  
 
 ```
-cp ~/Share/day3/kmersGWAS/picta/kmers_table* .
+cp ~/Share/day3/kmersGWAS/picta/picta_kmers_table* .
 ```
 
 ## 03. Generate kinship table  
