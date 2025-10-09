@@ -104,4 +104,8 @@ You can now explore this plot
 
 <img width="1375" height="334" alt="Screenshot 2025-09-30 at 10 29 15" src="https://github.com/user-attachments/assets/da17496b-2731-4e18-8c35-482236cc63c0" />
 
+  
+    
+## 06. Try out a second species
+If you like, run the same exercise with GCA_965213455.1 Cercyonis lupina
 
