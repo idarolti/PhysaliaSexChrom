@@ -157,7 +157,7 @@ head ../htseq/leaf/read_counts_leaf.txt
 
 ## 04. Filter lowly expressed genes
 
-Copy the merged.gtf file based on the full dataset, then create a file with the length of each gene. You only need to run this using one tissue, as all genes are included in both.
+Copy the stringtie merged.gtf file based on the full dataset, then create a file with the length of each gene. You only need to run this using one tissue, as all genes are included in both.
 
 ```
 cd ../stringtie
@@ -250,9 +250,8 @@ lines(sample6, type="l",lwd=2,col="blue")
 
 
 ```
-# Check normalised read count data
-# calcNormFactors computes normalization factors, 
-# accounting for differences in sequencing depth and RNA composition between samples
+# Normalize expression with the calcnormfactors() function that uses edgeR's TMM method
+# calcNormFactors computes normalization factors, accounting for differences in sequencing depth and RNA composition between samples
 norm_expr <- calcNormFactors(expr)
 plotMDS(norm_expr,xlim=c(-6,6))
 ```
@@ -280,9 +279,7 @@ lines(sample6, type="l",lwd=2,col="blue")
 
 
 ```
-#Normalise and extract rpkm (with the calcnormfactors() function that uses edgeR's TMM method)
-expr <- DGEList(counts=data)
-norm_expr <- calcNormFactors(expr)
+#Extract RPKM
 gene_length <- read.table("gene_length.txt",stringsAsFactors=F)
 head(gene_length)
 names(gene_length) <- c("gene","length")
