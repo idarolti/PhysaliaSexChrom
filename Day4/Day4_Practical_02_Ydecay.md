@@ -135,6 +135,6 @@ plot = ggplot(data_m, aes(x=ratio, fill=category)) +
 plot
 ```
 
-Run the analysis on the picta female dataset and compare results.
+### Run the analysis on the picta female dataset and compare results.
 
-Run the analysis on the male and female datasets from P. reticulata and compare the results.
+### Run the analysis on the male and female datasets from P. reticulata and compare the results.
