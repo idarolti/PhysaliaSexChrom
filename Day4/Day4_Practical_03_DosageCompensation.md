@@ -243,7 +243,7 @@ head(merged)
 expr_cols <- setdiff(colnames(merged), c("gene", "chromosome"))
 merged[expr_cols] <- log2(merged[expr_cols] + 1)
 
-# Filter rows for sex chromosome chromosome
+# Filter rows for sex chromosome
 chr12_data <- merged %>% filter(chromosome == "LG12")
 
 # Select relevant columns and reshape to long format
@@ -287,9 +287,14 @@ autosomal_data <- merged %>% filter(chromosome != "LG12")
 ## 08. Compare expression between the autosomes and the sex chromosomes
 
 ```
+sexchr_data <- chr12_data %>%
+  select(gene, female1, female2, female3, male1, male2, male3) %>%
+  pivot_longer(cols = -gene, names_to = "sample", values_to = "expression")
+
+sexchr_data$sex <- ifelse(grepl("^female", sexchr_data$sample), "Female", "Male")
 sexchr_data$chr_type <- "SexChr"
-autosome_data$chr_type <- "Autosome"
-combined_data <- bind_rows(sexchr_data, autosome_data)
+long_data$chr_type <- "Autosome"
+combined_data <- bind_rows(sexchr_data, long_data)
 
 combined_males <- combined_data %>% filter(sex == "Male")
 
