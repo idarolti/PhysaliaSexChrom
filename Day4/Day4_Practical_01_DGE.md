@@ -375,6 +375,10 @@ ggplot(de_results_catkin, aes(x=logFC, y=negLogFDR)) +
 	geom_hline(yintercept = -log10(0.05), col="red", linetype="dashed") +
 	geom_vline(xintercept = c(-1,1), col="blue", linetype = "dashed") +
 	geom_point(data=subset(de_results_catkin, Padj < 0.05 & abs(logFC) > 1),aes(x=logFC, y=negLogFDR), color="orange", size=1.5)
+
+# Save sex-biased genes
+sex_biased <- subset(de_results_catkin, Padj < 0.05 & abs(logFC) > 1)
+write.table(sex_biased, file = "sex_biased_genes.txt", sep = "\t", quote = FALSE, row.names = TRUE)
 ```
 
 <img width="676" height="665" alt="Screenshot 2025-10-08 at 00 08 52" src="https://github.com/user-attachments/assets/56bb457f-53a2-4d04-887c-9c95d105cb13" />
@@ -439,6 +443,78 @@ ggplot(as.data.frame(res), aes(x = log2FoldChange, y = negLogFDR)) +
   geom_vline(xintercept = c(-1, 1), col = "blue", linetype = "dashed") +
   geom_point(data = subset(res, Padj < 0.05 & abs(log2FoldChange) > 1),
              aes(x = log2FoldChange, y = negLogFDR), color = "orange", size = 1.5)
+```
+
+## 08. Plot male and female expression for genes with different sex-bias thresholds
+
+```
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+# Load expression data (genes x samples) and sex-biased gene list (with log2 fold change)
+expr <- read.table("rpkm_catkin_filtered.txt", header=TRUE, row.names=1)
+sexbias <- read.table("sex_biased_genes.txt", header=TRUE)
+
+# Filter genes present in expression data
+sexbias$gene_id <- rownames(sexbias)
+sexbias <- sexbias %>% filter(gene_id %in% rownames(expr))
+
+# Separate male and female samples
+female_samples <- grep("^female", colnames(expr), value=TRUE)
+male_samples <- grep("^male", colnames(expr), value=TRUE)
+
+# Calculate mean expression per gene for male and female samples, plus log2 transform (adding small pseudocount)
+expr$mean_female <- rowMeans(expr[,female_samples])
+expr$mean_male <- rowMeans(expr[,male_samples])
+
+# Log2 transform with pseudocount 1
+expr$log2_female <- log2(expr$mean_female + 1)
+expr$log2_male <- log2(expr$mean_male + 1)
+
+# Merge fold change info
+expr$gene_id <- rownames(expr)
+data <- merge(expr, sexbias, by="gene_id")
+
+# Define fold change groups (absolute value)
+data$abs_logFC <- abs(data$logFC)
+data$group <- cut(data$abs_logFC, breaks=c(1,3,5,7,Inf), 
+                  labels=c("≥1","≥3","≥5","≥7"), right=FALSE)
+
+# Create data for male-biased genes (log2FC > 1) and female-biased genes (log2FC < 1)
+male_biased <- subset(data, logFC > 1)
+female_biased <- subset(data, logFC < 1)
+
+# Melt data for ggplot
+male_long <- male_biased %>% 
+  select(gene_id, group, log2_male, log2_female) %>% 
+  pivot_longer(cols=c(log2_male, log2_female), 
+               names_to="sex_expression", values_to="log2_RPKM") %>% 
+  mutate(sex_expression = ifelse(sex_expression=="log2_male", "Male expression", "Female expression"))
+
+female_long <- female_biased %>% 
+  select(gene_id, group, log2_male, log2_female) %>% 
+  pivot_longer(cols=c(log2_male, log2_female), 
+               names_to="sex_expression", values_to="log2_RPKM") %>% 
+  mutate(sex_expression = ifelse(sex_expression=="log2_male", "Male expression", "Female expression"))
+
+# Plot for male-biased genes
+p1 <- ggplot(male_long, aes(x=group, y=log2_RPKM, fill=sex_expression)) + 
+  geom_boxplot(position=position_dodge(width=0.8)) + 
+  scale_fill_manual(values=c("firebrick", "dodgerblue")) +
+  labs(title="Male-biased genes", x=expression(log[2]*FC), y="Mean log2 RPKM") +
+  theme_bw()
+
+# Plot for female-biased genes
+p2 <- ggplot(female_long, aes(x=group, y=log2_RPKM, fill=sex_expression)) + 
+  geom_boxplot(position=position_dodge(width=0.8)) + 
+  scale_fill_manual(values=c("firebrick", "dodgerblue")) +
+  labs(title="Female-biased genes", x=expression(log[2]*FC), y="Mean log2 RPKM") +
+  theme_bw()
+
+# Combine plots side by side
+library(gridExtra)
+grid.arrange(p1, p2, ncol=2)
 ```
 
 ### Run the differential gene expression on the leaf samples, and see what contrasts can you make to the catkin results.
