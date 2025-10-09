@@ -325,6 +325,7 @@ Run the analysis based on the leaf gene expression, and see what differences can
 library("edgeR")
 library("ggplot2")
 
+# You can skip this first part if you ran I earlier
 data <- read.table("read_counts_catkin_filtered.txt",stringsAsFactors=F,header=T, row.names=1)
 head(data)
 dim(data)
@@ -420,11 +421,9 @@ sum(res$Padj < 0.05, na.rm=TRUE)
 
 # How many genes have 2-fold or greater enrichment in males (log2FC > 1)
 sum(res$Padj < 0.05 & res$log2FoldChange > 1, na.rm=TRUE)
-6766
 
 # How many genes have 2-fold or greater enrichment in females (log2FC < -1)
 sum(res$Padj < 0.05 & res$log2FoldChange < -1, na.rm=TRUE)
-5716
 
 # Volcano plot preparation
 res$negLogFDR <- -log10(res$Padj)
@@ -449,7 +448,7 @@ library(ggplot2)
 library(dplyr)
 library(tidyr)
 
-# Load expression data (genes x samples) and sex-biased gene list (with log2 fold change)
+# Load expression data and sex-biased gene list
 expr <- read.table("rpkm_catkin_filtered.txt", header=TRUE, row.names=1)
 sexbias <- read.table("sex_biased_genes.txt", header=TRUE)
 
@@ -465,7 +464,6 @@ male_samples <- grep("^male", colnames(expr), value=TRUE)
 expr$mean_female <- rowMeans(expr[,female_samples])
 expr$mean_male <- rowMeans(expr[,male_samples])
 
-# Log2 transform with pseudocount 1
 expr$log2_female <- log2(expr$mean_female + 1)
 expr$log2_male <- log2(expr$mean_male + 1)
 
@@ -473,7 +471,7 @@ expr$log2_male <- log2(expr$mean_male + 1)
 expr$gene_id <- rownames(expr)
 data <- merge(expr, sexbias, by="gene_id")
 
-# Define fold change groups (absolute value)
+# Define fold change groups
 data$abs_logFC <- abs(data$logFC)
 data$group <- cut(data$abs_logFC, breaks=c(1,3,5,7,Inf), 
                   labels=c("≥1","≥3","≥5","≥7"), right=FALSE)
