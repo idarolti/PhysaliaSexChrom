@@ -106,6 +106,7 @@ You can now explore this plot
 
   
     
-## 06. Try out a second species
-If you like, run the same exercise with GCA_965213455.1 Cercyonis lupina
+## 06. Try out more
 
+If you like, you can compare the Z chromosomes of the duck (GCA_047663525.1) and ostrich (GCA_040807025.1)
+or, you can compare the full genome of the **[fourspine stickleback] (https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/048/569/185/GCA_048569185.1_Unibe_ApeQuad_male_1.0/GCA_048569185.1_Unibe_ApeQuad_male_1.0_genomic.fna.gz)**to that of the **[threespine stickleback](https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/016/920/845/GCF_016920845.1_GAculeatus_UGA_version5/GCF_016920845.1_GAculeatus_UGA_version5_genomic.fna.gz)
