@@ -363,7 +363,7 @@ ggplot(expr_lg12, aes(x=start/1000000)) +
   geom_line(aes(y=female_ma, color="Female")) +
   geom_line(aes(y=male_ma, color="Male")) +
   labs(title="Gene expression moving average on sex chromosome",
-       x="Genomic position (bp)",
+       x="Genomic position (Mb)",
        y="Log2 RPKM") +
   scale_color_manual(values=c("Female"="firebrick", "Male"="dodgerblue")) +
   theme_classic()+
