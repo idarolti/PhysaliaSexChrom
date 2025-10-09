@@ -367,3 +367,183 @@ ggplot(expr_lg12, aes(x=start/1000000)) +
 
 <img width="752" height="436" alt="Screenshot 2025-10-08 at 09 53 02" src="https://github.com/user-attachments/assets/f354ebec-2dfb-4a91-b177-0b0b365aace9" />
 
+## 10. Get sex-biased genes
+
+```
+library("edgeR")
+library("ggplot2")
+
+data <- read.csv("Poecilia_picta_counts_filtered.txt",row.names=1)
+head(data)
+dim(data)
+conditions <- factor(c("F","F","F","M","M","M"))
+expr <- DGEList(counts=data,group=conditions)
+norm_expr <- calcNormFactors(expr)
+norm_expr
+
+# Estimates a single common dispersion parameter across all genes. This dispersion parameter represents the biological variability across samples
+norm_expr <- estimateCommonDisp(norm_expr)
+# Estimates dispersions for each gene (tag) individually, allowing for gene-level variability
+norm_expr <- estimateTagwiseDisp(norm_expr)
+# Performs the differential expression exact test using the modeled dispersions to find genes with significant expression changes.
+et <- exactTest(norm_expr)
+et
+
+# Correct for multiple testing
+p <- et$table$PValue
+p_FDR <- p.adjust(p, method = c("fdr"), n = length(p))
+
+de_results <- et$table
+de_results$Padj <- p_FDR
+
+#How many genes are significant?
+sum(de_results$Padj < 0.05)
+# 3131
+
+# How many genes show 2-fold enrichment in males?
+sum(de_results$Padj < 0.05 & de_results$logFC > 1)
+# 997
+
+# How many genes show 2-fold enrichment in females?
+sum(de_results$Padj < 0.05 & de_results$logFC < -1)
+# 1147
+
+# Volcano Plot
+de_results$negLogFDR <- -log10(de_results$Padj)
+
+ggplot(de_results, aes(x=logFC, y=negLogFDR)) +
+	geom_point(alpha=0.4, size=1) +
+	theme_minimal() +
+	xlab("log2 Fold Change") +
+	ylab("-log10 Adjusted P-value") +
+	ggtitle("Volcano Plot") +
+	geom_hline(yintercept = -log10(0.05), col="red", linetype="dashed") +
+	geom_vline(xintercept = c(-1,1), col="blue", linetype = "dashed") +
+	geom_point(data=subset(de_results, Padj < 0.05 & abs(logFC) > 1),
+		aes(x=logFC, y=negLogFDR), color="orange", size=1.5)
+
+# Output files
+de_results$gene <- rownames(de_results)
+de_results <- de_results[, c("gene", setdiff(colnames(de_results), "gene"))]
+write.table(de_results, file = "all_genes.txt", row.names = FALSE, quote=FALSE)
+
+# Male-biased genes: significant, logFC > 1
+male_biased <- subset(de_results, Padj < 0.05 & logFC > 1)
+male_biased$gene <- rownames(male_biased)
+male_biased <- male_biased[, c("gene", setdiff(colnames(male_biased), "gene"))]
+write.table(male_biased, file = "male_biased_genes.txt", row.names = FALSE, quote=FALSE)
+
+# Female-biased genes: significant, logFC < -1
+female_biased <- subset(de_results, Padj < 0.05 & logFC < -1)
+female_biased$gene <- rownames(female_biased)
+female_biased <- female_biased[, c("gene", setdiff(colnames(female_biased), "gene"))]
+write.table(female_biased, file = "female_biased_genes.txt", row.names = FALSE, quote=FALSE)
+```
+
+## 11. Check for sexualization of gene expression on the sex chromosome
+
+```
+# Read GFF file, skipping comment lines
+gff <- read.delim("../transcriptome/Poecilia_picta_annotation.gff3", comment.char="#", header=FALSE, stringsAsFactors=FALSE)
+colnames(gff) <- c("chromosome", "source", "feature", "start", "end", "score", "strand", "phase", "attribute")
+
+# Filter for gene features
+genes_gff <- gff[gff$feature == "gene", ]
+
+# Extract gene IDs using base R regex
+genes_gff$gene_id <- sub(".*ID=([^;]+);.*", "\\1", genes_gff$attribute)
+
+# Get unique gene-to-chromosome mapping
+gene_chr <- unique(genes_gff[, c("gene_id", "chromosome")])
+
+# Read male-biased genes
+colnames(male_biased)[1] <- "gene_id"
+# Remove the "-RA" suffix in the gene name
+male_biased$gene_id <- sub("-RA$", "", male_biased$gene_id)
+
+# Read female-biased genes
+colnames(female_biased)[1] <- "gene_id"
+# Remove the "-RA" suffix in the gene name
+female_biased$gene_id <- sub("-RA$", "", female_biased$gene_id)
+
+# Merge male-biased genes with chromosome info
+male_biased_chr <- merge(male_biased, gene_chr, by="gene_id")
+
+# Merge female-biased genes with chromosome info
+female_biased_chr <- merge(female_biased, gene_chr, by="gene_id")
+
+# Calculate total genes per chromosome
+total_counts <- as.data.frame(table(gene_chr$chromosome))
+colnames(total_counts) <- c("chromosome", "total_genes")
+
+# Calculate male-biased genes per chromosome
+male_counts <- as.data.frame(table(male_biased_chr$chromosome))
+colnames(male_counts) <- c("chromosome", "male_biased_genes")
+
+# Calculate female-biased genes per chromosome
+female_counts <- as.data.frame(table(female_biased_chr$chromosome))
+colnames(female_counts) <- c("chromosome", "female_biased_genes")
+
+#FOR MALES
+
+# Merge counts and replace NA with 0
+chr_summary <- merge(total_counts, male_counts, by="chromosome", all.x=TRUE)
+chr_summary$male_biased_genes[is.na(chr_summary$male_biased_genes)] <- 0
+
+# Calculate proportion
+chr_summary$proportion_male_biased <- chr_summary$male_biased_genes / chr_summary$total_genes
+
+print(chr_summary)
+
+# Filter chromosomes starting with "LG"
+lg_rows <- grep("^LG", chr_summary$chromosome)
+chr_summary_lg <- chr_summary[lg_rows, ]
+
+# Extract LG number as integer
+lg_nums <- as.integer(sub("LG", "", chr_summary_lg$chromosome))
+
+# Order data frame by LG number
+ordered_indices <- order(lg_nums)
+chr_summary_lg <- chr_summary_lg[ordered_indices, ]
+
+# Create a barplot with ordered LG chromosomes on x-axis
+barplot(height = chr_summary_lg$proportion_male_biased,
+        names.arg = chr_summary_lg$chromosome,
+        las = 2, # vertical labels
+        col = "cornflowerblue",
+        ylab = "Proportion of Male-Biased Genes",
+        main = "Proportion of Male-Biased Genes per LG Chromosome",
+        cex.names = 0.8)
+
+
+#FOR FEMALES
+
+# Merge counts and replace NA with 0
+chr_summary <- merge(total_counts, female_counts, by="chromosome", all.x=TRUE)
+chr_summary$female_biased_genes[is.na(chr_summary$female_biased_genes)] <- 0
+
+# Calculate proportion
+chr_summary$proportion_female_biased <- chr_summary$female_biased_genes / chr_summary$total_genes
+
+print(chr_summary)
+
+# Filter chromosomes starting with "LG"
+lg_rows <- grep("^LG", chr_summary$chromosome)
+chr_summary_lg <- chr_summary[lg_rows, ]
+
+# Extract LG number as integer
+lg_nums <- as.integer(sub("LG", "", chr_summary_lg$chromosome))
+
+# Order data frame by LG number
+ordered_indices <- order(lg_nums)
+chr_summary_lg <- chr_summary_lg[ordered_indices, ]
+
+# Create a barplot with ordered LG chromosomes on x-axis
+barplot(height = chr_summary_lg$proportion_female_biased,
+        names.arg = chr_summary_lg$chromosome,
+        las = 2, # vertical labels
+        col = "cornflowerblue",
+        ylab = "Proportion of Female-Biased Genes",
+        main = "Proportion of Female-Biased Genes per LG Chromosome",
+        cex.names = 0.8)
+```
