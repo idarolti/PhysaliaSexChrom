@@ -21,7 +21,7 @@ The two steps in Salmon are indexing the transcriptome, and then aligning with b
 ```
 salmon index -t Poecilia_picta_transcripts.fasta -i Poecilia_picta_transcripts
 
-salmon quant --numBootstraps 100 --gcBias --seqBias -p 12 -l A -i Poecilia_picta_transcripts -1 female1_R1.fastq.gz -2 female1_R2.fastq.gz -o female1
+salmon quant --numBootstraps 100 --gcBias --seqBias -p 12 -l A -i ~/Share/day4/guppy/transcriptome/Poecilia_picta_transcripts -1 ~/Share/day4/guppy/rnaseq_reads/picta/female1_R1.fastq.gz -2 ~/Share/day4/guppy/rnaseq_reads/picta/female1_R2.fastq.gz -o female1
 ```
 
 ```
