@@ -112,3 +112,4 @@ If you like, try out to compare the full genomes of the **[fourspine stickleback
 in Dgenies, zoom into the X and Y of the fourspine stickleback, what do you see?
 
 If you still like to explore more, you can compare the Z chromosomes of the duck (GCA_047663525.1) and ostrich (GCA_040807025.1)
+or the full genomes that revealed neo sex chromosome formation in parrots, for this compare the monk parakeet (GCA_017639245.1) to chicken (GCA_024206055.2)
