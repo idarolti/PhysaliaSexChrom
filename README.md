@@ -15,7 +15,7 @@ The practicals to be covered in this course include:
 **Day 5**: Synteny analysis of gametologs
 
 
-Feel free to contact us for any questions!
+### Feel free to contact us for any questions!
 
 Iulia Darolti: iulia.darolti@unil.ch
 Astrid Böhne: A.Boehne@leibniz-lib.de
