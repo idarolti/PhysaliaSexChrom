@@ -8,12 +8,6 @@ This practical will cover:
 
 We will investigate sex chromosome inversions identified in the fourspine stickleback by **[Liu et al. 2025](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1011465)**
 
-## 00. Prepare work folder for day 5
-```
-mkdir day5
-cd day1
-conda activate sexchr
-```
 
 ## 01. Local installation of visualisation software
 
