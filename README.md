@@ -18,5 +18,7 @@ The practicals to be covered in this course include:
 ### Feel free to contact us for any questions!
 
 Iulia Darolti: iulia.darolti@unil.ch
+
 Astrid Böhne: A.Boehne@leibniz-lib.de
+
 Sophie Smith: sophie.smith@evobio.eu
