@@ -13,3 +13,10 @@ The practicals to be covered in this course include:
 **Day 4**: Differential gene expression analysis, tests of Y gene activity decay and dosage compensation
 
 **Day 5**: Synteny analysis of gametologs
+
+
+Feel free to contact us for any questions!
+
+Iulia Darolti: iulia.darolti@unil.ch
+Astrid Böhne: A.Boehne@leibniz-lib.de
+Sophie Smith: sophie.smith@evobio.eu
