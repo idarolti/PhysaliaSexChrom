@@ -198,6 +198,7 @@ write.table(rpkm, file="rpkm_catkin.txt",quote=F, sep="\t")
 Filter genes that do not have a minimum of 2 RPKM expression in at least half of the individuals of one sex. 
 
 ```
+# this is to be run outside of R (in a terminal)
 awk -F"\t" '
 NR==1 { print; next }
 {
