@@ -68,6 +68,7 @@ write.table(df, file="./expression/Poecilia_picta_counts.txt", quote = FALSE, se
 First, obtain gene lengths.
 
 ```
+# note - this it to be run outside of R (in a terminal)
 awk '/^>/{if(seqlen){print seqname"\t"seqlen}; seqname=substr($0,2); seqlen=0; next}
      {seqlen += length($0)}
      END{print seqname"\t"seqlen}' ../transcriptome/Poecilia_picta_transcripts.fasta > ../transcriptome/gene_lengths.txt
@@ -106,6 +107,7 @@ write.table(rpkm, file="Poecilia_picta_rpkm.txt",quote=F, sep=",")
 Remove genes that do not have at least 2 RPKM in half of the individuals of one sex.
 
 ```
+# note - this it to be run outside of R (in a terminal)
 awk -F, '
 NR==1 { print; next }
 {
