@@ -210,6 +210,7 @@ write.table(rpkm_df, file="./expression/Poecilia_picta_rpkm_normalized.txt", quo
 ## 06. Obtain chromosomal information for each gene
 
 ```
+# note - this it to be run outside of R (in a terminal)
 awk '$3 == "CDS" { 
   split($9, a, ";"); 
   for(i in a) { 
